@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import Form from "next/form";
 import { useActionState } from "react";
 import { joinRoomAction } from "./_actions/join-room-action";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 export function RoomJoiningForm() {
   const [state, formAction, isPending] = useActionState(joinRoomAction, {
@@ -21,7 +22,7 @@ export function RoomJoiningForm() {
         required
       />
       <Button className="w-full font-bold" disabled={isPending}>
-        JOIN ROOM
+        {isPending ? <ReloadIcon className="animate-spin" /> : "JOIN ROOM"}
       </Button>
       <div>{!state.success && state.message}</div>
     </Form>
