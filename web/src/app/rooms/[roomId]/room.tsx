@@ -132,7 +132,7 @@ export function Room({
   );
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-4">
       <section>
         <h2 className="font-bold">Your Choices</h2>
         <ul className="flex flex-wrap gap-4 bg-muted p-4 rounded-md">
