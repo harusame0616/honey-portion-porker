@@ -219,14 +219,16 @@ export function Room({
       <section>
         <h2 className="font-bold">
           Note
-          <Button
-            variant="ghost"
-            size="icon"
-            type="button"
-            onClick={() => setIsNoteEditing((prev) => !prev)}
-          >
-            <EditIcon />
-          </Button>
+          {ownerRoomId && (
+            <Button
+              variant="ghost"
+              size="icon"
+              type="button"
+              onClick={() => setIsNoteEditing((prev) => !prev)}
+            >
+              <EditIcon />
+            </Button>
+          )}
         </h2>
         {ownerRoomId && isNoteEditing ? (
           <div className="bg-muted p-4 rounded-md">
