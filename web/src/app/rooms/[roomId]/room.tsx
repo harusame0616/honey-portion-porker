@@ -194,34 +194,40 @@ export function Room({
         </div>
       </section>
 
-      <section>
-        <h2 className="font-bold">Owner Controls</h2>
-        <div className="flex gap-4">
-          {isOpen ? (
-            <Button type="button" variant="outline" onClick={close}>
-              CLOSE
+      {ownerRoomId && (
+        <section>
+          <h2 className="font-bold">Owner Controls</h2>
+          <div className="flex gap-4">
+            {isOpen ? (
+              <Button type="button" variant="outline" onClick={close}>
+                CLOSE
+              </Button>
+            ) : (
+              <Button type="button" variant="outline" onClick={open}>
+                OPEN
+              </Button>
+            )}
+            <Button type="button" variant="outline" onClick={reset}>
+              RESET
             </Button>
-          ) : (
-            <Button type="button" variant="outline" onClick={open}>
-              OPEN
-            </Button>
-          )}
-          <Button type="button" variant="outline" onClick={reset}>
-            RESET
-          </Button>
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
 
       <section>
         <h2 className="font-bold">Note</h2>
 
-        {ownerRoomId && (
+        {ownerRoomId ? (
           <NoteEditionForm
             action={formAction}
             isPending={isPending}
             note={note}
             ownerRoomId={ownerRoomId}
           />
+        ) : (
+          <p className="whitespace-pre-wrap bg-muted p-4 rounded-md">
+            {note || "-"}
+          </p>
         )}
       </section>
       <section className="">
