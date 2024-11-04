@@ -55,7 +55,7 @@ export default async function Page({
 
   return (
     <div className="p-4">
-      <h1 className="font-bold text-2xl">Porker room</h1>
+      <h1 className="font-bold text-2xl">Poker room</h1>
       <main>
         <Room
           roomId={roomGettingResult.data.roomId}
