@@ -136,7 +136,7 @@ export function Room({
   return (
     <div className="flex flex-col gap-4">
       <section>
-        <h2 className="font-bold">Your Choices</h2>
+        <h2 className="font-bold">Your choices</h2>
         <ul className="flex flex-wrap gap-4 bg-muted p-4 rounded-md">
           {cardList.map((card) => (
             <li key={card}>
@@ -151,7 +151,7 @@ export function Room({
       </section>
 
       <section>
-        <h2 className="font-bold">Member choices</h2>
+        <h2 className="font-bold">Member's cards</h2>
         <div className="flex gap-4 bg-muted p-4 rounded-md">
           {users.length ? (
             users.map((user) => (
@@ -200,7 +200,7 @@ export function Room({
 
       {ownerRoomId && (
         <section>
-          <h2 className="font-bold">Owner Controls</h2>
+          <h2 className="font-bold">Owner operations</h2>
           <div className="flex gap-4 bg-muted p-4 rounded-md">
             {isOpen ? (
               <Button type="button" onClick={close} className="font-bold">
