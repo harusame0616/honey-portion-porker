@@ -264,13 +264,13 @@ export function Room({
             Member URL
             <div className="flex">
               <Input
-                value={`${process.env.NEXT_PUBLIC_VERCEL_URL}/rooms/${memberRoomId}`}
+                value={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/rooms/${memberRoomId}`}
                 name="roomId"
                 className="max-w-[605px]"
                 readOnly
               />
               <CopyButton
-                text={`${process.env.NEXT_PUBLIC_VERCEL_URL}/rooms/${memberRoomId}`}
+                text={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/rooms/${memberRoomId}`}
               />
             </div>
           </label>
