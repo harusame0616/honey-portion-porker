@@ -18,6 +18,8 @@ import { CoffeeIcon, EditIcon } from "lucide-react";
 import { Itim } from "next/font/google";
 import { Input } from "@/components/ui/input";
 import { CopyButton } from "./copy-button";
+import Image from "next/image";
+import cardIcon from "./card-icon.svg";
 
 const cardList = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, -1];
 
@@ -327,7 +329,7 @@ function Card({ children, isOpen, selected }: CardProps) {
           children
         )
       ) : (
-        "-"
+        <Image alt="" src={cardIcon} width={30} />
       )}
     </div>
   );
