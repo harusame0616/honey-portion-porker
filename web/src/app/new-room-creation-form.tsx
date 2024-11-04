@@ -13,7 +13,7 @@ export function NewRoomCreationForm() {
   );
   return (
     <Form action={formAction}>
-      <Button disabled={isPending} className="w-40">
+      <Button disabled={isPending} className="w-40 font-bold">
         {isPending ? (
           <ReloadIcon
             className="animate-spin"
@@ -21,7 +21,7 @@ export function NewRoomCreationForm() {
             aria-label="Creating new room"
           />
         ) : (
-          "Create new room"
+          "CREATE ROOM"
         )}
       </Button>
       <div>{state?.message}</div>

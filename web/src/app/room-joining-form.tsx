@@ -14,7 +14,9 @@ export function RoomJoiningForm() {
   return (
     <Form action={formAction}>
       <Input type="text" placeholder="Room ID" name="roomId" className="mb-1" />
-      <Button disabled={isPending}>Join Room</Button>
+      <Button className="w-full font-bold" disabled={isPending}>
+        JOIN ROOM
+      </Button>
       <div>{!state.success && state.message}</div>
     </Form>
   );
