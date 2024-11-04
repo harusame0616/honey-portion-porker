@@ -132,10 +132,10 @@ export function Room({
   );
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-8">
       <section>
         <h2 className="font-bold">Your Choices</h2>
-        <ul className="flex flex-wrap gap-4">
+        <ul className="flex flex-wrap gap-4 bg-muted p-4 rounded-md">
           {cardList.map((card) => (
             <li key={card}>
               <button type="button" onClick={() => selectCard(card)} key={card}>
@@ -150,7 +150,7 @@ export function Room({
 
       <section>
         <h2 className="font-bold">Member choices</h2>
-        <div className="flex gap-4">
+        <div className="flex gap-4 bg-muted p-4 rounded-md">
           {users.length ? (
             users.map((user) => (
               <Card isOpen={isOpen} selected={!!user.card} key={user.userId}>
@@ -167,7 +167,7 @@ export function Room({
 
       <section>
         <h2 className="font-bold">Result</h2>
-        <div className="text-sm">
+        <div className="text-sm bg-muted p-4 rounded-md">
           <div>
             Average:
             <span className="font-bold">
@@ -199,7 +199,7 @@ export function Room({
       {ownerRoomId && (
         <section>
           <h2 className="font-bold">Owner Controls</h2>
-          <div className="flex gap-4">
+          <div className="flex gap-4 bg-muted p-4 rounded-md">
             {isOpen ? (
               <Button type="button" variant="outline" onClick={close}>
                 CLOSE
@@ -229,12 +229,14 @@ export function Room({
           </Button>
         </h2>
         {ownerRoomId && isNoteEditing ? (
-          <NoteEditionForm
-            action={formAction}
-            isPending={isPending}
-            note={note}
-            ownerRoomId={ownerRoomId}
-          />
+          <div className="bg-muted p-4 rounded-md">
+            <NoteEditionForm
+              action={formAction}
+              isPending={isPending}
+              note={note}
+              ownerRoomId={ownerRoomId}
+            />
+          </div>
         ) : (
           <p className="whitespace-pre-wrap bg-muted p-4 rounded-md">
             {state.success ? state.data.note : note || "-"}
@@ -243,7 +245,7 @@ export function Room({
       </section>
       <section className="">
         <h2 className="font-bold">Room information</h2>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 bg-muted rounded-md p-4">
           <label>
             ID
             <div className="flex">
@@ -306,7 +308,7 @@ function Card({ children, isOpen, selected }: CardProps) {
   return (
     <div
       className={cn(
-        "h-20 w-12 border-gray-500 border-2 rounded-md flex items-center justify-center text-4xl font-bold",
+        "h-20 w-12 border-gray-500 border-2 rounded-md flex items-center justify-center text-4xl font-bold bg-white",
         cuteFont.className,
         selected ? "border-red-600" : ""
       )}
