@@ -13,7 +13,13 @@ export function RoomJoiningForm() {
 
   return (
     <Form action={formAction}>
-      <Input type="text" placeholder="Room ID" name="roomId" className="mb-1" />
+      <Input
+        type="text"
+        placeholder="Room ID"
+        name="roomId"
+        className="mb-1"
+        required
+      />
       <Button className="w-full font-bold" disabled={isPending}>
         JOIN ROOM
       </Button>

@@ -301,7 +301,13 @@ function NoteEditionForm({
   return (
     <Form {...formProps} className="flex flex-col gap-1">
       <input type="hidden" value={ownerRoomId} name="ownerRoomId" />
-      <Textarea className="h-48" name="note" defaultValue={note} key={note} />
+      <Textarea
+        className="h-48"
+        name="note"
+        defaultValue={note}
+        key={note}
+        required
+      />
       <div>
         <Button disabled={isPending}>Save</Button>
       </div>
