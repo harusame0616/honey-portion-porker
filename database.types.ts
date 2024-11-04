@@ -14,7 +14,7 @@ export type Database = {
           createdAt: string
           memberRoomId: string
           note: string
-          onwerRoomId: string
+          ownerRoomId: string
           roomId: string
           updatedAt: string | null
         }
@@ -22,7 +22,7 @@ export type Database = {
           createdAt?: string
           memberRoomId?: string
           note?: string
-          onwerRoomId?: string
+          ownerRoomId?: string
           roomId?: string
           updatedAt?: string | null
         }
@@ -30,7 +30,7 @@ export type Database = {
           createdAt?: string
           memberRoomId?: string
           note?: string
-          onwerRoomId?: string
+          ownerRoomId?: string
           roomId?: string
           updatedAt?: string | null
         }
