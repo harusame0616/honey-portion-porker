@@ -66,7 +66,7 @@ export default async function Page({
     <div>
       <header className="bg-primary p-4 shadow-md">
         <Link href="/">
-          <h1 className={cn("font-bold text-2xl", titleFont.className)}>
+          <h1 className={cn("font-bold text-3xl", titleFont.className)}>
             Honey Portion Poker
           </h1>
         </Link>
