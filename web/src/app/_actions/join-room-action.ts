@@ -9,7 +9,7 @@ const actionParamsSchema = v.object({
 });
 
 export async function joinRoomAction(
-  state: any,
+  _state: any,
   formData: FormData
 ): Promise<{ success: false; message: string }> {
   const paramsParsedResult = v.safeParse(

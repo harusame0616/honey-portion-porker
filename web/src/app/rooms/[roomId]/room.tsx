@@ -75,7 +75,7 @@ export function Room({
         setIsOpen(false);
       })
       .on("broadcast", { event: "reset" }, async () => {
-        const presenceTrackStatus = await channel.track({ card: undefined });
+        await channel.track({ card: undefined });
         setIsOpen(false);
       })
       .on("broadcast", { event: "updateNote" }, async () => {
