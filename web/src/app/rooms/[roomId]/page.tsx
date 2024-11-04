@@ -1,6 +1,16 @@
 import { createClient } from "@/lib/supabase/server";
 import * as v from "valibot";
 import { Room } from "./room";
+import Link from "next/link";
+import { Itim } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const titleFont = Itim({
+  subsets: ["latin"],
+  display: "swap",
+  weight: "400",
+  style: "normal",
+});
 
 async function getRoom(roomId: string) {
   const client = await createClient();
@@ -9,8 +19,6 @@ async function getRoom(roomId: string) {
     .select("*")
     .or(`ownerRoomId.eq.${roomId},memberRoomId.eq.${roomId}`)
     .single();
-
-  console.log({ roomId });
 
   if (roomSelect.error || !roomSelect.data.roomId) {
     console.log(roomSelect);
@@ -36,6 +44,7 @@ async function getRoom(roomId: string) {
 const paramsSchema = v.object({
   roomId: v.pipe(v.string(), v.uuid()),
 });
+
 export default async function Page({
   params,
 }: {
@@ -54,21 +63,29 @@ export default async function Page({
   }
 
   return (
-    <div className="p-4">
-      <h1 className="font-bold text-2xl">Poker room</h1>
-      <main>
-        <Room
-          roomId={roomGettingResult.data.roomId}
-          ownerRoomId={
-            paramsParseResult.output.roomId ===
-            roomGettingResult.data.ownerRoomId
-              ? roomGettingResult.data.ownerRoomId
-              : undefined
-          }
-          memberRoomId={roomGettingResult.data.memberRoomId}
-          note={roomGettingResult.data.note}
-        />
-      </main>
+    <div>
+      <header className="bg-primary p-4 shadow-md">
+        <Link href="/">
+          <h1 className={cn("font-bold text-2xl", titleFont.className)}>
+            Honey Portion Poker
+          </h1>
+        </Link>
+      </header>
+      <div className="p-8">
+        <main>
+          <Room
+            roomId={roomGettingResult.data.roomId}
+            ownerRoomId={
+              paramsParseResult.output.roomId ===
+              roomGettingResult.data.ownerRoomId
+                ? roomGettingResult.data.ownerRoomId
+                : undefined
+            }
+            memberRoomId={roomGettingResult.data.memberRoomId}
+            note={roomGettingResult.data.note}
+          />
+        </main>
+      </div>
     </div>
   );
 }

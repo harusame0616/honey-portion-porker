@@ -201,15 +201,20 @@ export function Room({
           <h2 className="font-bold">Owner Controls</h2>
           <div className="flex gap-4 bg-muted p-4 rounded-md">
             {isOpen ? (
-              <Button type="button" variant="outline" onClick={close}>
+              <Button type="button" onClick={close} className="font-bold">
                 CLOSE
               </Button>
             ) : (
-              <Button type="button" variant="outline" onClick={open}>
+              <Button type="button" onClick={open} className="font-bold">
                 OPEN
               </Button>
             )}
-            <Button type="button" variant="outline" onClick={reset}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={reset}
+              className="font-bold"
+            >
               RESET
             </Button>
           </div>
@@ -312,7 +317,7 @@ function Card({ children, isOpen, selected }: CardProps) {
       className={cn(
         "h-20 w-12 border-gray-500 border-2 rounded-md flex items-center justify-center text-4xl font-bold bg-white",
         cuteFont.className,
-        selected ? "border-red-600" : ""
+        selected ? "bg-primary" : ""
       )}
     >
       {isOpen ? (
