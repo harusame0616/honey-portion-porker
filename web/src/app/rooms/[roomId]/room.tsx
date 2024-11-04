@@ -14,7 +14,7 @@ import { editNoteAction } from "./_actions/edit-note-action";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
-import { CoffeeIcon } from "lucide-react";
+import { CoffeeIcon, EditIcon } from "lucide-react";
 import { Itim } from "next/font/google";
 import { Input } from "@/components/ui/input";
 import { CopyButton } from "./copy-button";
@@ -44,6 +44,7 @@ export function Room({
   ownerRoomId?: string;
   memberRoomId: string;
 }) {
+  const [isNoteEditing, setIsNoteEditing] = useState(false);
   const [users, setUsers] = useState<{ card: number; userId: string }[]>([]);
   const [selectedCard, setSelectedCard] = useState<number>();
   const [isOpen, setIsOpen] = useState(false);
@@ -101,6 +102,7 @@ export function Room({
     if (state.success && !isPending) {
       channel.send({ type: "broadcast", event: "updateNote" }).then(() => {
         router.refresh();
+        setIsNoteEditing(false);
       });
     }
   }, [state, isPending]);
@@ -215,9 +217,18 @@ export function Room({
       )}
 
       <section>
-        <h2 className="font-bold">Note</h2>
-
-        {ownerRoomId ? (
+        <h2 className="font-bold">
+          Note
+          <Button
+            variant="ghost"
+            size="icon"
+            type="button"
+            onClick={() => setIsNoteEditing((prev) => !prev)}
+          >
+            <EditIcon />
+          </Button>
+        </h2>
+        {ownerRoomId && isNoteEditing ? (
           <NoteEditionForm
             action={formAction}
             isPending={isPending}
@@ -226,7 +237,7 @@ export function Room({
           />
         ) : (
           <p className="whitespace-pre-wrap bg-muted p-4 rounded-md">
-            {note || "-"}
+            {state.success ? state.data.note : note || "-"}
           </p>
         )}
       </section>
