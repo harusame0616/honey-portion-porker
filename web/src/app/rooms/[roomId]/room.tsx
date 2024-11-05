@@ -54,6 +54,7 @@ export function Room({
     success: false,
     message: "",
   });
+  const router = useRouter();
 
   useEffect(() => {
     channel = client.channel(roomId);
@@ -96,18 +97,16 @@ export function Room({
     return () => {
       channel.unsubscribe();
     };
-  }, [roomId]);
-
-  const router = useRouter();
+  }, [roomId, router]);
 
   useEffect(() => {
-    if (state.success && !isPending) {
+    if (router && state.success && !isPending) {
       channel.send({ type: "broadcast", event: "updateNote" }).then(() => {
         router.refresh();
         setIsNoteEditing(false);
       });
     }
-  }, [state, isPending]);
+  }, [state, isPending, router]);
 
   async function selectCard(number: number | undefined) {
     setSelectedCard(number);
