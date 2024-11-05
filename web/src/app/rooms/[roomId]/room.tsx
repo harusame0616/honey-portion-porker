@@ -109,9 +109,12 @@ export function Room({
     }
   }, [state, isPending]);
 
-  async function selectCard(number: number) {
+  async function selectCard(number: number | undefined) {
     setSelectedCard(number);
     await channel.track({ card: number });
+  }
+  async function unselectCard() {
+    selectCard(undefined);
   }
 
   async function open() {
@@ -140,7 +143,13 @@ export function Room({
         <ul className="flex flex-wrap gap-4 bg-muted p-4 rounded-md">
           {cardList.map((card) => (
             <li key={card}>
-              <button type="button" onClick={() => selectCard(card)} key={card}>
+              <button
+                type="button"
+                onClick={() =>
+                  selectedCard === card ? unselectCard() : selectCard(card)
+                }
+                key={card}
+              >
                 <Card isOpen selected={card === selectedCard}>
                   {card}
                 </Card>
