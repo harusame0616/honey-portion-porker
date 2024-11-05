@@ -151,7 +151,7 @@ export function Room({
       </section>
 
       <section>
-        <h2 className="font-bold">Member's cards</h2>
+        <h2 className="font-bold">Member&apos;s cards</h2>
         <div className="flex gap-4 bg-muted p-4 rounded-md">
           {users.length ? (
             users.map((user) => (
