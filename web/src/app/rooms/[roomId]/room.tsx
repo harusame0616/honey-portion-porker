@@ -12,7 +12,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { PropsWithChildren, useActionState, useEffect, useState } from "react";
 import { editNoteAction } from "./_actions/edit-note-action";
-import cardIcon from "./card-icon.svg";
+import cardIcon from "../../_resources/icon.svg";
 import { CopyButton } from "./copy-button";
 
 const cardList = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, -1];
