@@ -1,25 +1,19 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { createBrowserClient } from "@supabase/ssr";
-import Form from "next/form";
-import {
-  ComponentProps,
-  PropsWithChildren,
-  useActionState,
-  useEffect,
-  useState,
-} from "react";
-import { editNoteAction } from "./_actions/edit-note-action";
-import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
+import { createBrowserClient } from "@supabase/ssr";
 import { CoffeeIcon, EditIcon } from "lucide-react";
 import { Itim } from "next/font/google";
-import { Input } from "@/components/ui/input";
-import { CopyButton } from "./copy-button";
+import Form from "next/form";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { PropsWithChildren, useActionState, useEffect, useState } from "react";
+import { editNoteAction } from "./_actions/edit-note-action";
 import cardIcon from "./card-icon.svg";
+import { CopyButton } from "./copy-button";
 
 const cardList = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, -1];
 
@@ -37,7 +31,7 @@ const cuteFont = Itim({
 });
 export function Room({
   roomId,
-  note,
+  note: initialNote,
   ownerRoomId,
   memberRoomId,
 }: {
@@ -50,10 +44,8 @@ export function Room({
   const [users, setUsers] = useState<{ card: number; userId: string }[]>([]);
   const [selectedCard, setSelectedCard] = useState<number>();
   const [isOpen, setIsOpen] = useState(false);
-  const [state, formAction, isPending] = useActionState(editNoteAction, {
-    success: false,
-    message: "",
-  });
+  const [note, setNote] = useState(initialNote);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -100,13 +92,8 @@ export function Room({
   }, [roomId, router]);
 
   useEffect(() => {
-    if (router && state.success && !isPending) {
-      channel.send({ type: "broadcast", event: "updateNote" }).then(() => {
-        router.refresh();
-        setIsNoteEditing(false);
-      });
-    }
-  }, [state, isPending, router]);
+    setNote(initialNote);
+  }, [initialNote]);
 
   async function selectCard(number: number | undefined) {
     setSelectedCard(number);
@@ -248,15 +235,19 @@ export function Room({
         {ownerRoomId && isNoteEditing ? (
           <div className="bg-muted p-4 rounded-md">
             <NoteEditionForm
-              action={formAction}
-              isPending={isPending}
               note={note}
               ownerRoomId={ownerRoomId}
+              onSubmit={async (newNote) => {
+                await channel.send({ type: "broadcast", event: "updateNote" });
+                setNote(newNote);
+                setIsNoteEditing(false);
+                router.refresh();
+              }}
             />
           </div>
         ) : (
           <p className="whitespace-pre-wrap bg-muted p-4 rounded-md">
-            {state.success ? state.data.note : note || "-"}
+            {note || "-"}
           </p>
         )}
       </section>
@@ -298,24 +289,31 @@ export function Room({
 type NoteEditionFormProps = {
   ownerRoomId: string;
   note: string;
-  isPending: boolean;
-} & ComponentProps<typeof Form>;
+  onSubmit: (newNote: string) => void;
+};
 function NoteEditionForm({
   ownerRoomId,
+  onSubmit,
   note,
-  isPending,
-  ...formProps
 }: NoteEditionFormProps) {
+  const [state, formAction, isPending] = useActionState(editNoteAction, {
+    success: false,
+    message: "",
+    errors: { note: "" },
+    inputs: { note },
+  });
+  useEffect(() => {
+    if (onSubmit && state.success && !isPending) {
+      onSubmit(state.inputs.note);
+    }
+  }, [state, isPending, onSubmit]);
   return (
-    <Form {...formProps} className="flex flex-col gap-1">
+    <Form action={formAction} className="flex flex-col gap-1">
       <input type="hidden" value={ownerRoomId} name="ownerRoomId" />
-      <Textarea
-        className="h-48"
-        name="note"
-        defaultValue={note}
-        key={note}
-        required
-      />
+      <Textarea className="h-48" name="note" defaultValue={state.inputs.note} />
+      <div className="text-destructive text-sm">
+        {!state.success && state.errors.note}
+      </div>
       <div>
         <Button disabled={isPending}>Save</Button>
       </div>
