@@ -17,17 +17,24 @@ export default function Home() {
     <div className="flex flex-col items-center p-4">
       <div className="max-w-2xl w-full">
         <header className="text-3xl font-bold flex items-end gap-1">
-          <Image src={icon} alt="" width={40} height={40} />
+          <Image src={icon} alt="" width={40} height={40} className="-ml-2" />
           <h1 className={cn(titleFont.className)}>Honey Portion Poker</h1>
         </header>
         <main>
           <div className="font-bold text-3xl p-4 leading-normal my-4">
-            <div className="text-primary">すぐに使えて設定が保持できる</div>
+            <div
+              className="text-primary"
+              style={{
+                textShadow: "0 1px 3px rgb(122, 113, 86)",
+              }}
+            >
+              すぐに使えて設定が保持できる
+            </div>
             <div>シンプルな</div>
             <div>プランニングポーカー</div>
           </div>
           <p>
-            <span className="text-primary font-bold">Honey Portion Poker</span>{" "}
+            <span className="font-bold">Honey Portion Poker</span>{" "}
             はオンライン上でプランニングポーカーを実施できるサービスです。面倒な登録は必要なく、1
             click
             ですぐに見積もりを開始することができます。また、作成したルームは30日間保存されるため、毎回
