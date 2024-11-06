@@ -22,9 +22,9 @@ export default function Home() {
         </header>
         <main>
           <div className="font-bold text-3xl p-4 leading-normal my-4">
-            <div className="text-primary">すぐに使える・設定が保持できる</div>
+            <div className="text-primary">すぐに使えて設定が保持できる</div>
             <div>シンプルな</div>
-            <div>オンライン・プランニングポーカー</div>
+            <div>プランニングポーカー</div>
           </div>
           <p>
             <span className="text-primary font-bold">Honey Portion Poker</span>{" "}
