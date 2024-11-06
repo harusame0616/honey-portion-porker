@@ -1,6 +1,9 @@
 import { Itim } from "next/font/google";
 import { NewRoomCreationForm } from "./new-room-creation-form";
 import { RoomJoiningForm } from "./room-joining-form";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
+import icon from "@/app/_resources/icon.svg";
 
 const titleFont = Itim({
   subsets: ["latin"],
@@ -13,8 +16,9 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center p-4">
       <div className="max-w-2xl w-full">
-        <header className="text-3xl font-bold">
-          <h1 className={titleFont.className}>Honey Portion Poker</h1>
+        <header className="text-3xl font-bold flex items-end gap-1">
+          <Image src={icon} alt="" width={40} height={40} />
+          <h1 className={cn(titleFont.className)}>Honey Portion Poker</h1>
         </header>
         <main>
           <div className="font-bold text-3xl p-4 leading-normal my-4">

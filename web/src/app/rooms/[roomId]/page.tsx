@@ -4,6 +4,8 @@ import { Room } from "./room";
 import Link from "next/link";
 import { Itim } from "next/font/google";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
+import icon from "@/app/_resources/icon.svg";
 
 const titleFont = Itim({
   subsets: ["latin"],
@@ -65,7 +67,8 @@ export default async function Page({
   return (
     <div>
       <header className="bg-primary p-4 shadow-md">
-        <Link href="/">
+        <Link href="/" className="flex items-end gap-1">
+          <Image src={icon} alt="" width={45} height={45} />
           <h1 className={cn("font-bold text-3xl", titleFont.className)}>
             Honey Portion Poker
           </h1>
