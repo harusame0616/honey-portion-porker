@@ -1,18 +1,8 @@
+import { ServiceTitle } from "@/components/service-title";
 import { createClient } from "@/lib/supabase/server";
+import Link from "next/link";
 import * as v from "valibot";
 import { Room } from "./room";
-import Link from "next/link";
-import { Itim } from "next/font/google";
-import { cn } from "@/lib/utils";
-import Image from "next/image";
-import icon from "@/app/_resources/icon.svg";
-
-const titleFont = Itim({
-  subsets: ["latin"],
-  display: "swap",
-  weight: "400",
-  style: "normal",
-});
 
 async function getRoom(roomId: string) {
   const client = await createClient();
@@ -66,12 +56,9 @@ export default async function Page({
 
   return (
     <div>
-      <header className="bg-primary p-4 shadow-md">
-        <Link href="/" className="flex items-end gap-1">
-          <Image src={icon} alt="" width={45} height={45} />
-          <h1 className={cn("font-bold text-3xl", titleFont.className)}>
-            Honey Portion Poker
-          </h1>
+      <header className="bg-primary p-4 shadow-md flex">
+        <Link href="/">
+          <ServiceTitle />
         </Link>
       </header>
       <div className="p-8">
