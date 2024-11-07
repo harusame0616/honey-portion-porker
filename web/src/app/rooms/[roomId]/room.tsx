@@ -10,9 +10,17 @@ import { Itim } from "next/font/google";
 import Form from "next/form";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { PropsWithChildren, useActionState, useEffect, useState } from "react";
-import { editNoteAction } from "./_actions/edit-note-action";
+import {
+  DetailedHTMLProps,
+  HTMLAttributes,
+  PropsWithChildren,
+  ReactNode,
+  useActionState,
+  useEffect,
+  useState,
+} from "react";
 import cardIcon from "../../_resources/icon.svg";
+import { editNoteAction } from "./_actions/edit-note-action";
 import { CopyButton } from "./copy-button";
 
 const cardList = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, -1];
@@ -124,9 +132,8 @@ export function Room({
 
   return (
     <div className="flex flex-col gap-4">
-      <section>
-        <h2 className="font-bold">Your choices</h2>
-        <ul className="flex flex-wrap gap-4 bg-muted p-4 rounded-md">
+      <Section title="Your choices">
+        <ul className="flex flex-wrap gap-4">
           {cardList.map((card) => (
             <li key={card}>
               <button
@@ -143,145 +150,131 @@ export function Room({
             </li>
           ))}
         </ul>
-      </section>
+      </Section>
 
-      <section>
-        <h2 className="font-bold">Member&apos;s cards</h2>
-        <div className="flex gap-4 bg-muted p-4 rounded-md">
-          {users.length ? (
-            users.map((user) => (
-              <Card isOpen={isOpen} selected={!!user.card} key={user.userId}>
-                {user.card}
-              </Card>
-            ))
-          ) : (
-            <Card isOpen={false} selected={false}>
-              0
+      <Section title="Member's cards" className="flex gap-4">
+        {users.length ? (
+          users.map((user) => (
+            <Card isOpen={isOpen} selected={!!user.card} key={user.userId}>
+              {user.card}
             </Card>
-          )}
-        </div>
-      </section>
+          ))
+        ) : (
+          <Card isOpen={false} selected={false} />
+        )}
+      </Section>
 
-      <section>
-        <h2 className="font-bold">Result</h2>
-        <div className="text-sm bg-muted p-4 rounded-md">
-          <div>
-            Average:
-            <span className="font-bold">
-              {isOpen && selectedUsers.length
-                ? selectedUsers.reduce((acc, user) => acc + user.card, 0) /
-                  selectedUsers.length
-                : "-"}
-            </span>
-          </div>
-          <div>
-            Min:
-            <span className="font-bold">
-              {isOpen && selectedUsers.length
-                ? Math.min(...selectedUsers.map((user) => user.card))
-                : "-"}
-            </span>
-          </div>
-          <div>
-            Max:
-            <span className="font-bold">
-              {isOpen && selectedUsers.length
-                ? Math.max(...selectedUsers.map((user) => user.card))
-                : "-"}
-            </span>
-          </div>
+      <Section title="Result" className="text-sm">
+        <div>
+          Average:
+          <span className="font-bold">
+            {isOpen && selectedUsers.length
+              ? selectedUsers.reduce((acc, user) => acc + user.card, 0) /
+                selectedUsers.length
+              : "-"}
+          </span>
         </div>
-      </section>
+        <div>
+          Min:
+          <span className="font-bold">
+            {isOpen && selectedUsers.length
+              ? Math.min(...selectedUsers.map((user) => user.card))
+              : "-"}
+          </span>
+        </div>
+        <div>
+          Max:
+          <span className="font-bold">
+            {isOpen && selectedUsers.length
+              ? Math.max(...selectedUsers.map((user) => user.card))
+              : "-"}
+          </span>
+        </div>
+      </Section>
 
       {ownerRoomId && (
-        <section>
-          <h2 className="font-bold">Owner operations</h2>
-          <div className="flex gap-4 bg-muted p-4 rounded-md">
-            {isOpen ? (
-              <Button type="button" onClick={close} className="font-bold">
-                CLOSE
-              </Button>
-            ) : (
-              <Button type="button" onClick={open} className="font-bold">
-                OPEN
-              </Button>
-            )}
-            <Button
-              type="button"
-              variant="outline"
-              onClick={reset}
-              className="font-bold"
-            >
-              RESET
+        <Section title="Owner operations" className="flex gap-4">
+          {isOpen ? (
+            <Button type="button" onClick={close} className="font-bold">
+              CLOSE
             </Button>
-          </div>
-        </section>
-      )}
-
-      <section>
-        <h2 className="font-bold">
-          Note
-          {ownerRoomId && (
-            <Button
-              variant="ghost"
-              size="icon"
-              type="button"
-              onClick={() => setIsNoteEditing((prev) => !prev)}
-            >
-              <EditIcon />
+          ) : (
+            <Button type="button" onClick={open} className="font-bold">
+              OPEN
             </Button>
           )}
-        </h2>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={reset}
+            className="font-bold"
+          >
+            RESET
+          </Button>
+        </Section>
+      )}
+
+      <Section
+        title="Note"
+        bar={
+          ownerRoomId && (
+            <div className="-mb-[6px]">
+              <Button
+                variant="ghost"
+                size="icon"
+                type="button"
+                onClick={() => setIsNoteEditing((prev) => !prev)}
+              >
+                <EditIcon />
+              </Button>
+            </div>
+          )
+        }
+      >
         {ownerRoomId && isNoteEditing ? (
-          <div className="bg-muted p-4 rounded-md">
-            <NoteEditionForm
-              note={note}
-              ownerRoomId={ownerRoomId}
-              onSubmit={async (newNote) => {
-                await channel.send({ type: "broadcast", event: "updateNote" });
-                setNote(newNote);
-                setIsNoteEditing(false);
-                router.refresh();
-              }}
+          <NoteEditionForm
+            note={note}
+            ownerRoomId={ownerRoomId}
+            onSubmit={async (newNote) => {
+              await channel.send({ type: "broadcast", event: "updateNote" });
+              setNote(newNote);
+              setIsNoteEditing(false);
+              router.refresh();
+            }}
+          />
+        ) : (
+          <p className="whitespace-pre-wrap">{note || "-"}</p>
+        )}
+      </Section>
+
+      <Section title="Room information" className="flex flex-col gap-2">
+        <label>
+          ID
+          <div className="flex">
+            <Input
+              value={memberRoomId}
+              name="roomId"
+              readOnly
+              className="max-w-80"
+            />
+            <CopyButton text={memberRoomId} />
+          </div>
+        </label>
+        <label>
+          Member URL
+          <div className="flex">
+            <Input
+              value={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/rooms/${memberRoomId}`}
+              name="roomId"
+              className="max-w-[605px]"
+              readOnly
+            />
+            <CopyButton
+              text={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/rooms/${memberRoomId}`}
             />
           </div>
-        ) : (
-          <p className="whitespace-pre-wrap bg-muted p-4 rounded-md">
-            {note || "-"}
-          </p>
-        )}
-      </section>
-      <section className="">
-        <h2 className="font-bold">Room information</h2>
-        <div className="flex flex-col gap-2 bg-muted rounded-md p-4">
-          <label>
-            ID
-            <div className="flex">
-              <Input
-                value={memberRoomId}
-                name="roomId"
-                readOnly
-                className="max-w-80"
-              />
-              <CopyButton text={memberRoomId} />
-            </div>
-          </label>
-          <label>
-            Member URL
-            <div className="flex">
-              <Input
-                value={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/rooms/${memberRoomId}`}
-                name="roomId"
-                className="max-w-[605px]"
-                readOnly
-              />
-              <CopyButton
-                text={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/rooms/${memberRoomId}`}
-              />
-            </div>
-          </label>
-        </div>
-      </section>
+        </label>
+      </Section>
     </div>
   );
 }
@@ -344,5 +337,26 @@ function Card({ children, isOpen, selected }: CardProps) {
         <Image alt="" src={cardIcon} width={30} />
       )}
     </div>
+  );
+}
+
+function Section({
+  children,
+  title,
+  bar,
+  className,
+  ...props
+}: PropsWithChildren<{ title: string; bar?: ReactNode }> &
+  DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>) {
+  return (
+    <section>
+      <div className="flex items-end">
+        <h2 className="font-bold">{title}</h2>
+        <div>{bar}</div>
+      </div>
+      <div {...props} className={cn("bg-muted p-4 rounded-md", className)}>
+        {children}
+      </div>
+    </section>
   );
 }
