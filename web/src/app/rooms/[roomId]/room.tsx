@@ -134,6 +134,39 @@ export function Room({
 
   return (
     <div className="flex flex-col gap-4">
+      <Section
+        title="Note"
+        bar={
+          ownerRoomId && (
+            <div className="-mb-[6px]">
+              <Button
+                variant="ghost"
+                size="icon"
+                type="button"
+                onClick={() => setIsNoteEditing((prev) => !prev)}
+              >
+                <EditIcon />
+              </Button>
+            </div>
+          )
+        }
+      >
+        {ownerRoomId && isNoteEditing ? (
+          <NoteEditionForm
+            note={note}
+            ownerRoomId={ownerRoomId}
+            onSubmit={async (newNote) => {
+              await channel.send({ type: "broadcast", event: "updateNote" });
+              setNote(newNote);
+              setIsNoteEditing(false);
+              router.refresh();
+            }}
+          />
+        ) : (
+          <p className="whitespace-pre-wrap">{note || "-"}</p>
+        )}
+      </Section>
+
       <Section title="Your choices">
         <ul className="flex flex-wrap gap-4">
           {cardList.map((card) => (
@@ -166,6 +199,28 @@ export function Room({
         )}
       </Section>
 
+      {ownerRoomId && (
+        <Section title="Owner operations" className="flex gap-4">
+          {isOpen ? (
+            <Button type="button" onClick={close} className="font-bold">
+              CLOSE
+            </Button>
+          ) : (
+            <Button type="button" onClick={open} className="font-bold">
+              OPEN
+            </Button>
+          )}
+          <Button
+            type="button"
+            variant="outline"
+            onClick={reset}
+            className="font-bold"
+          >
+            RESET
+          </Button>
+        </Section>
+      )}
+
       <Section title="Result" className="text-sm">
         <div>
           Average:
@@ -192,61 +247,6 @@ export function Room({
               : "-"}
           </span>
         </div>
-      </Section>
-
-      {ownerRoomId && (
-        <Section title="Owner operations" className="flex gap-4">
-          {isOpen ? (
-            <Button type="button" onClick={close} className="font-bold">
-              CLOSE
-            </Button>
-          ) : (
-            <Button type="button" onClick={open} className="font-bold">
-              OPEN
-            </Button>
-          )}
-          <Button
-            type="button"
-            variant="outline"
-            onClick={reset}
-            className="font-bold"
-          >
-            RESET
-          </Button>
-        </Section>
-      )}
-
-      <Section
-        title="Note"
-        bar={
-          ownerRoomId && (
-            <div className="-mb-[6px]">
-              <Button
-                variant="ghost"
-                size="icon"
-                type="button"
-                onClick={() => setIsNoteEditing((prev) => !prev)}
-              >
-                <EditIcon />
-              </Button>
-            </div>
-          )
-        }
-      >
-        {ownerRoomId && isNoteEditing ? (
-          <NoteEditionForm
-            note={note}
-            ownerRoomId={ownerRoomId}
-            onSubmit={async (newNote) => {
-              await channel.send({ type: "broadcast", event: "updateNote" });
-              setNote(newNote);
-              setIsNoteEditing(false);
-              router.refresh();
-            }}
-          />
-        ) : (
-          <p className="whitespace-pre-wrap">{note || "-"}</p>
-        )}
       </Section>
 
       <Section title="Room information" className="flex flex-col gap-2">
