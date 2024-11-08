@@ -79,6 +79,7 @@ export function Room({
       })
       .on("broadcast", { event: "reset" }, async () => {
         await channel.track({ card: undefined });
+        setSelectedCard(undefined);
         setIsOpen(false);
       })
       .on("broadcast", { event: "updateNote" }, async () => {
@@ -123,6 +124,7 @@ export function Room({
 
   async function reset() {
     setIsOpen(false);
+    setSelectedCard(undefined);
     await channel.track({ card: undefined });
     await channel.send({ type: "broadcast", event: "reset" });
   }
