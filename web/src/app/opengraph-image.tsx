@@ -1,9 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 
 // Image metadata
-export const alt = "About Acme";
 export const size = {
   width: 1200,
   height: 630,
@@ -11,49 +11,83 @@ export const size = {
 
 export const contentType = "image/png";
 
-// Image generation
-export default async function OgpImage() {
-  // Font
-  const font = await fetch(new URL("./Itim-Regular.ttf", import.meta.url)).then(
-    (res) => res.arrayBuffer()
-  );
-  const logo = await fetch(
-    new URL("./_resources/icon.svg", import.meta.url)
-  ).then((res) => res.arrayBuffer());
+export default async function Image() {
+  const iconUrl = (await (
+    await fetch(new URL("./ogp-icon.png", import.meta.url))
+  ).arrayBuffer()) as unknown as string; // arraybuffer のままだと img の src に指定したときに型エラーになる。暫定対応
+  const font = await (
+    await fetch(new URL("./Itim-Regular.ttf", import.meta.url))
+  ).arrayBuffer();
 
-  return new ImageResponse(
-    (
-      // ImageResponse JSX element
-      <div className="flex items-end">
-        <img src={logo} alt="" />
+  try {
+    return new ImageResponse(
+      (
         <div
           style={{
-            fontSize: 128,
-            background: "white",
             width: "100%",
             height: "100%",
+            background: "#DED5BA",
+            borderRadius: "15px",
+            border: "8px solid #000",
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          Honey Portion Poker
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              gap: "0.5rem",
+            }}
+          >
+            <img src={iconUrl} width="80" height="80" alt="" />
+            <div
+              style={{
+                fontSize: "4rem",
+                paddingTop: "0.8rem",
+              }}
+            >
+              Honey Portion Porker
+            </div>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              fontSize: "2rem",
+              marginTop: "2rem",
+              marginLeft: "-3.5rem",
+            }}
+          >
+            <div
+              style={{
+                color: "#FACC15",
+                textShadow: "0 1px 3px rgb(122, 113, 86)",
+              }}
+            >
+              すぐに使えて設定が保存できる
+            </div>
+            <div>シンプルな</div>
+            <div>プランニングポーカー</div>
+          </div>
         </div>
-      </div>
-    ),
-    // ImageResponse options
-    {
-      // For convenience, we can re-use the exported opengraph-image
-      // size config to also set the ImageResponse's width and height.
-      ...size,
-      fonts: [
-        {
-          name: "Itim",
-          data: await font,
-          style: "normal",
-          weight: 400,
-        },
-      ],
-    }
-  );
+      ),
+      {
+        ...size,
+        fonts: [
+          {
+            name: "Itim",
+            data: font,
+            weight: 400,
+            style: "normal",
+          },
+        ],
+      }
+    );
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
 }
