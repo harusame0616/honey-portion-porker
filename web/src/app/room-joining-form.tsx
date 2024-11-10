@@ -13,7 +13,7 @@ export function RoomJoiningForm() {
   });
 
   return (
-    <Form action={formAction}>
+    <Form action={formAction} className="w-full">
       <Input
         type="text"
         placeholder="Room ID"

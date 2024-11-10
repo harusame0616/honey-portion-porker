@@ -32,10 +32,12 @@ export default function Home() {
             URL を発行する必要はありません。
           </p>
 
-          <div className="p-8 flex flex-col items-center w-full gap-4">
-            <NewRoomCreationForm />
-            <div>or</div>
-            <RoomJoiningForm />
+          <div className="flex justify-center">
+            <div className="p-8 flex flex-col items-center gap-4 w-60">
+              <NewRoomCreationForm />
+              <div>or</div>
+              <RoomJoiningForm />
+            </div>
           </div>
         </main>
       </div>

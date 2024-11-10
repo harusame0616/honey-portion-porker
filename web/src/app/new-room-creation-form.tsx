@@ -12,8 +12,8 @@ export function NewRoomCreationForm() {
     undefined
   );
   return (
-    <Form action={formAction}>
-      <Button disabled={isPending} className="w-40 font-bold">
+    <Form action={formAction} className="w-full">
+      <Button disabled={isPending} className="w-full font-bold">
         {isPending ? (
           <ReloadIcon
             className="animate-spin"
