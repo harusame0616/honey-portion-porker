@@ -3,9 +3,12 @@ import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import * as v from "valibot";
 import { Room } from "./room";
+import { unstable_after as after } from "next/server";
 
-async function getRoom(roomId: string) {
-  const client = await createClient();
+async function getRoom(
+  roomId: string,
+  client: Awaited<ReturnType<typeof createClient>>
+) {
   const roomSelect = await client
     .from("room")
     .select("*")
@@ -33,6 +36,16 @@ async function getRoom(roomId: string) {
   };
 }
 
+async function updateRoom(
+  roomId: string,
+  client: Awaited<ReturnType<typeof createClient>>
+) {
+  await client
+    .from("room")
+    .update({ updatedAt: new Date().toISOString() })
+    .or(`ownerRoomId.eq.${roomId},memberRoomId.eq.${roomId}`);
+}
+
 const paramsSchema = v.object({
   roomId: v.pipe(v.string(), v.uuid()),
 });
@@ -48,7 +61,15 @@ export default async function Page({
     return <div>invalid request</div>;
   }
 
-  const roomGettingResult = await getRoom(paramsParseResult.output.roomId);
+  const client = await createClient();
+  after(async () => {
+    await updateRoom(paramsParseResult.output.roomId, client);
+  });
+
+  const roomGettingResult = await getRoom(
+    paramsParseResult.output.roomId,
+    client
+  );
 
   if (!roomGettingResult.success) {
     return <div>not found</div>;
