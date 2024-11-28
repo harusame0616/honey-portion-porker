@@ -30,8 +30,8 @@ export default function Home() {
         <div className="max-w-2xl w-full p-4">
           <p>
             <span className="font-bold">Honey Portion Poker</span>{" "}
-            はオンライン上でプランニングポーカーを実施できるサービスです。面倒な登録は必要なく、1
-            click
+            はオンライン上でプランニングポーカーを実施できる Web
+            プラニングポーカーサービスです。登録不要で、1 click
             ですぐに見積もりを開始することができます。また、作成したルームは最終アクセスから30日間保存されるため、毎回
             URL を発行する必要はありません。
           </p>
