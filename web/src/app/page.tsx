@@ -4,31 +4,35 @@ import { RoomJoiningForm } from "./room-joining-form";
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center p-4">
-      <div className="max-w-2xl w-full">
-        <header>
-          <h1>
-            <ServiceTitle />
-          </h1>
-        </header>
-        <main>
-          <div className="font-bold text-3xl p-4 leading-normal my-4">
+    <div className="flex flex-col items-center">
+      <header className="max-w-2xl w-full p-4">
+        <h1>
+          <ServiceTitle />
+        </h1>
+      </header>
+
+      <main className="flex flex-col items-center">
+        <div className="font-bold text-3xl leading-normal bg-[hsl(45_35%_60%)] w-svw flex justify-center my-4">
+          <div className="max-w-2xl w-full p-6">
             <div
               className="text-primary"
               style={{
                 textShadow: "0 1px 3px rgb(122, 113, 86)",
               }}
             >
-              すぐに使えて設定が保持できる
+              すぐ使えて設定を保持できる
             </div>
             <div>シンプルな</div>
             <div>プランニングポーカー</div>
           </div>
+        </div>
+
+        <div className="max-w-2xl w-full p-4">
           <p>
             <span className="font-bold">Honey Portion Poker</span>{" "}
             はオンライン上でプランニングポーカーを実施できるサービスです。面倒な登録は必要なく、1
             click
-            ですぐに見積もりを開始することができます。また、作成したルームは30日間保存されるため、毎回
+            ですぐに見積もりを開始することができます。また、作成したルームは最終アクセスから30日間保存されるため、毎回
             URL を発行する必要はありません。
           </p>
 
@@ -39,8 +43,8 @@ export default function Home() {
               <RoomJoiningForm />
             </div>
           </div>
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   );
 }
