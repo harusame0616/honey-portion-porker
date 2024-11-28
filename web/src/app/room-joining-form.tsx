@@ -14,17 +14,15 @@ export function RoomJoiningForm() {
 
   return (
     <Form action={formAction} className="w-full">
-      <Input
-        type="text"
-        placeholder="Room ID"
-        name="roomId"
-        className="mb-1"
-        required
-      />
+      <div className="mb-1">
+        <Input type="text" placeholder="Room ID" name="roomId" required />
+        <div className="text-destructive text-sm">
+          {!state.success && state.message}
+        </div>
+      </div>
       <Button className="w-full font-bold" disabled={isPending}>
         {isPending ? <ReloadIcon className="animate-spin" /> : "JOIN ROOM"}
       </Button>
-      <div>{!state.success && state.message}</div>
     </Form>
   );
 }

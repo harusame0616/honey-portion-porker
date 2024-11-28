@@ -24,7 +24,9 @@ export function NewRoomCreationForm() {
           "CREATE ROOM"
         )}
       </Button>
-      <div>{state?.message}</div>
+      <div className="text-destructive text-sm">
+        {!state?.success && state?.message}
+      </div>
     </Form>
   );
 }
