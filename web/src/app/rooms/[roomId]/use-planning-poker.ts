@@ -1,0 +1,136 @@
+import { createBrowserClient } from "@supabase/ssr";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+
+type Params = {
+  roomId: string;
+  ownerRoomId?: string;
+  autoReset: boolean;
+};
+
+const client = createBrowserClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+let channel: ReturnType<(typeof client)["channel"]>;
+
+export function usePlanningPoker({ roomId, ownerRoomId, autoReset }: Params) {
+  const [users, setUsers] = useState<{ card: number; userId: string }[]>([]);
+  const [selectedCard, setSelectedCard] = useState<number>();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const router = useRouter();
+  const [lastOperationDatetime, setLastOperationDatetime] = useState<number>(
+    Date.now()
+  );
+
+  function updateLastOperationDatetime() {
+    setLastOperationDatetime(Date.now());
+  }
+
+  const reset = useCallback(async () => {
+    setIsOpen(false);
+    setSelectedCard(undefined);
+    await channel.track({ card: undefined });
+    await channel.send({ type: "broadcast", event: "reset" });
+  }, []);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (autoReset && ownerRoomId && isOpen) {
+        reset();
+      }
+    }, 1000 * 60 * 3);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [autoReset, isOpen, lastOperationDatetime, ownerRoomId, reset]);
+
+  useEffect(() => {
+    channel = client.channel(roomId);
+
+    channel
+      .on("presence", { event: "sync" }, () => {
+        updateLastOperationDatetime();
+        const newState = channel.presenceState<{
+          card: number;
+        }>();
+        setUsers(
+          Object.entries(newState).map(([userId, [{ card }]]) => ({
+            userId,
+            card,
+          }))
+        );
+      })
+      .on("broadcast", { event: "open" }, () => {
+        updateLastOperationDatetime();
+        setIsOpen(true);
+      })
+      .on("broadcast", { event: "close" }, () => {
+        updateLastOperationDatetime();
+        setIsOpen(false);
+      })
+      .on("broadcast", { event: "reset" }, async () => {
+        await channel.track({ card: undefined });
+        setSelectedCard(undefined);
+        setIsOpen(false);
+      })
+      .on("broadcast", { event: "refresh" }, async () => {
+        router.refresh();
+      })
+      .subscribe(async (status) => {
+        if (status !== "SUBSCRIBED") {
+          return;
+        }
+
+        await channel.track({
+          card: undefined,
+        });
+      });
+
+    return () => {
+      channel.unsubscribe();
+    };
+  }, [roomId, router]);
+
+  async function selectCard(number: number | undefined) {
+    setSelectedCard(number);
+    await channel.track({ card: number });
+  }
+  async function unselectCard() {
+    selectCard(undefined);
+  }
+
+  async function open() {
+    setIsOpen(true);
+    await channel.send({ type: "broadcast", event: "open" });
+  }
+
+  async function close() {
+    setIsOpen(false);
+    await channel.send({ type: "broadcast", event: "close" });
+  }
+
+  return {
+    selectCard,
+    unselectCard,
+    users,
+    open,
+    close,
+    isOpen,
+    reset,
+    selectedCard,
+    get selectedUsers() {
+      return users.filter(
+        (user) => user.card !== -1 && user.card !== undefined
+      );
+    },
+    updateLastOperationDatetime() {
+      setLastOperationDatetime(Date.now());
+    },
+    async sendEvent(event: "refresh") {
+      await channel.send({ type: "broadcast", event });
+    },
+  };
+}

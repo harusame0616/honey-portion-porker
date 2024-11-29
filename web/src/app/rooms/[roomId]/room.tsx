@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { createBrowserClient } from "@supabase/ssr";
 import { CoffeeIcon, EditIcon } from "lucide-react";
 import { Itim } from "next/font/google";
 import Form from "next/form";
@@ -21,16 +20,11 @@ import {
 } from "react";
 import cardIcon from "../../_resources/icon.svg";
 import { editNoteAction } from "./_actions/edit-note-action";
-import { CopyButton } from "./copy-button";
 import { AutoResetCheckbox } from "./_auto-reset-checkbox/auto-reset-checkbox";
+import { CopyButton } from "./copy-button";
+import { usePlanningPoker } from "./use-planning-poker";
 
 const cardList = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, -1];
-
-const client = createBrowserClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
-let channel: ReturnType<(typeof client)["channel"]>;
 
 const cuteFont = Itim({
   subsets: ["latin"],
@@ -40,7 +34,7 @@ const cuteFont = Itim({
 });
 export function Room({
   roomId,
-  note: initialNote,
+  note,
   ownerRoomId,
   memberRoomId,
   autoReset,
@@ -51,111 +45,20 @@ export function Room({
   memberRoomId: string;
   autoReset: boolean;
 }) {
-  const [isNoteEditing, setIsNoteEditing] = useState(false);
-  const [users, setUsers] = useState<{ card: number; userId: string }[]>([]);
-  const [selectedCard, setSelectedCard] = useState<number>();
-  const [isOpen, setIsOpen] = useState(false);
-  const [note, setNote] = useState(initialNote);
-
   const router = useRouter();
-  const [lastOperationDatetime, setLastOperationDatetime] = useState<number>(
-    Date.now()
-  );
-
-  function updateLastOperationDatetime() {
-    setLastOperationDatetime(Date.now());
-  }
-
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (autoReset && ownerRoomId && isOpen) {
-        reset();
-      }
-    }, 1000 * 60 * 3);
-
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [autoReset, isOpen, lastOperationDatetime, ownerRoomId]);
-
-  useEffect(() => {
-    channel = client.channel(roomId);
-
-    channel
-      .on("presence", { event: "sync" }, () => {
-        updateLastOperationDatetime();
-        const newState = channel.presenceState<{
-          card: number;
-        }>();
-        setUsers(
-          Object.entries(newState).map(([userId, [{ card }]]) => ({
-            userId,
-            card,
-          }))
-        );
-      })
-      .on("broadcast", { event: "open" }, () => {
-        updateLastOperationDatetime();
-        setIsOpen(true);
-      })
-      .on("broadcast", { event: "close" }, () => {
-        updateLastOperationDatetime();
-        setIsOpen(false);
-      })
-      .on("broadcast", { event: "reset" }, async () => {
-        await channel.track({ card: undefined });
-        setSelectedCard(undefined);
-        setIsOpen(false);
-      })
-      .on("broadcast", { event: "refresh" }, async () => {
-        router.refresh();
-      })
-      .subscribe(async (status) => {
-        if (status !== "SUBSCRIBED") {
-          return;
-        }
-
-        await channel.track({
-          card: undefined,
-        });
-      });
-
-    return () => {
-      channel.unsubscribe();
-    };
-  }, [roomId, router]);
-
-  useEffect(() => {
-    setNote(initialNote);
-  }, [initialNote]);
-
-  async function selectCard(number: number | undefined) {
-    setSelectedCard(number);
-    await channel.track({ card: number });
-  }
-  async function unselectCard() {
-    selectCard(undefined);
-  }
-
-  async function open() {
-    setIsOpen(true);
-    await channel.send({ type: "broadcast", event: "open" });
-  }
-
-  async function close() {
-    setIsOpen(false);
-    await channel.send({ type: "broadcast", event: "close" });
-  }
-
-  async function reset() {
-    setIsOpen(false);
-    setSelectedCard(undefined);
-    await channel.track({ card: undefined });
-    await channel.send({ type: "broadcast", event: "reset" });
-  }
-  const selectedUsers = users.filter(
-    (user) => user.card !== -1 && user.card !== undefined
-  );
+  const {
+    users,
+    selectedUsers,
+    selectedCard,
+    selectCard,
+    isOpen,
+    unselectCard,
+    open,
+    close,
+    sendEvent,
+    reset,
+  } = usePlanningPoker({ roomId, ownerRoomId, autoReset });
+  const [isNoteEditing, setIsNoteEditing] = useState(false);
 
   return (
     <div className="flex flex-col gap-4">
@@ -180,9 +83,8 @@ export function Room({
           <NoteEditionForm
             note={note}
             ownerRoomId={ownerRoomId}
-            onSubmit={async (newNote) => {
-              await channel.send({ type: "broadcast", event: "refresh" });
-              setNote(newNote);
+            onSubmit={async () => {
+              sendEvent("refresh");
               setIsNoteEditing(false);
               router.refresh();
             }}
@@ -279,7 +181,7 @@ export function Room({
             ownerRoomId={ownerRoomId}
             autoReset={autoReset}
             onChangedAutoReset={async () => {
-              await channel.send({ type: "broadcast", event: "refresh" });
+              sendEvent("refresh");
               router.refresh();
             }}
           />
