@@ -32,6 +32,7 @@ async function getRoom(
       ownerRoomId: roomSelect.data.ownerRoomId,
       memberRoomId: roomSelect.data.memberRoomId,
       note: roomSelect.data.note,
+      autoReset: roomSelect.data.autoReset,
     },
   };
 }
@@ -86,6 +87,7 @@ export default async function Page({
         <main>
           <Room
             roomId={roomGettingResult.data.roomId}
+            autoReset={roomGettingResult.data.autoReset}
             ownerRoomId={
               paramsParseResult.output.roomId ===
               roomGettingResult.data.ownerRoomId

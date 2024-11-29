@@ -1,11 +1,12 @@
 "use client";
 
+import { LabeledCheckbox } from "@/components/labeled-checkbox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { createBrowserClient } from "@supabase/ssr";
-import { CoffeeIcon, EditIcon } from "lucide-react";
+import { CheckIcon, CoffeeIcon, EditIcon, LoaderIcon } from "lucide-react";
 import { Itim } from "next/font/google";
 import Form from "next/form";
 import Image from "next/image";
@@ -17,10 +18,13 @@ import {
   ReactNode,
   useActionState,
   useEffect,
+  useOptimistic,
   useState,
+  useTransition,
 } from "react";
 import cardIcon from "../../_resources/icon.svg";
 import { editNoteAction } from "./_actions/edit-note-action";
+import { updateAutoResetConfigAction } from "./_actions/update-auto-reset-config";
 import { CopyButton } from "./copy-button";
 
 const cardList = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, -1];
@@ -42,11 +46,13 @@ export function Room({
   note: initialNote,
   ownerRoomId,
   memberRoomId,
+  autoReset,
 }: {
   roomId: string;
   note: string;
   ownerRoomId?: string;
   memberRoomId: string;
+  autoReset: boolean;
 }) {
   const [isNoteEditing, setIsNoteEditing] = useState(false);
   const [users, setUsers] = useState<{ card: number; userId: string }[]>([]);
@@ -55,12 +61,32 @@ export function Room({
   const [note, setNote] = useState(initialNote);
 
   const router = useRouter();
+  const [lastOperationDatetime, setLastOperationDatetime] = useState<number>(
+    Date.now()
+  );
+
+  function updateLastOperationDatetime() {
+    setLastOperationDatetime(Date.now());
+  }
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (autoReset && ownerRoomId && isOpen) {
+        reset();
+      }
+    }, 1000);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [autoReset, isOpen, lastOperationDatetime, ownerRoomId]);
 
   useEffect(() => {
     channel = client.channel(roomId);
 
     channel
       .on("presence", { event: "sync" }, () => {
+        updateLastOperationDatetime();
         const newState = channel.presenceState<{
           card: number;
         }>();
@@ -72,9 +98,11 @@ export function Room({
         );
       })
       .on("broadcast", { event: "open" }, () => {
+        updateLastOperationDatetime();
         setIsOpen(true);
       })
       .on("broadcast", { event: "close" }, () => {
+        updateLastOperationDatetime();
         setIsOpen(false);
       })
       .on("broadcast", { event: "reset" }, async () => {
@@ -82,7 +110,7 @@ export function Room({
         setSelectedCard(undefined);
         setIsOpen(false);
       })
-      .on("broadcast", { event: "updateNote" }, async () => {
+      .on("broadcast", { event: "refresh" }, async () => {
         router.refresh();
       })
       .subscribe(async (status) => {
@@ -156,7 +184,7 @@ export function Room({
             note={note}
             ownerRoomId={ownerRoomId}
             onSubmit={async (newNote) => {
-              await channel.send({ type: "broadcast", event: "updateNote" });
+              await channel.send({ type: "broadcast", event: "refresh" });
               setNote(newNote);
               setIsNoteEditing(false);
               router.refresh();
@@ -248,6 +276,18 @@ export function Room({
           </span>
         </div>
       </Section>
+      {ownerRoomId && (
+        <Section title="Configures">
+          <AutoResetCheckbox
+            ownerRoomId={ownerRoomId}
+            autoReset={autoReset}
+            onChangedAutoReset={async () => {
+              await channel.send({ type: "broadcast", event: "refresh" });
+              router.refresh();
+            }}
+          />
+        </Section>
+      )}
 
       <Section title="Room information" className="flex flex-col gap-2">
         <label>
@@ -313,6 +353,68 @@ function NoteEditionForm({
         <Button disabled={isPending}>Save</Button>
       </div>
     </Form>
+  );
+}
+
+type AutoResetCheckboxProps = {
+  ownerRoomId: string;
+  autoReset: boolean;
+  onChangedAutoReset: (newNote: boolean) => void;
+};
+function AutoResetCheckbox({
+  ownerRoomId,
+  onChangedAutoReset: onChangedAutoReset,
+  autoReset,
+}: AutoResetCheckboxProps) {
+  const [isPending, startTransition] = useTransition();
+
+  const [optimisticState, addOptimisticState] = useOptimistic(autoReset);
+  const [isFinished, setIsFinished] = useState(false);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setIsFinished(false);
+    }, 60 * 1000 * 3);
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [isFinished]);
+
+  function saveAutoReset() {
+    startTransition(async () => {
+      const newAutoReset = !autoReset;
+      addOptimisticState(!optimisticState);
+      const result = await updateAutoResetConfigAction(
+        ownerRoomId,
+        newAutoReset
+      );
+      if (!result.success) {
+        return;
+      }
+      setIsFinished(true);
+      onChangedAutoReset(newAutoReset);
+    });
+  }
+
+  return (
+    <LabeledCheckbox
+      onCheckedChange={saveAutoReset}
+      checked={optimisticState}
+      className="text-sm"
+    >
+      Auto Reset{" "}
+      {isPending && <LoaderIcon className="animate-spin size-4 ml-2" />}
+      {isFinished && (
+        <CheckIcon
+          className="size-4 ml-2 text-green-600 font-bold "
+          strokeWidth={4}
+        />
+      )}
+      <span className="text-xs text-muted-foreground ml-2">
+        （選択肢をオープンしたあと、操作のない時間が 3
+        分経過した場合、自動でリセットする）
+      </span>
+    </LabeledCheckbox>
   );
 }
 
