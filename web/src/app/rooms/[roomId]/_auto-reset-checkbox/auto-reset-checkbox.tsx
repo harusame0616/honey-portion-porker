@@ -1,5 +1,3 @@
-"use client";
-
 import { LabeledCheckbox } from "@/components/labeled-checkbox";
 import { CheckIcon, LoaderIcon } from "lucide-react";
 import { useEffect, useState } from "react";
