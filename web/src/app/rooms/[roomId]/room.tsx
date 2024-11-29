@@ -4,10 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { CoffeeIcon, EditIcon } from "lucide-react";
-import { Itim } from "next/font/google";
+import { EditIcon } from "lucide-react";
 import Form from "next/form";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   DetailedHTMLProps,
@@ -18,20 +16,14 @@ import {
   useEffect,
   useState,
 } from "react";
-import cardIcon from "../../_resources/icon.svg";
 import { editNoteAction } from "./_actions/edit-note-action";
 import { AutoResetCheckbox } from "./_auto-reset-checkbox/auto-reset-checkbox";
+import { Card } from "./card";
 import { CopyButton } from "./copy-button";
 import { usePlanningPoker } from "./use-planning-poker";
 
 const cardList = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, -1];
 
-const cuteFont = Itim({
-  subsets: ["latin"],
-  display: "swap",
-  weight: "400",
-  style: "normal",
-});
 export function Room({
   roomId,
   note,
@@ -252,32 +244,6 @@ function NoteEditionForm({
         <Button disabled={isPending}>Save</Button>
       </div>
     </Form>
-  );
-}
-
-type CardProps = PropsWithChildren<{
-  isOpen: boolean;
-  selected: boolean;
-}>;
-function Card({ children, isOpen, selected }: CardProps) {
-  return (
-    <div
-      className={cn(
-        "h-20 w-12 border-gray-500 border-2 rounded-md flex items-center justify-center text-4xl font-bold bg-white",
-        cuteFont.className,
-        selected ? "bg-primary" : ""
-      )}
-    >
-      {isOpen ? (
-        children === -1 ? (
-          <CoffeeIcon className="size-10 text-2xl" />
-        ) : (
-          children
-        )
-      ) : (
-        <Image alt="" src={cardIcon} width={30} />
-      )}
-    </div>
   );
 }
 
