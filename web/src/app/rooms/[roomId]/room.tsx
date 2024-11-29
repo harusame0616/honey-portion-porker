@@ -71,7 +71,7 @@ export function Room({
       if (autoReset && ownerRoomId && isOpen) {
         reset();
       }
-    }, 1000);
+    }, 1000 * 60 * 3);
 
     return () => {
       clearTimeout(timeoutId);
