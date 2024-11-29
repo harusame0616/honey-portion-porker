@@ -82,7 +82,7 @@ export function Room({
             }}
           />
         ) : (
-          <p className="whitespace-pre-wrap">{note || "-"}</p>
+          <p className="whitespace-pre-wrap break-all">{note || "-"}</p>
         )}
       </Section>
 
