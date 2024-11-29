@@ -1,6 +1,6 @@
 import { createBrowserClient } from "@supabase/ssr";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type Params = {
   roomId: string;
@@ -15,8 +15,8 @@ const client = createBrowserClient(
 let channel: ReturnType<(typeof client)["channel"]>;
 
 export function usePlanningPoker({ roomId, ownerRoomId, autoReset }: Params) {
+  const userId = useRef<string>(window.crypto.randomUUID());
   const [users, setUsers] = useState<{ card: number; userId: string }[]>([]);
-  const [selectedCard, setSelectedCard] = useState<number>();
   const [isOpen, setIsOpen] = useState(false);
 
   const router = useRouter();
@@ -30,8 +30,7 @@ export function usePlanningPoker({ roomId, ownerRoomId, autoReset }: Params) {
 
   const reset = useCallback(async () => {
     setIsOpen(false);
-    setSelectedCard(undefined);
-    await channel.track({ card: undefined });
+    await channel.track({ card: undefined, userId: userId.current });
     await channel.send({ type: "broadcast", event: "reset" });
   }, []);
 
@@ -55,9 +54,10 @@ export function usePlanningPoker({ roomId, ownerRoomId, autoReset }: Params) {
         updateLastOperationDatetime();
         const newState = channel.presenceState<{
           card: number;
+          userId: string;
         }>();
         setUsers(
-          Object.entries(newState).map(([userId, [{ card }]]) => ({
+          Object.values(newState).map(([{ card, userId }]) => ({
             userId,
             card,
           }))
@@ -72,8 +72,7 @@ export function usePlanningPoker({ roomId, ownerRoomId, autoReset }: Params) {
         setIsOpen(false);
       })
       .on("broadcast", { event: "reset" }, async () => {
-        await channel.track({ card: undefined });
-        setSelectedCard(undefined);
+        await channel.track({ card: undefined, userId: userId.current });
         setIsOpen(false);
       })
       .on("broadcast", { event: "refresh" }, async () => {
@@ -84,9 +83,7 @@ export function usePlanningPoker({ roomId, ownerRoomId, autoReset }: Params) {
           return;
         }
 
-        await channel.track({
-          card: undefined,
-        });
+        await channel.track({ card: undefined, userId: userId.current });
       });
 
     return () => {
@@ -95,8 +92,7 @@ export function usePlanningPoker({ roomId, ownerRoomId, autoReset }: Params) {
   }, [roomId, router]);
 
   async function selectCard(number: number | undefined) {
-    setSelectedCard(number);
-    await channel.track({ card: number });
+    await channel.track({ card: number, userId: userId.current });
   }
   async function unselectCard() {
     selectCard(undefined);
@@ -120,7 +116,9 @@ export function usePlanningPoker({ roomId, ownerRoomId, autoReset }: Params) {
     close,
     isOpen,
     reset,
-    selectedCard,
+    get selectedCard() {
+      return users.find((user) => user.userId === userId.current)?.card;
+    },
     get selectedUsers() {
       return users.filter(
         (user) => user.card !== -1 && user.card !== undefined
