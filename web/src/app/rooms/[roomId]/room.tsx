@@ -21,6 +21,7 @@ import { AutoResetCheckbox } from "./_auto-reset-checkbox/auto-reset-checkbox";
 import { Card } from "./card";
 import { CopyButton } from "./copy-button";
 import { usePlanningPoker } from "./use-planning-poker";
+import { AutoOpenCheckbox } from "./_auto-open-checkbox/auto-open-checkbox";
 
 const cardList = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, -1];
 
@@ -30,12 +31,14 @@ export function Room({
   ownerRoomId,
   memberRoomId,
   autoReset,
+  autoOpen,
 }: {
   roomId: string;
   note: string;
   ownerRoomId?: string;
   memberRoomId: string;
   autoReset: boolean;
+  autoOpen: boolean;
 }) {
   const router = useRouter();
   const {
@@ -49,7 +52,7 @@ export function Room({
     close,
     sendEvent,
     reset,
-  } = usePlanningPoker({ roomId, ownerRoomId, autoReset });
+  } = usePlanningPoker({ roomId, ownerRoomId, autoReset, autoOpen });
   const [isNoteEditing, setIsNoteEditing] = useState(false);
 
   return (
@@ -168,10 +171,18 @@ export function Room({
         </div>
       </Section>
       {ownerRoomId && (
-        <Section title="Configures">
+        <Section title="Configures" className="flex flex-col gap-2">
           <AutoResetCheckbox
             ownerRoomId={ownerRoomId}
             autoReset={autoReset}
+            onChangedAutoReset={async () => {
+              sendEvent("refresh");
+              router.refresh();
+            }}
+          />
+          <AutoOpenCheckbox
+            ownerRoomId={ownerRoomId}
+            autoOpen={autoOpen}
             onChangedAutoReset={async () => {
               sendEvent("refresh");
               router.refresh();

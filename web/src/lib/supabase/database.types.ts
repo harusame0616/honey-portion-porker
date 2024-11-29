@@ -11,6 +11,7 @@ export type Database = {
     Tables: {
       room: {
         Row: {
+          autoOpen: boolean
           autoReset: boolean
           createdAt: string
           memberRoomId: string
@@ -20,6 +21,7 @@ export type Database = {
           updatedAt: string | null
         }
         Insert: {
+          autoOpen?: boolean
           autoReset?: boolean
           createdAt?: string
           memberRoomId?: string
@@ -29,6 +31,7 @@ export type Database = {
           updatedAt?: string | null
         }
         Update: {
+          autoOpen?: boolean
           autoReset?: boolean
           createdAt?: string
           memberRoomId?: string

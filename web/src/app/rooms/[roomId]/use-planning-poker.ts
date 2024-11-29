@@ -6,6 +6,7 @@ type Params = {
   roomId: string;
   ownerRoomId?: string;
   autoReset: boolean;
+  autoOpen: boolean;
 };
 
 const client = createBrowserClient(
@@ -14,7 +15,12 @@ const client = createBrowserClient(
 );
 let channel: ReturnType<(typeof client)["channel"]>;
 
-export function usePlanningPoker({ roomId, ownerRoomId, autoReset }: Params) {
+export function usePlanningPoker({
+  roomId,
+  ownerRoomId,
+  autoReset,
+  autoOpen,
+}: Params) {
   const userId = useRef<string>(window.crypto.randomUUID());
   const [users, setUsers] = useState<{ card: number; userId: string }[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -45,6 +51,19 @@ export function usePlanningPoker({ roomId, ownerRoomId, autoReset }: Params) {
       clearTimeout(timeoutId);
     };
   }, [autoReset, isOpen, lastOperationDatetime, ownerRoomId, reset]);
+
+  useEffect(() => {
+    if (
+      ownerRoomId &&
+      !isOpen &&
+      autoOpen &&
+      users.length > 1 &&
+      users.filter((user) => user.card !== -1 && user.card !== undefined)
+        .length === users.length
+    ) {
+      open();
+    }
+  }, [users]);
 
   useEffect(() => {
     channel = client.channel(roomId);
