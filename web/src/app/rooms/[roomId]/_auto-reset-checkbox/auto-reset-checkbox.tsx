@@ -2,6 +2,7 @@ import { LabeledCheckbox } from "@/components/labeled-checkbox";
 import { CheckIcon, LoaderIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAutoResetSaving } from "./use-auto-reset-saving";
+import { AUTO_OPEN_MINUTES } from "../use-planning-poker";
 
 type props = {
   ownerRoomId: string;
@@ -62,7 +63,7 @@ export function AutoResetCheckbox({
         />
       )}
       <span className="text-xs text-muted-foreground ml-2">
-        （選択肢をオープンしたあと、操作のない時間が 3
+        （選択肢をオープンしたあと、操作のない時間が {AUTO_OPEN_MINUTES}
         分経過した場合、自動でリセットする）
       </span>
     </LabeledCheckbox>

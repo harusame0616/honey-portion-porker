@@ -9,6 +9,8 @@ type Params = {
   autoOpen: boolean;
 };
 
+export const AUTO_OPEN_MINUTES = 1;
+
 const client = createBrowserClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -45,7 +47,7 @@ export function usePlanningPoker({
       if (autoReset && ownerRoomId && isOpen) {
         reset();
       }
-    }, 1000 * 60 * 3);
+    }, 1000 * 60 * AUTO_OPEN_MINUTES);
 
     return () => {
       clearTimeout(timeoutId);
