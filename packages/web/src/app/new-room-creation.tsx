@@ -2,9 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { createNewRoomAction } from "./_actions/create-new-room-action";
-import { useRouter } from "next/navigation";
 
 export function NewRoomCreation() {
 	const [errorMessage, setErrorMessage] = useState("");
