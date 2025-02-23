@@ -1,28 +1,54 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ReloadIcon } from "@radix-ui/react-icons";
-import Form from "next/form";
-import { useActionState } from "react";
-import { joinRoomAction } from "./_actions/join-room-action";
+import { valibotResolver } from "@hookform/resolvers/valibot";
+import { useRouter } from "next/navigation";
+import { useId } from "react";
+import { useForm } from "react-hook-form";
+import * as v from "valibot";
+
+const formSchema = v.object({
+	roomId: v.pipe(
+		v.string(),
+		v.minLength(1, "ルーム ID の入力を入力してください。"),
+		v.uuid("ルーム ID は UUID 形式で入力してください。"),
+	),
+});
 
 export function RoomJoiningForm() {
-	const [state, formAction, isPending] = useActionState(joinRoomAction, {
-		success: false,
-		message: "",
+	const roomIdInputId = useId();
+	const router = useRouter();
+
+	const { register, handleSubmit, formState } = useForm<
+		v.InferOutput<typeof formSchema>
+	>({
+		defaultValues: {
+			roomId: "",
+		},
+		resolver: valibotResolver(formSchema),
 	});
 
+	async function enterRoom(params: { roomId: string }) {
+		router.push(`/rooms/${params.roomId}`);
+	}
+
 	return (
-		<Form action={formAction} className="w-full">
-			<div className="mb-1">
-				<Input type="text" placeholder="Room ID" name="roomId" required />
-				<div className="text-destructive text-sm">
-					{!state.success && state.message}
-				</div>
+		<form onSubmit={handleSubmit(enterRoom)} noValidate>
+			<label className="mb-1 text-sm font-bold" htmlFor={roomIdInputId}>
+				ルーム ID
+			</label>
+			<div className="flex gap-1">
+				<Input
+					type="text"
+					required
+					{...register("roomId")}
+					id={roomIdInputId}
+				/>
+				<Button className="font-bold">入室</Button>
 			</div>
-			<Button className="w-full font-bold" disabled={isPending}>
-				{isPending ? <ReloadIcon className="animate-spin" /> : "JOIN ROOM"}
-			</Button>
-		</Form>
+			<div className="text-destructive text-sm mt-1" aria-live="polite">
+				{formState.errors.roomId?.message}
+			</div>
+		</form>
 	);
 }
