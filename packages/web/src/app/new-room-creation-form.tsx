@@ -7,26 +7,26 @@ import { useActionState } from "react";
 import { createNewRoomAction } from "./_actions/create-new-room-action";
 
 export function NewRoomCreationForm() {
-  const [state, formAction, isPending] = useActionState(
-    createNewRoomAction,
-    undefined
-  );
-  return (
-    <Form action={formAction} className="w-full">
-      <Button disabled={isPending} className="w-full font-bold">
-        {isPending ? (
-          <ReloadIcon
-            className="animate-spin"
-            role="img"
-            aria-label="Creating new room"
-          />
-        ) : (
-          "CREATE ROOM"
-        )}
-      </Button>
-      <div className="text-destructive text-sm">
-        {!state?.success && state?.message}
-      </div>
-    </Form>
-  );
+	const [state, formAction, isPending] = useActionState(
+		createNewRoomAction,
+		undefined,
+	);
+	return (
+		<Form action={formAction} className="w-full">
+			<Button disabled={isPending} className="w-full font-bold">
+				{isPending ? (
+					<ReloadIcon
+						className="animate-spin"
+						role="img"
+						aria-label="Creating new room"
+					/>
+				) : (
+					"CREATE ROOM"
+				)}
+			</Button>
+			<div className="text-destructive text-sm">
+				{!state?.success && state?.message}
+			</div>
+		</Form>
+	);
 }

@@ -3,153 +3,161 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 type Params = {
-  roomId: string;
-  ownerRoomId?: string;
-  autoReset: boolean;
-  autoOpen: boolean;
+	roomId: string;
+	ownerRoomId?: string;
+	autoReset: boolean;
+	autoOpen: boolean;
 };
 
 export const AUTO_OPEN_MINUTES = 1;
 
 const client = createBrowserClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+	// biome-ignore lint/style/noNonNullAssertion: <explanation>
+	process.env.NEXT_PUBLIC_SUPABASE_URL!,
+	// biome-ignore lint/style/noNonNullAssertion: <explanation>
+	process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 );
 let channel: ReturnType<(typeof client)["channel"]>;
 
 export function usePlanningPoker({
-  roomId,
-  ownerRoomId,
-  autoReset,
-  autoOpen,
+	roomId,
+	ownerRoomId,
+	autoReset,
+	autoOpen,
 }: Params) {
-  const userId = useRef<string>(window.crypto.randomUUID());
-  const [users, setUsers] = useState<{ card: number; userId: string }[]>([]);
-  const [isOpen, setIsOpen] = useState(false);
+	const userId = useRef<string>(window.crypto.randomUUID());
+	const [users, setUsers] = useState<{ card: number; userId: string }[]>([]);
+	const [isOpen, setIsOpen] = useState(false);
 
-  const router = useRouter();
-  const [lastOperationDatetime, setLastOperationDatetime] = useState<number>(
-    Date.now()
-  );
+	const router = useRouter();
+	const [lastOperationDatetime, setLastOperationDatetime] = useState<number>(
+		Date.now(),
+	);
 
-  function updateLastOperationDatetime() {
-    setLastOperationDatetime(Date.now());
-  }
+	function updateLastOperationDatetime() {
+		setLastOperationDatetime(Date.now());
+	}
 
-  const reset = useCallback(async () => {
-    setIsOpen(false);
-    await channel.track({ card: undefined, userId: userId.current });
-    await channel.send({ type: "broadcast", event: "reset" });
-  }, []);
+	const reset = useCallback(async () => {
+		setIsOpen(false);
+		await channel.track({ card: undefined, userId: userId.current });
+		await channel.send({ type: "broadcast", event: "reset" });
+	}, []);
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (autoReset && ownerRoomId && isOpen) {
-        reset();
-      }
-    }, 1000 * 60 * AUTO_OPEN_MINUTES);
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		const timeoutId = setTimeout(
+			() => {
+				if (autoReset && ownerRoomId && isOpen) {
+					reset();
+				}
+			},
+			1000 * 60 * AUTO_OPEN_MINUTES,
+		);
 
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [autoReset, isOpen, lastOperationDatetime, ownerRoomId, reset]);
+		return () => {
+			clearTimeout(timeoutId);
+		};
+	}, [autoReset, isOpen, lastOperationDatetime, ownerRoomId, reset]);
 
-  useEffect(() => {
-    if (
-      ownerRoomId &&
-      !isOpen &&
-      autoOpen &&
-      users.length > 1 &&
-      users.filter((user) => user.card !== -1 && user.card !== undefined)
-        .length === users.length
-    ) {
-      open();
-    }
-  }, [users]);
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		if (
+			ownerRoomId &&
+			!isOpen &&
+			autoOpen &&
+			users.length > 1 &&
+			users.filter((user) => user.card !== -1 && user.card !== undefined)
+				.length === users.length
+		) {
+			open();
+		}
+	}, [users]);
 
-  useEffect(() => {
-    channel = client.channel(roomId);
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		channel = client.channel(roomId);
 
-    channel
-      .on("presence", { event: "sync" }, () => {
-        updateLastOperationDatetime();
-        const newState = channel.presenceState<{
-          card: number;
-          userId: string;
-        }>();
-        setUsers(
-          Object.values(newState).map(([{ card, userId }]) => ({
-            userId,
-            card,
-          }))
-        );
-      })
-      .on("broadcast", { event: "open" }, () => {
-        updateLastOperationDatetime();
-        setIsOpen(true);
-      })
-      .on("broadcast", { event: "close" }, () => {
-        updateLastOperationDatetime();
-        setIsOpen(false);
-      })
-      .on("broadcast", { event: "reset" }, async () => {
-        await channel.track({ card: undefined, userId: userId.current });
-        setIsOpen(false);
-      })
-      .on("broadcast", { event: "refresh" }, async () => {
-        router.refresh();
-      })
-      .subscribe(async (status) => {
-        if (status !== "SUBSCRIBED") {
-          return;
-        }
+		channel
+			.on("presence", { event: "sync" }, () => {
+				updateLastOperationDatetime();
+				const newState = channel.presenceState<{
+					card: number;
+					userId: string;
+				}>();
+				setUsers(
+					Object.values(newState).map(([{ card, userId }]) => ({
+						userId,
+						card,
+					})),
+				);
+			})
+			.on("broadcast", { event: "open" }, () => {
+				updateLastOperationDatetime();
+				setIsOpen(true);
+			})
+			.on("broadcast", { event: "close" }, () => {
+				updateLastOperationDatetime();
+				setIsOpen(false);
+			})
+			.on("broadcast", { event: "reset" }, async () => {
+				await channel.track({ card: undefined, userId: userId.current });
+				setIsOpen(false);
+			})
+			.on("broadcast", { event: "refresh" }, async () => {
+				router.refresh();
+			})
+			.subscribe(async (status) => {
+				if (status !== "SUBSCRIBED") {
+					return;
+				}
 
-        await channel.track({ card: undefined, userId: userId.current });
-      });
+				await channel.track({ card: undefined, userId: userId.current });
+			});
 
-    return () => {
-      channel.unsubscribe();
-    };
-  }, [roomId, router]);
+		return () => {
+			channel.unsubscribe();
+		};
+	}, [roomId, router]);
 
-  async function selectCard(number: number | undefined) {
-    await channel.track({ card: number, userId: userId.current });
-  }
-  async function unselectCard() {
-    selectCard(undefined);
-  }
+	async function selectCard(number: number | undefined) {
+		await channel.track({ card: number, userId: userId.current });
+	}
+	async function unselectCard() {
+		selectCard(undefined);
+	}
 
-  async function open() {
-    setIsOpen(true);
-    await channel.send({ type: "broadcast", event: "open" });
-  }
+	async function open() {
+		setIsOpen(true);
+		await channel.send({ type: "broadcast", event: "open" });
+	}
 
-  async function close() {
-    setIsOpen(false);
-    await channel.send({ type: "broadcast", event: "close" });
-  }
+	async function close() {
+		setIsOpen(false);
+		await channel.send({ type: "broadcast", event: "close" });
+	}
 
-  return {
-    selectCard,
-    unselectCard,
-    users,
-    open,
-    close,
-    isOpen,
-    reset,
-    get selectedCard() {
-      return users.find((user) => user.userId === userId.current)?.card;
-    },
-    get selectedUsers() {
-      return users.filter(
-        (user) => user.card !== -1 && user.card !== undefined
-      );
-    },
-    updateLastOperationDatetime() {
-      setLastOperationDatetime(Date.now());
-    },
-    async sendEvent(event: "refresh") {
-      await channel.send({ type: "broadcast", event });
-    },
-  };
+	return {
+		selectCard,
+		unselectCard,
+		users,
+		open,
+		close,
+		isOpen,
+		reset,
+		get selectedCard() {
+			return users.find((user) => user.userId === userId.current)?.card;
+		},
+		get selectedUsers() {
+			return users.filter(
+				(user) => user.card !== -1 && user.card !== undefined,
+			);
+		},
+		updateLastOperationDatetime() {
+			setLastOperationDatetime(Date.now());
+		},
+		async sendEvent(event: "refresh") {
+			await channel.send({ type: "broadcast", event });
+		},
+	};
 }

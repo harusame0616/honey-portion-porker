@@ -5,37 +5,38 @@ import { redirect } from "next/navigation";
 import * as v from "valibot";
 
 const actionParamsSchema = v.object({
-  roomId: v.pipe(v.string(), v.uuid()),
+	roomId: v.pipe(v.string(), v.uuid()),
 });
 
 export async function joinRoomAction(
-  _state: any,
-  formData: FormData
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	_state: any,
+	formData: FormData,
 ): Promise<{ success: false; message: string }> {
-  const paramsParsedResult = v.safeParse(
-    actionParamsSchema,
-    Object.fromEntries(formData.entries())
-  );
-  if (!paramsParsedResult.success) {
-    return { success: false as const, message: "The room id is invalid" };
-  }
+	const paramsParsedResult = v.safeParse(
+		actionParamsSchema,
+		Object.fromEntries(formData.entries()),
+	);
+	if (!paramsParsedResult.success) {
+		return { success: false as const, message: "The room id is invalid" };
+	}
 
-  const client = await createClient();
+	const client = await createClient();
 
-  const result = await client
-    .from("room")
-    .select("*")
-    .or(
-      `memberRoomId.eq.${paramsParsedResult.output.roomId},ownerRoomId.eq.${paramsParsedResult.output.roomId}`
-    )
-    .single();
+	const result = await client
+		.from("room")
+		.select("*")
+		.or(
+			`memberRoomId.eq.${paramsParsedResult.output.roomId},ownerRoomId.eq.${paramsParsedResult.output.roomId}`,
+		)
+		.single();
 
-  if (result.error) {
-    return {
-      success: false,
-      message: "The room is not found",
-    };
-  }
+	if (result.error) {
+		return {
+			success: false,
+			message: "The room is not found",
+		};
+	}
 
-  return redirect(`/rooms/${paramsParsedResult.output.roomId}`);
+	return redirect(`/rooms/${paramsParsedResult.output.roomId}`);
 }
