@@ -1,5 +1,5 @@
 import { ServiceTitle } from "@/components/service-title";
-import { NewRoomCreationForm } from "./new-room-creation-form";
+import { NewRoomCreation } from "./new-room-creation";
 import { RoomJoiningForm } from "./room-joining-form";
 
 export default function Home() {
@@ -38,7 +38,7 @@ export default function Home() {
 
 					<div className="flex justify-center">
 						<div className="p-8 flex flex-col items-center gap-4 w-60">
-							<NewRoomCreationForm />
+							<NewRoomCreation />
 							<div>or</div>
 							<RoomJoiningForm />
 						</div>
