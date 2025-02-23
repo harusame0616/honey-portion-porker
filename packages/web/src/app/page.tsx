@@ -37,10 +37,12 @@ export default function Home() {
 					</p>
 
 					<div className="flex justify-center">
-						<div className="p-8 flex flex-col items-center gap-4 w-60">
+						<div className="p-8 max-w-96 w-full">
 							<NewRoomCreation />
-							<div>or</div>
-							<RoomJoiningForm />
+							<div className="mt-8">
+								<div className="mb-2 text-sm">または既存のルームに入室する</div>
+								<RoomJoiningForm />
+							</div>
 						</div>
 					</div>
 				</div>

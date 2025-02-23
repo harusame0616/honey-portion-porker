@@ -14,6 +14,9 @@ importers:
 
   packages/web:
     dependencies:
+      '@hookform/resolvers':
+        specifier: 4.1.0
+        version: 4.1.0(react-hook-form@7.52.1(react@19.0.0-rc-02c0e824-20241028))
       '@radix-ui/react-checkbox':
         specifier: 1.1.2
         version: 1.1.2(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@19.0.0-rc-02c0e824-20241028(react@19.0.0-rc-02c0e824-20241028))(react@19.0.0-rc-02c0e824-20241028)
@@ -53,6 +56,9 @@ importers:
       react-dom:
         specifier: 19.0.0-rc-02c0e824-20241028
         version: 19.0.0-rc-02c0e824-20241028(react@19.0.0-rc-02c0e824-20241028)
+      react-hook-form:
+        specifier: 7.52.1
+        version: 7.52.1(react@19.0.0-rc-02c0e824-20241028)
       tailwind-merge:
         specifier: 2.5.4
         version: 2.5.4
@@ -60,8 +66,8 @@ importers:
         specifier: 1.0.7
         version: 1.0.7(tailwindcss@3.4.1)
       valibot:
-        specifier: 0.42.1
-        version: 0.42.1(typescript@5.7.3)
+        specifier: 1.0.0-rc.1
+        version: 1.0.0-rc.1(typescript@5.7.3)
     devDependencies:
       '@biomejs/biome':
         specifier: ^1.9.4
@@ -363,6 +369,11 @@ packages:
   '@gwhitney/detect-indent@7.0.1':
     resolution: {integrity: sha512-7bQW+gkKa2kKZPeJf6+c6gFK9ARxQfn+FKy9ScTBppyKRWH2KzsmweXUoklqeEiHiNVWaeP5csIdsNq6w7QhzA==}
     engines: {node: '>=12.20'}
+
+  '@hookform/resolvers@4.1.0':
+    resolution: {integrity: sha512-fX/uHKb+OOCpACLc6enuTQsf0ZpRrKbeBBPETg5PCPLCIYV6osP2Bw6ezuclM61lH+wBF9eXcuC0+BFh9XOEnQ==}
+    peerDependencies:
+      react-hook-form: ^7.0.0
 
   '@img/sharp-darwin-arm64@0.33.5':
     resolution: {integrity: sha512-UT4p+iz/2H4twwAoLCqfA9UH5pI6DggwKEGuaPy7nCVQ8ZsiY5PIcrRvD1DzuY3qYL07NtIQcWnBSY/heikIFQ==}
@@ -2980,6 +2991,12 @@ packages:
     peerDependencies:
       react: 19.0.0-rc-02c0e824-20241028
 
+  react-hook-form@7.52.1:
+    resolution: {integrity: sha512-uNKIhaoICJ5KQALYZ4TOaOLElyM+xipord+Ha3crEFhTntdLvWZqVY49Wqd/0GiVCA/f9NjemLeiNPjG7Hpurg==}
+    engines: {node: '>=12.22.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18 || ^19
+
   react@19.0.0-rc-02c0e824-20241028:
     resolution: {integrity: sha512-GbZ7hpPHQMiEu53BqEaPQVM/4GG4hARo+mqEEnx4rYporDvNvUjutiAFxYFSbu6sgHwcr7LeFv8htEOwALVA2A==}
     engines: {node: '>=0.10.0'}
@@ -3511,8 +3528,8 @@ packages:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
     hasBin: true
 
-  valibot@0.42.1:
-    resolution: {integrity: sha512-3keXV29Ar5b//Hqi4MbSdV7lfVp6zuYLZuA9V1PvQUsXqogr+u5lvLPLk3A4f74VUXDnf/JfWMN6sB+koJ/FFw==}
+  valibot@1.0.0-rc.1:
+    resolution: {integrity: sha512-bTHNpeeQ403xS7qGHF/tw3EC/zkZOU5VdkfIsmRDu1Sp+BJNTNCm6m5HlwOgyW/03lofP+uQiq3R+Poo9wiCEg==}
     peerDependencies:
       typescript: '>=5'
     peerDependenciesMeta:
@@ -4451,6 +4468,11 @@ snapshots:
     optional: true
 
   '@gwhitney/detect-indent@7.0.1': {}
+
+  '@hookform/resolvers@4.1.0(react-hook-form@7.52.1(react@19.0.0-rc-02c0e824-20241028))':
+    dependencies:
+      caniuse-lite: 1.0.30001700
+      react-hook-form: 7.52.1(react@19.0.0-rc-02c0e824-20241028)
 
   '@img/sharp-darwin-arm64@0.33.5':
     optionalDependencies:
@@ -7284,6 +7306,10 @@ snapshots:
       react: 19.0.0-rc-02c0e824-20241028
       scheduler: 0.25.0-rc-02c0e824-20241028
 
+  react-hook-form@7.52.1(react@19.0.0-rc-02c0e824-20241028):
+    dependencies:
+      react: 19.0.0-rc-02c0e824-20241028
+
   react@19.0.0-rc-02c0e824-20241028: {}
 
   read-cache@1.0.0:
@@ -8036,7 +8062,7 @@ snapshots:
 
   uuid@9.0.1: {}
 
-  valibot@0.42.1(typescript@5.7.3):
+  valibot@1.0.0-rc.1(typescript@5.7.3):
     optionalDependencies:
       typescript: 5.7.3
 
