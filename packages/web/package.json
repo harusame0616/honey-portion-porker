@@ -6,7 +6,6 @@
 		"dev": "next dev --turbopack",
 		"build": "next build",
 		"start": "next start",
-		"lint": "next lint",
 		"lint:check": "biome lint .",
 		"lint:write": "biome format --write .",
 		"format:check": "biome format .",

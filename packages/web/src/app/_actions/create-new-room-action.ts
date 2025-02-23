@@ -1,6 +1,6 @@
 "use server";
 
-import { randomUUID } from "crypto";
+import { randomUUID } from "node:crypto";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 

@@ -192,6 +192,7 @@ export function Room({
 			)}
 
 			<Section title="Room information" className="flex flex-col gap-2">
+				{/* biome-ignore lint/a11y/noLabelWithoutControl: <explanation> */}
 				<label>
 					ID
 					<div className="flex">
@@ -204,6 +205,7 @@ export function Room({
 						<CopyButton text={memberRoomId} />
 					</div>
 				</label>
+				{/* biome-ignore lint/a11y/noLabelWithoutControl: <explanation> */}
 				<label>
 					Member URL
 					<div className="flex">

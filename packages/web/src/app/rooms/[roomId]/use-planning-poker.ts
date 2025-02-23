@@ -12,7 +12,9 @@ type Params = {
 export const AUTO_OPEN_MINUTES = 1;
 
 const client = createBrowserClient(
+	// biome-ignore lint/style/noNonNullAssertion: <explanation>
 	process.env.NEXT_PUBLIC_SUPABASE_URL!,
+	// biome-ignore lint/style/noNonNullAssertion: <explanation>
 	process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 );
 let channel: ReturnType<(typeof client)["channel"]>;
@@ -42,6 +44,7 @@ export function usePlanningPoker({
 		await channel.send({ type: "broadcast", event: "reset" });
 	}, []);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		const timeoutId = setTimeout(
 			() => {
@@ -57,6 +60,7 @@ export function usePlanningPoker({
 		};
 	}, [autoReset, isOpen, lastOperationDatetime, ownerRoomId, reset]);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (
 			ownerRoomId &&
@@ -70,6 +74,7 @@ export function usePlanningPoker({
 		}
 	}, [users]);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		channel = client.channel(roomId);
 

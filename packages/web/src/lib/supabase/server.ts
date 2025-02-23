@@ -6,7 +6,9 @@ export async function createClient() {
 	const cookieStore = await cookies();
 
 	return createServerClient<Database>(
+		// biome-ignore lint/style/noNonNullAssertion: <explanation>
 		process.env.NEXT_PUBLIC_SUPABASE_URL!,
+		// biome-ignore lint/style/noNonNullAssertion: <explanation>
 		process.env.SUPABASE_SERVICE_ROLE_KEY!,
 		{
 			cookies: {
@@ -15,6 +17,7 @@ export async function createClient() {
 				},
 				setAll(cookiesToSet) {
 					try {
+						// biome-ignore lint/complexity/noForEach: <explanation>
 						cookiesToSet.forEach(({ name, value, options }) =>
 							cookieStore.set(name, value, options),
 						);

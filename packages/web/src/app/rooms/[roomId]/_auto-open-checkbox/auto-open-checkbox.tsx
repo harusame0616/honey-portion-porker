@@ -28,6 +28,7 @@ export function AutoOpenCheckbox({
 		},
 	});
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		const timeoutId = setTimeout(() => {
 			setIsFinished(false);

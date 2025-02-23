@@ -9,6 +9,7 @@ const actionParamsSchema = v.object({
 });
 
 export async function joinRoomAction(
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	_state: any,
 	formData: FormData,
 ): Promise<{ success: false; message: string }> {
