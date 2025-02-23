@@ -27,7 +27,7 @@ jobs:
       - name: Colima のセットアップ
         run: |
           brew install docker colima
-          colima start
+          brew services start colima
       - name: supabase cli のセットアップ
         uses: supabase/setup-cli@v1
         with:
