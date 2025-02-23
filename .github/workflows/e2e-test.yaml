@@ -19,16 +19,11 @@ jobs:
   e2e-test:
     timeout-minutes: 5
     # playwright の vrt で環境が異なると差分が出る可能性が高いため、ローカルと同じ macOS で実行する
-    runs-on: macos-15
+    runs-on: ubuntu-latest
     steps:
       - name: チェックアウト
         uses: actions/checkout@v4
 
-      - name: Colima のセットアップ
-        run: |
-          brew install docker colima
-          brew services start colima
-          sudo ln -s ~/.colima/default/docker.sock /var/run/docker.sock
       - name: supabase cli のセットアップ
         uses: supabase/setup-cli@v1
         with:
