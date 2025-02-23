@@ -16,10 +16,9 @@ async function getRoom(
 		.single();
 
 	if (roomSelect.error || !roomSelect.data.roomId) {
-		console.log(roomSelect);
 		return {
 			success: false as const,
-			message: "not found",
+			message: "ルームが見つかりません",
 			data: null,
 		};
 	}
@@ -35,6 +34,32 @@ async function getRoom(
 			autoReset: roomSelect.data.autoReset,
 			autoOpen: roomSelect.data.autoOpen,
 		},
+	};
+}
+
+export async function generateMetadata({
+	params,
+}: { params: Promise<{ roomId: string }> }) {
+	const paramsParseResult = v.safeParse(paramsSchema, await params);
+	if (!paramsParseResult.success) {
+		return {
+			title: "不正なルーム ID です",
+		};
+	}
+
+	const room = await getRoom(
+		paramsParseResult.output.roomId,
+		await createClient(),
+	);
+
+	if (!room.success) {
+		return {
+			title: room.message,
+		};
+	}
+
+	return {
+		title: `${room.data.ownerRoomId === paramsParseResult.output.roomId ? "オーナー" : "メンバー"}ルーム | Honey Portion Poker`,
 	};
 }
 
