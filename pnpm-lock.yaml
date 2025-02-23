@@ -64,10 +64,10 @@ importers:
         version: 0.42.1(typescript@5.7.3)
     devDependencies:
       '@biomejs/biome':
-        specifier: ^1.9.4
+        specifier: 1.9.4
         version: 1.9.4
       '@types/node':
-        specifier: '20'
+        specifier: 20.17.19
         version: 20.17.19
       '@types/react':
         specifier: '18'
@@ -76,13 +76,13 @@ importers:
         specifier: '18'
         version: 18.3.5(@types/react@18.3.18)
       postcss:
-        specifier: '8'
+        specifier: 8.5.3
         version: 8.5.3
       tailwindcss:
         specifier: 3.4.1
         version: 3.4.1
       typescript:
-        specifier: '5'
+        specifier: 5.7.3
         version: 5.7.3
 
 packages:
