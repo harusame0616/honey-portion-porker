@@ -185,7 +185,6 @@ export function Room({
 						autoReset={autoReset}
 						onChangedAutoReset={async () => {
 							sendEvent("refresh");
-							router.refresh();
 						}}
 					/>
 					<AutoOpenCheckbox
@@ -193,7 +192,6 @@ export function Room({
 						autoOpen={autoOpen}
 						onChangedAutoReset={async () => {
 							sendEvent("refresh");
-							router.refresh();
 						}}
 					/>
 				</Section>

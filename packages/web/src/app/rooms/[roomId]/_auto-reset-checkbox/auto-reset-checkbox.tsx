@@ -26,11 +26,14 @@ export function AutoResetCheckbox({
 			},
 		});
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
+		if (!isFinished) {
+			return;
+		}
+
 		const timeoutId = setTimeout(() => {
 			setIsFinished(false);
-		}, 1000);
+		}, 500);
 		return () => {
 			clearTimeout(timeoutId);
 		};

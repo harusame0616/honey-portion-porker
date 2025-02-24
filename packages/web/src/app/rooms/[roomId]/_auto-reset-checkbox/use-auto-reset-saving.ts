@@ -1,4 +1,4 @@
-import { useOptimistic, useTransition } from "react";
+import { useEffect, useOptimistic, useState, useTransition } from "react";
 import { updateAutoResetConfigAction } from "../_actions/update-auto-reset-config";
 
 type Params = {
@@ -10,13 +10,18 @@ type Params = {
 export function useAutoResetSaving({ onSave, autoReset, ownerRoomId }: Params) {
 	const [isPending, startTransition] = useTransition();
 
+	const [autoResetState, setAutoResetState] = useState(autoReset);
 	const [optimisticAutoReset, setOptimisticAutoReset] =
-		useOptimistic(autoReset);
+		useOptimistic(autoResetState);
+
+	useEffect(() => {
+		setAutoResetState(autoReset);
+	}, [autoReset]);
 
 	function toggleAutoReset() {
 		startTransition(async () => {
-			const newAutoReset = !autoReset;
-			setOptimisticAutoReset(!optimisticAutoReset);
+			const newAutoReset = !autoResetState;
+			setOptimisticAutoReset(newAutoReset);
 			const result = await updateAutoResetConfigAction(
 				ownerRoomId,
 				newAutoReset,
@@ -24,6 +29,7 @@ export function useAutoResetSaving({ onSave, autoReset, ownerRoomId }: Params) {
 			if (!result.success) {
 				return;
 			}
+			setAutoResetState(newAutoReset);
 			onSave(newAutoReset);
 		});
 	}
