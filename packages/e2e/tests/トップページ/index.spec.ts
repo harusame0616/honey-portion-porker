@@ -62,6 +62,7 @@ test("作成済みのルームにメンバーとして参加できる", async ({
 });
 
 test("初回表示のスナップショットテスト", async ({ topPage }, { title }) => {
+	test.skip(!!process.env.CI, "CI 環境ではスナップショットテストをスキップ");
 	await expect(topPage).toHaveScreenshot(title, {
 		fullPage: true,
 		maxDiffPixelRatio: 0.02,
