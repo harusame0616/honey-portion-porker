@@ -40,7 +40,7 @@ export default function Home() {
 						<div className="p-8 max-w-96 w-full">
 							<NewRoomCreation />
 							<div className="mt-8">
-								<div className="mb-2 text-sm">または既存のルームに入室する</div>
+								<div className="mb-2 text-sm">または既存のルームに参加する</div>
 								<RoomJoiningForm />
 							</div>
 						</div>

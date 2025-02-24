@@ -14,6 +14,7 @@ import {
 	type ReactNode,
 	useActionState,
 	useEffect,
+	useId,
 	useState,
 } from "react";
 import { editNoteAction } from "./_actions/edit-note-action";
@@ -54,6 +55,9 @@ export function Room({
 		reset,
 	} = usePlanningPoker({ roomId, ownerRoomId, autoReset, autoOpen });
 	const [isNoteEditing, setIsNoteEditing] = useState(false);
+
+	const memberRoomIdInputId = useId();
+	const memberRoomUrlInputId = useId();
 
 	return (
 		<div className="flex flex-col gap-4">
@@ -192,34 +196,38 @@ export function Room({
 			)}
 
 			<Section title="Room information" className="flex flex-col gap-2">
-				{/* biome-ignore lint/a11y/noLabelWithoutControl: <explanation> */}
-				<label>
-					ID
+				<div>
+					<label className="text-sm" htmlFor={memberRoomIdInputId}>
+						Member Room ID
+					</label>
 					<div className="flex">
 						<Input
 							value={memberRoomId}
 							name="roomId"
 							readOnly
 							className="max-w-80"
+							id={memberRoomIdInputId}
 						/>
 						<CopyButton text={memberRoomId} />
 					</div>
-				</label>
-				{/* biome-ignore lint/a11y/noLabelWithoutControl: <explanation> */}
-				<label>
-					Member URL
+				</div>
+				<div>
+					<label className="text-sm" htmlFor={memberRoomUrlInputId}>
+						Member Room URL
+					</label>
 					<div className="flex">
 						<Input
 							value={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/rooms/${memberRoomId}`}
 							name="roomId"
 							className="max-w-[605px]"
 							readOnly
+							id={memberRoomUrlInputId}
 						/>
 						<CopyButton
 							text={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/rooms/${memberRoomId}`}
 						/>
 					</div>
-				</label>
+				</div>
 			</Section>
 		</div>
 	);

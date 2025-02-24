@@ -44,7 +44,7 @@ export function RoomJoiningForm() {
 					{...register("roomId")}
 					id={roomIdInputId}
 				/>
-				<Button className="font-bold">入室</Button>
+				<Button className="font-bold">参加</Button>
 			</div>
 			<div className="text-destructive text-sm mt-1" aria-live="polite">
 				{formState.errors.roomId?.message}
