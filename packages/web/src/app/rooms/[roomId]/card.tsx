@@ -28,12 +28,27 @@ export function Card({ children, isOpen, selected }: Props) {
 		>
 			{isOpen ? (
 				children === -1 ? (
-					<CoffeeIcon className="size-10 text-2xl" />
+					<CoffeeIcon
+						className="size-10 text-2xl"
+						role="img"
+						aria-label={`${selected ? "選択済み" : "未選択"}のコーヒーカード`}
+						width={30}
+					/>
 				) : (
-					children
+					<>
+						<span className="sr-only">
+							{selected ? "選択済み" : "未選択"}の
+						</span>
+						{children}
+						<span className="sr-only">のカード</span>
+					</>
 				)
 			) : (
-				<Image alt="" src={cardIcon} width={30} />
+				<Image
+					alt={`${selected ? "選択済み" : "未選択"}の裏向きのカード`}
+					src={cardIcon}
+					width={30}
+				/>
 			)}
 		</div>
 	);

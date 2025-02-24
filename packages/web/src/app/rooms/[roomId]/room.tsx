@@ -113,16 +113,20 @@ export function Room({
 				</ul>
 			</Section>
 
-			<Section title="Member's cards" className="flex gap-4">
-				{users.length ? (
-					users.map((user) => (
-						<Card isOpen={isOpen} selected={!!user.card} key={user.userId}>
-							{user.card}
-						</Card>
-					))
-				) : (
-					<Card isOpen={false} selected={false} />
-				)}
+			<Section title="Member's cards">
+				<ul className="flex gap-4 flex-wrap">
+					{users.length ? (
+						users.map((user) => (
+							<li key={user.userId}>
+								<Card isOpen={isOpen} selected={!!user.card} key={user.userId}>
+									{user.card}
+								</Card>
+							</li>
+						))
+					) : (
+						<Card isOpen={false} selected={false} />
+					)}
+				</ul>
 			</Section>
 
 			{ownerRoomId && (
