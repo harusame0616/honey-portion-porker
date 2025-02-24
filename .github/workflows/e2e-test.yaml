@@ -55,7 +55,7 @@ jobs:
       - name: Web ビルド
         run: pnpm --filter web run build
       - name: e2e テスト
-        run: pnpm --filter e2e run test --project="${{ matrix.project }}""
+        run: pnpm --filter e2e run test --project="${{ matrix.project }}"
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
