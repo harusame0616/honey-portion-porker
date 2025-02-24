@@ -15,8 +15,8 @@ importers:
   packages/web:
     dependencies:
       '@hookform/resolvers':
-        specifier: 4.1.0
-        version: 4.1.0(react-hook-form@7.52.1(react@19.0.0))
+        specifier: 4.1.1
+        version: 4.1.1(react-hook-form@7.52.1(react@19.0.0))
       '@radix-ui/react-checkbox':
         specifier: 1.1.2
         version: 1.1.2(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -370,8 +370,8 @@ packages:
     resolution: {integrity: sha512-7bQW+gkKa2kKZPeJf6+c6gFK9ARxQfn+FKy9ScTBppyKRWH2KzsmweXUoklqeEiHiNVWaeP5csIdsNq6w7QhzA==}
     engines: {node: '>=12.20'}
 
-  '@hookform/resolvers@4.1.0':
-    resolution: {integrity: sha512-fX/uHKb+OOCpACLc6enuTQsf0ZpRrKbeBBPETg5PCPLCIYV6osP2Bw6ezuclM61lH+wBF9eXcuC0+BFh9XOEnQ==}
+  '@hookform/resolvers@4.1.1':
+    resolution: {integrity: sha512-S9YN1RgNWG+klUz5uQaV6rjE4pr6Py2tamj7ekshzLcMyg+/Pal1KZAYgGszV0+doiy41dUiQgXL3uRS9stndQ==}
     peerDependencies:
       react-hook-form: ^7.0.0
 
@@ -4469,7 +4469,7 @@ snapshots:
 
   '@gwhitney/detect-indent@7.0.1': {}
 
-  '@hookform/resolvers@4.1.0(react-hook-form@7.52.1(react@19.0.0))':
+  '@hookform/resolvers@4.1.1(react-hook-form@7.52.1(react@19.0.0))':
     dependencies:
       caniuse-lite: 1.0.30001700
       react-hook-form: 7.52.1(react@19.0.0)
