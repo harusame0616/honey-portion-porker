@@ -1,8 +1,8 @@
 import { LabeledCheckbox } from "@/components/labeled-checkbox";
 import { CheckIcon, LoaderIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useOptimisticCheckbox } from "./use-optimistic-checkbox";
 import { updateAutoOpenAction } from "./_actions/update-auto-open-action";
+import { useOptimisticCheckbox } from "./use-optimistic-checkbox";
 import { useTimerFinished } from "./use-timer-finished";
 
 type Props = {

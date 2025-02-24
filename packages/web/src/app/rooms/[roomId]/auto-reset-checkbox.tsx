@@ -1,9 +1,9 @@
 import { LabeledCheckbox } from "@/components/labeled-checkbox";
 import { CheckIcon, LoaderIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { AUTO_OPEN_MINUTES } from "./use-planning-poker";
-import { useOptimisticCheckbox } from "./use-optimistic-checkbox";
 import { updateAutoResetConfigAction } from "./_actions/update-auto-reset-config";
+import { useOptimisticCheckbox } from "./use-optimistic-checkbox";
+import { AUTO_OPEN_MINUTES } from "./use-planning-poker";
 import { useTimerFinished } from "./use-timer-finished";
 
 type props = {
