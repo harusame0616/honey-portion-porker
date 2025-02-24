@@ -1,6 +1,5 @@
-import { ServiceTitle } from "@/components/service-title";
 import { createClient } from "@/lib/supabase/server";
-import Link from "next/link";
+import { notFound } from "next/navigation";
 import { unstable_after as after } from "next/server";
 import * as v from "valibot";
 import { Room } from "./room";
@@ -85,7 +84,7 @@ export default async function Page({
 	const paramsParseResult = v.safeParse(paramsSchema, await params);
 
 	if (!paramsParseResult.success) {
-		return <div>invalid request</div>;
+		return notFound();
 	}
 
 	const client = await createClient();
@@ -99,33 +98,21 @@ export default async function Page({
 	);
 
 	if (!roomGettingResult.success) {
-		return <div>not found</div>;
+		notFound();
 	}
 
 	return (
-		<div>
-			<header className="bg-primary p-4 shadow-md flex">
-				<Link href="/">
-					<ServiceTitle />
-				</Link>
-			</header>
-			<div className="p-8">
-				<main>
-					<Room
-						roomId={roomGettingResult.data.roomId}
-						autoReset={roomGettingResult.data.autoReset}
-						autoOpen={roomGettingResult.data.autoOpen}
-						ownerRoomId={
-							paramsParseResult.output.roomId ===
-							roomGettingResult.data.ownerRoomId
-								? roomGettingResult.data.ownerRoomId
-								: undefined
-						}
-						memberRoomId={roomGettingResult.data.memberRoomId}
-						note={roomGettingResult.data.note}
-					/>
-				</main>
-			</div>
-		</div>
+		<Room
+			roomId={roomGettingResult.data.roomId}
+			autoReset={roomGettingResult.data.autoReset}
+			autoOpen={roomGettingResult.data.autoOpen}
+			ownerRoomId={
+				paramsParseResult.output.roomId === roomGettingResult.data.ownerRoomId
+					? roomGettingResult.data.ownerRoomId
+					: undefined
+			}
+			memberRoomId={roomGettingResult.data.memberRoomId}
+			note={roomGettingResult.data.note}
+		/>
 	);
 }
