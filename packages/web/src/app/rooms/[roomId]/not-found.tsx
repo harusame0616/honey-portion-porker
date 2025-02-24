@@ -1,10 +1,5 @@
 import { RoomJoiningForm } from "@/app/room-joining-form";
-import type { Metadata } from "next";
 import Link from "next/link";
-
-export const metadata: Metadata = {
-	title: "ルームが見つかりません",
-};
 
 export default function NotFoundPage() {
 	return (

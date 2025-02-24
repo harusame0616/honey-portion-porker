@@ -17,7 +17,7 @@ async function getRoom(
 	if (roomSelect.error || !roomSelect.data.roomId) {
 		return {
 			success: false as const,
-			message: "ルームが見つかりません",
+			message: "ルームが見つかりません | Honey Portion Poker",
 			data: null,
 		};
 	}
