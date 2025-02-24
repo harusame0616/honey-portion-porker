@@ -1,50 +1,41 @@
 import { LabeledCheckbox } from "@/components/labeled-checkbox";
 import { CheckIcon, LoaderIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useAutoOpenSaving } from "./use-auto-open-saving";
+import { updateAutoOpenAction } from "./_actions/update-auto-open-action";
+import { useOptimisticCheckbox } from "./use-optimistic-checkbox";
+import { useTimerFinished } from "./use-timer-finished";
 
 type Props = {
 	ownerRoomId: string;
-	autoOpen: boolean;
-	onChangedAutoReset: (newNote: boolean) => void;
+	checked: boolean;
+	onCheckedChange: (checked: boolean) => void;
 };
 export function AutoOpenCheckbox({
 	ownerRoomId,
-	onChangedAutoReset,
-	autoOpen,
+	onCheckedChange,
+	checked,
 }: Props) {
-	const [isFinished, setIsFinished] = useState(false);
-
-	const {
-		isPending,
-		toggleAutoOpen: toggleAutoReset,
-		optimisticAutoOpen: optimisticAutoReset,
-	} = useAutoOpenSaving({
-		ownerRoomId,
-		autoOpen: autoOpen,
-		onSave: async (newAutoReset) => {
-			setIsFinished(true);
-			onChangedAutoReset(newAutoReset);
-		},
-	});
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(() => {
-		const timeoutId = setTimeout(() => {
-			setIsFinished(false);
-		}, 1000);
-		return () => {
-			clearTimeout(timeoutId);
-		};
-	}, [isFinished]);
+	const { isFinished, finish, reset } = useTimerFinished();
+	const { isPending, changeChecked, optimisticCheckedState } =
+		useOptimisticCheckbox({
+			checked,
+			action: async (checked: boolean) => {
+				reset();
+				const result = await updateAutoOpenAction(ownerRoomId, checked);
+				if (!result.success) {
+					return;
+				}
+				finish();
+			},
+			onCheckedChange,
+		});
 
 	return (
 		<LabeledCheckbox
-			onCheckedChange={() => {
-				setIsFinished(false);
-				toggleAutoReset();
+			onCheckedChange={(checked) => {
+				changeChecked(checked === true);
 			}}
-			checked={optimisticAutoReset}
+			checked={optimisticCheckedState}
 			className="text-sm"
 			disabled={isPending}
 			aria-live="polite"

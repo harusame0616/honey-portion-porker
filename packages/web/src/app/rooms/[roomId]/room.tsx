@@ -18,8 +18,8 @@ import {
 	useState,
 } from "react";
 import { editNoteAction } from "./_actions/edit-note-action";
-import { AutoOpenCheckbox } from "./_auto-open-checkbox/auto-open-checkbox";
-import { AutoResetCheckbox } from "./_auto-reset-checkbox/auto-reset-checkbox";
+import { AutoOpenCheckbox } from "./auto-open-checkbox";
+import { AutoResetCheckbox } from "./auto-reset-checkbox";
 import { Card } from "./card";
 import { CopyButton } from "./copy-button";
 import { usePlanningPoker } from "./use-planning-poker";
@@ -182,18 +182,16 @@ export function Room({
 				<Section title="Configures" className="flex flex-col gap-2">
 					<AutoResetCheckbox
 						ownerRoomId={ownerRoomId}
-						autoReset={autoReset}
-						onChangedAutoReset={async () => {
+						checked={autoReset}
+						onCheckedChange={() => {
 							sendEvent("refresh");
-							router.refresh();
 						}}
 					/>
 					<AutoOpenCheckbox
 						ownerRoomId={ownerRoomId}
-						autoOpen={autoOpen}
-						onChangedAutoReset={async () => {
+						checked={autoOpen}
+						onCheckedChange={() => {
 							sendEvent("refresh");
-							router.refresh();
 						}}
 					/>
 				</Section>
