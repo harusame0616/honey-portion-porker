@@ -39,8 +39,8 @@ importers:
         specifier: 1.1.0
         version: 1.1.0(@types/react@18.3.18)(react@19.0.0)
       '@supabase/ssr':
-        specifier: 0.5.1
-        version: 0.5.1(@supabase/supabase-js@2.46.1)
+        specifier: 0.5.2
+        version: 0.5.2(@supabase/supabase-js@2.46.1)
       '@supabase/supabase-js':
         specifier: 2.46.1
         version: 2.46.1
@@ -1229,8 +1229,8 @@ packages:
   '@supabase/realtime-js@2.10.7':
     resolution: {integrity: sha512-OLI0hiSAqQSqRpGMTUwoIWo51eUivSYlaNBgxsXZE7PSoWh12wPRdVt0psUMaUzEonSB85K21wGc7W5jHnT6uA==}
 
-  '@supabase/ssr@0.5.1':
-    resolution: {integrity: sha512-+G94H/GZG0nErZ3FQV9yJmsC5Rj7dmcfCAwOt37hxeR1La+QTl8cE9whzYwPUrTJjMLGNXoO+1BMvVxwBAbz4g==}
+  '@supabase/ssr@0.5.2':
+    resolution: {integrity: sha512-n3plRhr2Bs8Xun1o4S3k1CDv17iH5QY9YcoEvXX3bxV1/5XSasA0mNXYycFmADIdtdE6BG9MRjP5CGIs8qxC8A==}
     peerDependencies:
       '@supabase/supabase-js': ^2.43.4
 
@@ -1282,6 +1282,9 @@ packages:
 
   '@types/cacheable-request@6.0.3':
     resolution: {integrity: sha512-IQ3EbTzGxIigb1I3qPZc1rWJnH0BmSKv5QYTalEwweFvyBDLSAe24zP0le/hyi7ecGfZVlIVAg4BZqb8WBwKqw==}
+
+  '@types/cookie@0.6.0':
+    resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
 
   '@types/emscripten@1.40.0':
     resolution: {integrity: sha512-MD2JJ25S4tnjnhjWyalMS6K6p0h+zQV6+Ylm+aGbiS8tSn/aHLSGNzBgduj6FB4zH0ax2GRMGYi/8G1uOxhXWA==}
@@ -1680,8 +1683,8 @@ packages:
     engines: {node: '>=6.9.0'}
     hasBin: true
 
-  cookie@0.6.0:
-    resolution: {integrity: sha512-U71cyTamuh1CRNCfpGY6to28lxvNwPG4Guz/EVjgf3Jmzv0vlDp1atT9eS5dDjMYHucpHbWns6Lwf3BKz6svdw==}
+  cookie@0.7.2:
+    resolution: {integrity: sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==}
     engines: {node: '>= 0.6'}
 
   core-js-pure@3.40.0:
@@ -5429,10 +5432,11 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@supabase/ssr@0.5.1(@supabase/supabase-js@2.46.1)':
+  '@supabase/ssr@0.5.2(@supabase/supabase-js@2.46.1)':
     dependencies:
       '@supabase/supabase-js': 2.46.1
-      cookie: 0.6.0
+      '@types/cookie': 0.6.0
+      cookie: 0.7.2
 
   '@supabase/storage-js@2.7.1':
     dependencies:
@@ -5507,6 +5511,8 @@ snapshots:
       '@types/keyv': 3.1.4
       '@types/node': 20.17.19
       '@types/responselike': 1.0.3
+
+  '@types/cookie@0.6.0': {}
 
   '@types/emscripten@1.40.0': {}
 
@@ -5943,7 +5949,7 @@ snapshots:
       meow: 7.1.1
       through2-concurrent: 2.0.0
 
-  cookie@0.6.0: {}
+  cookie@0.7.2: {}
 
   core-js-pure@3.40.0: {}
 
