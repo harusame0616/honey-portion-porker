@@ -40,8 +40,11 @@ export function usePlanningPoker({
 
 	const reset = useCallback(async () => {
 		setIsOpen(false);
-		await channel.track({ card: undefined, userId: userId.current });
-		await channel.send({ type: "broadcast", event: "reset" });
+
+		await Promise.all([
+			channel.track({ card: undefined, userId: userId.current }),
+			channel.send({ type: "broadcast", event: "reset" }),
+		]);
 	}, []);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
