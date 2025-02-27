@@ -1,6 +1,6 @@
 import { createBrowserClient } from "@supabase/ssr";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Params = {
 	roomId: string;
@@ -38,14 +38,9 @@ export function usePlanningPoker({
 		setLastOperationDatetime(Date.now());
 	}
 
-	const reset = useCallback(async () => {
-		setIsOpen(false);
-
-		await Promise.all([
-			channel.track({ card: undefined, userId: userId.current }),
-			channel.send({ type: "broadcast", event: "reset" }),
-		]);
-	}, []);
+	async function reset() {
+		await channel.send({ type: "broadcast", event: "reset" });
+	}
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
@@ -61,7 +56,7 @@ export function usePlanningPoker({
 		return () => {
 			clearTimeout(timeoutId);
 		};
-	}, [autoReset, isOpen, lastOperationDatetime, ownerRoomId, reset]);
+	}, [autoReset, isOpen, lastOperationDatetime, ownerRoomId]);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
@@ -79,7 +74,7 @@ export function usePlanningPoker({
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		channel = client.channel(roomId);
+		channel = client.channel(roomId, { config: { broadcast: { self: true } } });
 
 		channel
 			.on("presence", { event: "sync" }, () => {
@@ -104,8 +99,8 @@ export function usePlanningPoker({
 				setIsOpen(false);
 			})
 			.on("broadcast", { event: "reset" }, async () => {
-				await channel.track({ card: undefined, userId: userId.current });
 				setIsOpen(false);
+				await channel.track({ card: undefined, userId: userId.current });
 			})
 			.on("broadcast", { event: "refresh" }, async () => {
 				router.refresh();
@@ -131,12 +126,10 @@ export function usePlanningPoker({
 	}
 
 	async function open() {
-		setIsOpen(true);
 		await channel.send({ type: "broadcast", event: "open" });
 	}
 
 	async function close() {
-		setIsOpen(false);
 		await channel.send({ type: "broadcast", event: "close" });
 	}
 
@@ -159,8 +152,8 @@ export function usePlanningPoker({
 		updateLastOperationDatetime() {
 			setLastOperationDatetime(Date.now());
 		},
-		async sendEvent(event: "refresh") {
-			await channel.send({ type: "broadcast", event });
+		async refresh() {
+			await channel.send({ type: "broadcast", event: "refresh" });
 		},
 	};
 }
