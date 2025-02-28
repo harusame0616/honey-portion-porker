@@ -22,6 +22,7 @@ jobs:
     strategy:
       matrix:
         project: [chromium, webkit, "Mobile Chrome", "Mobile Safari"]
+      fail-fast: false
     steps:
       - name: チェックアウト
         uses: actions/checkout@v4

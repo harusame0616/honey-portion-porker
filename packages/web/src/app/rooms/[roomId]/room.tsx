@@ -51,7 +51,7 @@ export function Room({
 		unselectCard,
 		open,
 		close,
-		sendEvent,
+		refresh,
 		reset,
 	} = usePlanningPoker({ roomId, ownerRoomId, autoReset, autoOpen });
 	const [isNoteEditing, setIsNoteEditing] = useState(false);
@@ -83,9 +83,8 @@ export function Room({
 						note={note}
 						ownerRoomId={ownerRoomId}
 						onSubmit={async () => {
-							sendEvent("refresh");
+							await refresh();
 							setIsNoteEditing(false);
-							router.refresh();
 						}}
 					/>
 				) : (
@@ -183,15 +182,15 @@ export function Room({
 					<AutoResetCheckbox
 						ownerRoomId={ownerRoomId}
 						checked={autoReset}
-						onCheckedChange={() => {
-							sendEvent("refresh");
+						onCheckedChange={async () => {
+							await refresh();
 						}}
 					/>
 					<AutoOpenCheckbox
 						ownerRoomId={ownerRoomId}
 						checked={autoOpen}
-						onCheckedChange={() => {
-							sendEvent("refresh");
+						onCheckedChange={async () => {
+							await refresh();
 						}}
 					/>
 				</Section>
