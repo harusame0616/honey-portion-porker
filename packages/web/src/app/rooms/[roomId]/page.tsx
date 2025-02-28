@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
-import { unstable_after as after } from "next/server";
+import { after } from "next/server";
 import * as v from "valibot";
 import { Room } from "./room";
 
@@ -38,7 +38,9 @@ async function getRoom(
 
 export async function generateMetadata({
 	params,
-}: { params: Promise<{ roomId: string }> }) {
+}: {
+	params: Promise<{ roomId: string }>;
+}) {
 	const paramsParseResult = v.safeParse(paramsSchema, await params);
 	if (!paramsParseResult.success) {
 		return {
