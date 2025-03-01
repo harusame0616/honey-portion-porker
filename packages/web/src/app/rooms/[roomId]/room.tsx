@@ -6,7 +6,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { EditIcon } from "lucide-react";
 import Form from "next/form";
-import { useRouter } from "next/navigation";
 import {
 	type DetailedHTMLProps,
 	type HTMLAttributes,
@@ -31,17 +30,16 @@ export function Room({
 	note,
 	ownerRoomId,
 	memberRoomId,
-	autoReset,
+	initialAutoReset,
 	autoOpen,
 }: {
 	roomId: string;
 	note: string;
 	ownerRoomId?: string;
 	memberRoomId: string;
-	autoReset: boolean;
+	initialAutoReset: boolean;
 	autoOpen: boolean;
 }) {
-	const router = useRouter();
 	const {
 		users,
 		selectedUsers,
@@ -53,7 +51,10 @@ export function Room({
 		close,
 		refresh,
 		reset,
-	} = usePlanningPoker({ roomId, ownerRoomId, autoReset, autoOpen });
+		enableAutoReset,
+		disableAutoReset,
+		autoReset,
+	} = usePlanningPoker({ roomId, ownerRoomId, initialAutoReset, autoOpen });
 	const [isNoteEditing, setIsNoteEditing] = useState(false);
 
 	const memberRoomIdInputId = useId();
@@ -182,8 +183,12 @@ export function Room({
 					<AutoResetCheckbox
 						ownerRoomId={ownerRoomId}
 						checked={autoReset}
-						onCheckedChange={async () => {
-							await refresh();
+						onCheckedChange={() => {
+							if (autoReset) {
+								enableAutoReset();
+							} else {
+								disableAutoReset();
+							}
 						}}
 					/>
 					<AutoOpenCheckbox

@@ -1,11 +1,12 @@
 import { createBrowserClient } from "@supabase/ssr";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useTimer } from "./use-timer";
 
 type Params = {
 	roomId: string;
 	ownerRoomId?: string;
-	autoReset: boolean;
+	initialAutoReset: boolean;
 	autoOpen: boolean;
 };
 
@@ -22,41 +23,33 @@ let channel: ReturnType<(typeof client)["channel"]>;
 export function usePlanningPoker({
 	roomId,
 	ownerRoomId,
-	autoReset,
+	initialAutoReset,
 	autoOpen,
 }: Params) {
 	const userId = useRef<string>(window.crypto.randomUUID());
 	const [users, setUsers] = useState<{ card: number; userId: string }[]>([]);
 	const [isOpen, setIsOpen] = useState(false);
+	const [autoReset, setAutoReset] = useState(initialAutoReset);
 
 	const router = useRouter();
-	const [lastOperationDatetime, setLastOperationDatetime] = useState<number>(
-		Date.now(),
+
+	const reset = useCallback(async () => {
+		await channel.send({ type: "broadcast", event: "reset" });
+	}, []);
+
+	const { startTimer, stopTimer, initializeTimer } = useTimer(
+		1000 * 60 * AUTO_OPEN_MINUTES,
+		reset,
 	);
 
-	function updateLastOperationDatetime() {
-		setLastOperationDatetime(Date.now());
-	}
-
-	async function reset() {
-		await channel.send({ type: "broadcast", event: "reset" });
-	}
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		const timeoutId = setTimeout(
-			() => {
-				if (autoReset && ownerRoomId && isOpen) {
-					reset();
-				}
-			},
-			1000 * 60 * AUTO_OPEN_MINUTES,
-		);
+		if (!ownerRoomId || !isOpen || !autoReset) {
+			return;
+		}
 
-		return () => {
-			clearTimeout(timeoutId);
-		};
-	}, [autoReset, isOpen, lastOperationDatetime, ownerRoomId]);
+		startTimer();
+		return stopTimer();
+	}, [autoReset, stopTimer, startTimer, ownerRoomId, isOpen]);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
@@ -72,13 +65,12 @@ export function usePlanningPoker({
 		}
 	}, [users]);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		channel = client.channel(roomId, { config: { broadcast: { self: true } } });
 
 		channel
 			.on("presence", { event: "sync" }, () => {
-				updateLastOperationDatetime();
+				initializeTimer();
 				const newState = channel.presenceState<{
 					card: number;
 					userId: string;
@@ -91,11 +83,9 @@ export function usePlanningPoker({
 				);
 			})
 			.on("broadcast", { event: "open" }, () => {
-				updateLastOperationDatetime();
 				setIsOpen(true);
 			})
 			.on("broadcast", { event: "close" }, () => {
-				updateLastOperationDatetime();
 				setIsOpen(false);
 			})
 			.on("broadcast", { event: "reset" }, async () => {
@@ -116,7 +106,7 @@ export function usePlanningPoker({
 		return () => {
 			channel.unsubscribe();
 		};
-	}, [roomId, router]);
+	}, [roomId, router, initializeTimer]);
 
 	async function selectCard(number: number | undefined) {
 		await channel.track({ card: number, userId: userId.current });
@@ -149,11 +139,15 @@ export function usePlanningPoker({
 				(user) => user.card !== -1 && user.card !== undefined,
 			);
 		},
-		updateLastOperationDatetime() {
-			setLastOperationDatetime(Date.now());
-		},
 		async refresh() {
 			await channel.send({ type: "broadcast", event: "refresh" });
+		},
+		autoReset,
+		enableAutoReset() {
+			startTimer();
+		},
+		disableAutoReset() {
+			stopTimer();
 		},
 	};
 }
