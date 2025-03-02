@@ -8,7 +8,7 @@ import { useTimerFinished } from "./use-timer-finished";
 type Props = {
 	ownerRoomId: string;
 	checked: boolean;
-	onCheckedChange: (checked: boolean) => void;
+	onCheckedChange: (checked: boolean) => Promise<void>;
 };
 export function AutoOpenCheckbox({
 	ownerRoomId,
