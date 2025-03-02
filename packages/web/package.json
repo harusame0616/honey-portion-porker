@@ -31,7 +31,7 @@
 		"react-hook-form": "7.54.2",
 		"tailwind-merge": "2.5.4",
 		"tailwindcss-animate": "1.0.7",
-		"valibot": "1.0.0-rc.2"
+		"valibot": "1.0.0-rc.3"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
