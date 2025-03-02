@@ -27,14 +27,14 @@ const cardList = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, -1];
 
 export function Room({
 	roomId,
-	note,
+	initialNote,
 	ownerRoomId,
 	memberRoomId,
 	initialAutoReset,
 	initialAutoOpen,
 }: {
 	roomId: string;
-	note: string;
+	initialNote: string;
 	ownerRoomId?: string;
 	memberRoomId: string;
 	initialAutoReset: boolean;
@@ -49,17 +49,19 @@ export function Room({
 		unselectCard,
 		open,
 		close,
-		refresh,
 		reset,
 		changeAutoReset,
 		changeAutoOpen,
 		autoOpen,
 		autoReset,
+		note,
+		changeNote,
 	} = usePlanningPoker({
 		roomId,
 		ownerRoomId,
 		initialAutoReset,
 		initialAutoOpen,
+		initialNote,
 	});
 	const [isNoteEditing, setIsNoteEditing] = useState(false);
 
@@ -89,10 +91,11 @@ export function Room({
 					<NoteEditionForm
 						note={note}
 						ownerRoomId={ownerRoomId}
-						onSubmit={async () => {
-							await refresh();
+						onSubmit={async (newNote) => {
+							changeNote(newNote);
 							setIsNoteEditing(false);
 						}}
+						key={note}
 					/>
 				) : (
 					<p className="whitespace-pre-wrap break-all">{note || "-"}</p>

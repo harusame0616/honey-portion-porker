@@ -114,7 +114,7 @@ export default async function Page({
 					: undefined
 			}
 			memberRoomId={roomGettingResult.data.memberRoomId}
-			note={roomGettingResult.data.note}
+			initialNote={roomGettingResult.data.note}
 		/>
 	);
 }
