@@ -8,6 +8,7 @@ type Params = {
 	ownerRoomId?: string;
 	initialAutoReset: boolean;
 	initialAutoOpen: boolean;
+	initialNote: string;
 };
 
 export const AUTO_OPEN_MINUTES = 1;
@@ -25,6 +26,7 @@ export function usePlanningPoker({
 	ownerRoomId,
 	initialAutoReset,
 	initialAutoOpen,
+	initialNote,
 }: Params) {
 	const userId = useRef<string>(window.crypto.randomUUID());
 	const [users, setUsers] = useState<{ card: number; userId: string }[]>([]);
@@ -32,6 +34,7 @@ export function usePlanningPoker({
 	const [autoReset, setAutoReset] = useState(initialAutoReset);
 	const [autoOpen, setAutoOpen] = useState(initialAutoOpen);
 	const autoOpenRef = useRef(initialAutoOpen);
+	const [note, setNote] = useState(initialNote);
 
 	const router = useRouter();
 
@@ -87,15 +90,15 @@ export function usePlanningPoker({
 				setIsOpen(false);
 				await channel.track({ card: undefined, userId: userId.current });
 			})
-			.on("broadcast", { event: "refresh" }, async () => {
-				router.refresh();
-			})
 			.on("broadcast", { event: "update-auto-open" }, async ({ value }) => {
 				autoOpenRef.current = value;
 				setAutoOpen(value);
 			})
 			.on("broadcast", { event: "update-auto-reset" }, async ({ value }) => {
 				setAutoReset(value);
+			})
+			.on("broadcast", { event: "update-note" }, async ({ value }) => {
+				setNote(value);
 			})
 			.subscribe(async (status) => {
 				if (status !== "SUBSCRIBED") {
@@ -108,7 +111,7 @@ export function usePlanningPoker({
 		return () => {
 			channel.unsubscribe();
 		};
-	}, [roomId, router, initializeTimer]);
+	}, [roomId, initializeTimer]);
 
 	async function selectCard(number: number | undefined) {
 		await channel.track({ card: number, userId: userId.current });
@@ -141,9 +144,6 @@ export function usePlanningPoker({
 				(user) => user.card !== -1 && user.card !== undefined,
 			);
 		},
-		async refresh() {
-			await channel.send({ type: "broadcast", event: "refresh" });
-		},
 		autoReset,
 		changeAutoReset: useCallback(async (value: boolean) => {
 			await channel.send({
@@ -160,5 +160,13 @@ export function usePlanningPoker({
 			});
 		}, []),
 		autoOpen,
+		note,
+		changeNote: useCallback(async (value: string) => {
+			await channel.send({
+				type: "broadcast",
+				event: "update-note",
+				value,
+			});
+		}, []),
 	};
 }
