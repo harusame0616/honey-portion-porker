@@ -7,7 +7,7 @@ type Params = {
 	roomId: string;
 	ownerRoomId?: string;
 	initialAutoReset: boolean;
-	autoOpen: boolean;
+	initialAutoOpen: boolean;
 };
 
 export const AUTO_OPEN_MINUTES = 1;
@@ -24,12 +24,14 @@ export function usePlanningPoker({
 	roomId,
 	ownerRoomId,
 	initialAutoReset,
-	autoOpen,
+	initialAutoOpen,
 }: Params) {
 	const userId = useRef<string>(window.crypto.randomUUID());
 	const [users, setUsers] = useState<{ card: number; userId: string }[]>([]);
 	const [isOpen, setIsOpen] = useState(false);
 	const [autoReset, setAutoReset] = useState(initialAutoReset);
+	const [autoOpen, setAutoOpen] = useState(initialAutoOpen);
+	const autoOpenRef = useRef(initialAutoOpen);
 
 	const router = useRouter();
 
@@ -51,20 +53,6 @@ export function usePlanningPoker({
 		return stopTimer();
 	}, [autoReset, stopTimer, startTimer, ownerRoomId, isOpen]);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(() => {
-		if (
-			ownerRoomId &&
-			!isOpen &&
-			autoOpen &&
-			users.length > 1 &&
-			users.filter((user) => user.card !== -1 && user.card !== undefined)
-				.length === users.length
-		) {
-			open();
-		}
-	}, [users]);
-
 	useEffect(() => {
 		channel = client.channel(roomId, { config: { broadcast: { self: true } } });
 
@@ -75,12 +63,19 @@ export function usePlanningPoker({
 					card: number;
 					userId: string;
 				}>();
-				setUsers(
-					Object.values(newState).map(([{ card, userId }]) => ({
-						userId,
-						card,
-					})),
-				);
+				const newUsers = Object.values(newState).map(([{ card, userId }]) => ({
+					userId,
+					card,
+				}));
+				setUsers(newUsers);
+
+				if (
+					autoOpenRef.current &&
+					newUsers.length > 0 &&
+					newUsers.every((user) => user.card !== undefined)
+				) {
+					setIsOpen(true);
+				}
 			})
 			.on("broadcast", { event: "open" }, () => {
 				setIsOpen(true);
@@ -94,6 +89,13 @@ export function usePlanningPoker({
 			})
 			.on("broadcast", { event: "refresh" }, async () => {
 				router.refresh();
+			})
+			.on("broadcast", { event: "update-auto-open" }, async ({ value }) => {
+				autoOpenRef.current = value;
+				setAutoOpen(value);
+			})
+			.on("broadcast", { event: "update-auto-reset" }, async ({ value }) => {
+				setAutoReset(value);
 			})
 			.subscribe(async (status) => {
 				if (status !== "SUBSCRIBED") {
@@ -143,11 +145,20 @@ export function usePlanningPoker({
 			await channel.send({ type: "broadcast", event: "refresh" });
 		},
 		autoReset,
-		enableAutoReset() {
-			startTimer();
-		},
-		disableAutoReset() {
-			stopTimer();
-		},
+		changeAutoReset: useCallback(async (value: boolean) => {
+			await channel.send({
+				type: "broadcast",
+				event: "update-auto-reset",
+				value,
+			});
+		}, []),
+		changeAutoOpen: useCallback(async (value: boolean) => {
+			await channel.send({
+				type: "broadcast",
+				event: "update-auto-open",
+				value,
+			});
+		}, []),
+		autoOpen,
 	};
 }

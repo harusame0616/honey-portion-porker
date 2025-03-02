@@ -31,14 +31,14 @@ export function Room({
 	ownerRoomId,
 	memberRoomId,
 	initialAutoReset,
-	autoOpen,
+	initialAutoOpen,
 }: {
 	roomId: string;
 	note: string;
 	ownerRoomId?: string;
 	memberRoomId: string;
 	initialAutoReset: boolean;
-	autoOpen: boolean;
+	initialAutoOpen: boolean;
 }) {
 	const {
 		users,
@@ -51,10 +51,16 @@ export function Room({
 		close,
 		refresh,
 		reset,
-		enableAutoReset,
-		disableAutoReset,
+		changeAutoReset,
+		changeAutoOpen,
+		autoOpen,
 		autoReset,
-	} = usePlanningPoker({ roomId, ownerRoomId, initialAutoReset, autoOpen });
+	} = usePlanningPoker({
+		roomId,
+		ownerRoomId,
+		initialAutoReset,
+		initialAutoOpen,
+	});
 	const [isNoteEditing, setIsNoteEditing] = useState(false);
 
 	const memberRoomIdInputId = useId();
@@ -183,20 +189,12 @@ export function Room({
 					<AutoResetCheckbox
 						ownerRoomId={ownerRoomId}
 						checked={autoReset}
-						onCheckedChange={() => {
-							if (autoReset) {
-								enableAutoReset();
-							} else {
-								disableAutoReset();
-							}
-						}}
+						onCheckedChange={changeAutoReset}
 					/>
 					<AutoOpenCheckbox
 						ownerRoomId={ownerRoomId}
 						checked={autoOpen}
-						onCheckedChange={async () => {
-							await refresh();
-						}}
+						onCheckedChange={changeAutoOpen}
 					/>
 				</Section>
 			)}

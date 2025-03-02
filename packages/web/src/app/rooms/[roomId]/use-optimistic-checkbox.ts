@@ -3,7 +3,7 @@ import { updateAutoResetConfigAction } from "./_actions/update-auto-reset-config
 
 type Params = {
 	checked: boolean;
-	onCheckedChange: (newAutoReset: boolean) => void;
+	onCheckedChange: (newChecked: boolean) => Promise<void>;
 	action: (newChecked: boolean) => Promise<void>;
 };
 
@@ -14,13 +14,8 @@ export function useOptimisticCheckbox({
 }: Params) {
 	const [isPending, startTransition] = useTransition();
 
-	const [checkedState, setCheckedState] = useState(checked);
 	const [optimisticCheckedState, setOptimisticCheckedState] =
-		useOptimistic(checkedState);
-
-	useEffect(() => {
-		setCheckedState(checked);
-	}, [checked]);
+		useOptimistic(checked);
 
 	function changeChecked(checked: boolean) {
 		startTransition(async () => {
@@ -28,8 +23,7 @@ export function useOptimisticCheckbox({
 
 			await action(checked);
 
-			setCheckedState(checked);
-			onCheckedChange(checked);
+			await onCheckedChange(checked);
 		});
 	}
 

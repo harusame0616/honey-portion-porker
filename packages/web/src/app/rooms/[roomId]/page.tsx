@@ -107,7 +107,7 @@ export default async function Page({
 		<Room
 			roomId={roomGettingResult.data.roomId}
 			initialAutoReset={roomGettingResult.data.autoReset}
-			autoOpen={roomGettingResult.data.autoOpen}
+			initialAutoOpen={roomGettingResult.data.autoOpen}
 			ownerRoomId={
 				paramsParseResult.output.roomId === roomGettingResult.data.ownerRoomId
 					? roomGettingResult.data.ownerRoomId
