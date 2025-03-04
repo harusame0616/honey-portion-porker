@@ -97,5 +97,19 @@ export function usePlanningPoker({
 		autoReset,
 		autoOpen,
 		note,
+		changeAutoReset: useCallback(
+			async (checked: boolean) => {
+				setAutoReset(checked);
+				await realtimeCommand.changeAutoReset(checked);
+			},
+			[realtimeCommand.changeAutoReset, setAutoReset],
+		),
+		changeAutoOpen: useCallback(
+			async (checked: boolean) => {
+				setAutoOpen(checked);
+				await realtimeCommand.changeAutoOpen(checked);
+			},
+			[realtimeCommand.changeAutoOpen, setAutoOpen],
+		),
 	};
 }
