@@ -85,7 +85,7 @@ export function usePlanningPoker({
 		}
 
 		startTimer();
-		return stopTimer();
+		return stopTimer;
 	}, [autoReset, stopTimer, startTimer, ownerRoomId, isOpen]);
 
 	return {

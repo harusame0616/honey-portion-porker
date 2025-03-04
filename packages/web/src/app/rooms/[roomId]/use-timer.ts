@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useStateWithRef } from "./use-planning-poker/use-state-with-ref";
 
 type UseTimer = {
 	startTimer: () => void;
@@ -7,27 +8,28 @@ type UseTimer = {
 };
 
 export function useTimer(time: number, onTimeUp: () => void): UseTimer {
-	const [isActive, setIsActive] = useState(false);
+	const [isActive, setIsActive, isActiveRef] = useStateWithRef(false);
 	const timerIdRef = useRef<NodeJS.Timeout | undefined>();
 
 	const startTimer = useCallback(() => {
 		setIsActive(true);
-	}, []);
+	}, [setIsActive]);
 
 	const stopTimer = useCallback(() => {
 		setIsActive(false);
-	}, []);
+	}, [setIsActive]);
 
 	const initializeTimer = useCallback(() => {
-		if (!isActive) {
+		clearInterval(timerIdRef.current);
+
+		if (!isActiveRef.current) {
 			return;
 		}
 
-		clearInterval(timerIdRef.current);
 		timerIdRef.current = setInterval(() => {
 			onTimeUp();
 		}, time);
-	}, [onTimeUp, time, isActive]);
+	}, [onTimeUp, time, isActiveRef]);
 
 	useEffect(() => {
 		if (!isActive) {
