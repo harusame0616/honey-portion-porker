@@ -1,5 +1,6 @@
 import { createBrowserClient } from "@supabase/ssr";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { v7 as uuid } from "uuid";
 import { useTimer } from "../use-timer";
 import { useConfig } from "./use-config";
 import { useRealtimeCommand } from "./use-realtime-command";
@@ -23,7 +24,7 @@ export function usePlanningPoker({
 	initialAutoOpen,
 	initialNote,
 }: Params) {
-	const userId = useRef<string>(window.crypto.randomUUID());
+	const userId = useRef<string>(uuid());
 	const { users, setUsers, selectedUsers, selectedCard } = useUsers(
 		userId.current,
 	);
