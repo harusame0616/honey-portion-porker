@@ -141,11 +141,11 @@ export function Room({
 			{ownerRoomId && (
 				<Section title="Owner operations" className="flex gap-4">
 					{isOpen ? (
-						<Button type="button" onClick={close} className="font-bold">
+						<Button type="button" onClick={close} className="font-bold w-20">
 							CLOSE
 						</Button>
 					) : (
-						<Button type="button" onClick={open} className="font-bold">
+						<Button type="button" onClick={open} className="font-bold w-20">
 							OPEN
 						</Button>
 					)}
