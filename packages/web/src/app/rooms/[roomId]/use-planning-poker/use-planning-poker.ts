@@ -1,7 +1,7 @@
-import { createBrowserClient } from "@supabase/ssr";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { v7 as uuid } from "uuid";
 import { useTimer } from "../use-timer";
+import { useChannel } from "./use-cannel";
 import { useConfig } from "./use-config";
 import { useRealtimeCommand } from "./use-realtime-command";
 import { useRealtimeListener } from "./use-realtime-listener";
@@ -32,25 +32,15 @@ export function usePlanningPoker({
 	const { autoReset, autoOpen, setAutoReset, setAutoOpen, autoOpenRef } =
 		useConfig(initialAutoReset, initialAutoOpen);
 	const [note, setNote] = useState(initialNote);
-	const channelRef = useRef(
-		createBrowserClient(
-			// biome-ignore lint/style/noNonNullAssertion: <explanation>
-			process.env.NEXT_PUBLIC_SUPABASE_URL!,
-			// biome-ignore lint/style/noNonNullAssertion: <explanation>
-			process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-		).channel(roomId, { config: { broadcast: { self: true } } }),
-	);
-	const realtimeCommand = useRealtimeCommand(
-		channelRef.current,
-		userId.current,
-	);
+	const channel = useChannel(roomId);
+	const realtimeCommand = useRealtimeCommand(channel, userId.current);
 
 	const { startTimer, stopTimer, initializeTimer } = useTimer(
 		1000 * 60 * AUTO_OPEN_MINUTES,
 		realtimeCommand.reset,
 	);
 
-	useRealtimeListener(channelRef, {
+	useRealtimeListener(channel, {
 		onPresenceChange: useCallback(
 			(users) => {
 				setUsers(users);
