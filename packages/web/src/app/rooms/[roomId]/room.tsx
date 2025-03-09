@@ -23,6 +23,7 @@ import { ChoiceCards } from "./choice-cards";
 import { CopyButton } from "./copy-button";
 import { MemberCards } from "./member-cards";
 import { usePlanningPoker } from "./use-planning-poker";
+import { OwnerOperations } from "./owner-operations";
 
 export function Room({
 	roomId,
@@ -120,24 +121,13 @@ export function Room({
 			</Section>
 
 			{ownerRoomId && (
-				<Section title="Owner operations" className="flex gap-4">
-					{isOpen ? (
-						<Button type="button" onClick={close} className="font-bold w-20">
-							CLOSE
-						</Button>
-					) : (
-						<Button type="button" onClick={open} className="font-bold w-20">
-							OPEN
-						</Button>
-					)}
-					<Button
-						type="button"
-						variant="outline"
-						onClick={reset}
-						className="font-bold"
-					>
-						RESET
-					</Button>
+				<Section title="Owner operations">
+					<OwnerOperations
+						isOpen={isOpen}
+						onOpen={open}
+						onClose={close}
+						onReset={reset}
+					/>
 				</Section>
 			)}
 
