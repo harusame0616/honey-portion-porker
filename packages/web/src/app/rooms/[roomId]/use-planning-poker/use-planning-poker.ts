@@ -88,6 +88,7 @@ export function usePlanningPoker({
 		autoReset,
 		autoOpen,
 		note,
+		userId,
 		changeAutoReset: useCallback(
 			async (checked: boolean) => {
 				setAutoReset(checked);

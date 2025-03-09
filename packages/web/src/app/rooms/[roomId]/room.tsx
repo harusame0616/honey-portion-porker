@@ -19,10 +19,10 @@ import {
 import { editNoteAction } from "./_actions/edit-note-action";
 import { AutoOpenCheckbox } from "./auto-open-checkbox";
 import { AutoResetCheckbox } from "./auto-reset-checkbox";
-import { Card } from "./card";
-import { CopyButton } from "./copy-button";
-import { usePlanningPoker } from "./use-planning-poker";
 import { ChoiceCards } from "./choice-cards";
+import { CopyButton } from "./copy-button";
+import { MemberCards } from "./member-cards";
+import { usePlanningPoker } from "./use-planning-poker";
 
 export function Room({
 	roomId,
@@ -45,6 +45,7 @@ export function Room({
 		selectedCard,
 		selectCard,
 		isOpen,
+		userId,
 		unselectCard,
 		open,
 		close,
@@ -115,19 +116,7 @@ export function Room({
 			</Section>
 
 			<Section title="Member's cards">
-				<ul className="flex gap-4 flex-wrap">
-					{users.length ? (
-						users.map((user) => (
-							<li key={user.userId}>
-								<Card isOpen={isOpen} selected={!!user.card} key={user.userId}>
-									{user.card}
-								</Card>
-							</li>
-						))
-					) : (
-						<Card isOpen={false} selected={false} />
-					)}
-				</ul>
+				<MemberCards users={users} isOpen={isOpen} userId={userId.current} />
 			</Section>
 
 			{ownerRoomId && (
