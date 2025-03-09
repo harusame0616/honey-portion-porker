@@ -18,8 +18,8 @@ importers:
         specifier: 1.51.0
         version: 1.51.0
       '@types/node':
-        specifier: 22.13.9
-        version: 22.13.9
+        specifier: 22.13.10
+        version: 22.13.10
 
   packages/web:
     dependencies:
@@ -88,8 +88,8 @@ importers:
         specifier: ^4.0.12
         version: 4.0.12
       '@types/node':
-        specifier: 22.13.9
-        version: 22.13.9
+        specifier: 22.13.10
+        version: 22.13.10
       '@types/react':
         specifier: 18.3.18
         version: 18.3.18
@@ -1371,8 +1371,8 @@ packages:
   '@types/moo@0.5.5':
     resolution: {integrity: sha512-eXQpwnkI4Ntw5uJg6i2PINdRFWLr55dqjuYQaLHNjvqTzF14QdNWbCbml9sza0byyXNA0hZlHtcdN+VNDcgVHA==}
 
-  '@types/node@22.13.9':
-    resolution: {integrity: sha512-acBjXdRJ3A6Pb3tqnw9HZmyR3Fiol3aGxRCK1x3d+6CDAMjl7I649wpSd+yNURCjbOUGu9tqtLKnTGxmK6CyGw==}
+  '@types/node@22.13.10':
+    resolution: {integrity: sha512-I6LPUvlRH+O6VRUqYOcMudhaIdUVWfsjnZavnsraHvpBwaEyMN29ry+0UVJhImYL16xsscu0aske3yA+uPOWfw==}
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -5543,13 +5543,13 @@ snapshots:
 
   '@types/bunyan@1.8.11':
     dependencies:
-      '@types/node': 22.13.9
+      '@types/node': 22.13.10
 
   '@types/cacheable-request@6.0.3':
     dependencies:
       '@types/http-cache-semantics': 4.0.4
       '@types/keyv': 3.1.4
-      '@types/node': 22.13.9
+      '@types/node': 22.13.10
       '@types/responselike': 1.0.3
 
   '@types/cookie@0.6.0': {}
@@ -5560,7 +5560,7 @@ snapshots:
 
   '@types/keyv@3.1.4':
     dependencies:
-      '@types/node': 22.13.9
+      '@types/node': 22.13.10
 
   '@types/mdast@3.0.15':
     dependencies:
@@ -5570,7 +5570,7 @@ snapshots:
 
   '@types/moo@0.5.5': {}
 
-  '@types/node@22.13.9':
+  '@types/node@22.13.10':
     dependencies:
       undici-types: 6.20.0
 
@@ -5593,7 +5593,7 @@ snapshots:
 
   '@types/responselike@1.0.3':
     dependencies:
-      '@types/node': 22.13.9
+      '@types/node': 22.13.10
 
   '@types/semver@7.5.8': {}
 
@@ -5607,11 +5607,11 @@ snapshots:
 
   '@types/ws@8.5.14':
     dependencies:
-      '@types/node': 22.13.9
+      '@types/node': 22.13.10
 
   '@types/yauzl@2.10.3':
     dependencies:
-      '@types/node': 22.13.9
+      '@types/node': 22.13.10
     optional: true
 
   '@yarnpkg/core@4.2.0(typanion@3.14.0)':
@@ -7291,7 +7291,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 22.13.9
+      '@types/node': 22.13.10
       long: 5.3.1
 
   protocols@2.0.2: {}
