@@ -22,8 +22,7 @@ import { AutoResetCheckbox } from "./auto-reset-checkbox";
 import { Card } from "./card";
 import { CopyButton } from "./copy-button";
 import { usePlanningPoker } from "./use-planning-poker";
-
-const cardList = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, -1];
+import { ChoiceCards } from "./choice-cards";
 
 export function Room({
 	roomId,
@@ -103,23 +102,16 @@ export function Room({
 			</Section>
 
 			<Section title="Your choices">
-				<ul className="flex flex-wrap gap-4">
-					{cardList.map((card) => (
-						<li key={card}>
-							<button
-								type="button"
-								onClick={() =>
-									selectedCard === card ? unselectCard() : selectCard(card)
-								}
-								key={card}
-							>
-								<Card isOpen selected={card === selectedCard}>
-									{card}
-								</Card>
-							</button>
-						</li>
-					))}
-				</ul>
+				<ChoiceCards
+					selectedCard={selectedCard}
+					onCardClick={(card) => {
+						if (card === selectedCard) {
+							unselectCard();
+						} else {
+							selectCard(card);
+						}
+					}}
+				/>
 			</Section>
 
 			<Section title="Member's cards">
