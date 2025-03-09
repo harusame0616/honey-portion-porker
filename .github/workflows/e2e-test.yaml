@@ -47,7 +47,7 @@ jobs:
       - name: パッケージインストール
         run: pnpm install
       - name: Playwright ブラウザインストール
-        run: pnpm --filter e2e exec playwright install
+        run: pnpm --filter e2e exec playwright install --with-deps
 
       - name: DB リセット
         run: pnpm dlx supabase db reset
