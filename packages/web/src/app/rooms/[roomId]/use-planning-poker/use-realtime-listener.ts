@@ -1,5 +1,7 @@
+import { createBrowserClient } from "@supabase/ssr";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import { type MutableRefObject, useEffect } from "react";
+import type { Channel } from "./use-cannel";
 
 type Presence = {
 	card: number;
@@ -17,7 +19,7 @@ type PokerEvent = {
 	onSubscribe: () => void;
 };
 export function useRealtimeListener(
-	channel: MutableRefObject<RealtimeChannel>,
+	channel: Channel,
 	{
 		onPresenceChange,
 		onOpen,
@@ -30,9 +32,12 @@ export function useRealtimeListener(
 	}: PokerEvent,
 ) {
 	useEffect(() => {
-		channel.current
+		// cleanup 関数内で実施する unsubscribe は非同期関数で、
+		// unsubscribe が完了する前に subscribe が実施されるとエラーが起きるので channel 自体を作り直す
+		channel.recreate();
+		channel.ref.current
 			.on("presence", { event: "sync" }, () => {
-				const newState = channel.current.presenceState<{
+				const newState = channel.ref.current.presenceState<{
 					card: number;
 					userId: string;
 				}>();
@@ -62,7 +67,7 @@ export function useRealtimeListener(
 			});
 
 		return () => {
-			channel.current.unsubscribe();
+			channel.ref.current.unsubscribe();
 		};
 	}, [
 		onPresenceChange,
