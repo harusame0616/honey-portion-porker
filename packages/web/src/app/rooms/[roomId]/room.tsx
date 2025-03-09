@@ -19,11 +19,11 @@ import {
 import { editNoteAction } from "./_actions/edit-note-action";
 import { AutoOpenCheckbox } from "./auto-open-checkbox";
 import { AutoResetCheckbox } from "./auto-reset-checkbox";
-import { Card } from "./card";
+import { ChoiceCards } from "./choice-cards";
 import { CopyButton } from "./copy-button";
+import { MemberCards } from "./member-cards";
+import { OwnerOperations } from "./owner-operations";
 import { usePlanningPoker } from "./use-planning-poker";
-
-const cardList = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, -1];
 
 export function Room({
 	roomId,
@@ -46,6 +46,7 @@ export function Room({
 		selectedCard,
 		selectCard,
 		isOpen,
+		userId,
 		unselectCard,
 		open,
 		close,
@@ -103,60 +104,30 @@ export function Room({
 			</Section>
 
 			<Section title="Your choices">
-				<ul className="flex flex-wrap gap-4">
-					{cardList.map((card) => (
-						<li key={card}>
-							<button
-								type="button"
-								onClick={() =>
-									selectedCard === card ? unselectCard() : selectCard(card)
-								}
-								key={card}
-							>
-								<Card isOpen selected={card === selectedCard}>
-									{card}
-								</Card>
-							</button>
-						</li>
-					))}
-				</ul>
+				<ChoiceCards
+					selectedCard={selectedCard}
+					onCardClick={(card) => {
+						if (card === selectedCard) {
+							unselectCard();
+						} else {
+							selectCard(card);
+						}
+					}}
+				/>
 			</Section>
 
 			<Section title="Member's cards">
-				<ul className="flex gap-4 flex-wrap">
-					{users.length ? (
-						users.map((user) => (
-							<li key={user.userId}>
-								<Card isOpen={isOpen} selected={!!user.card} key={user.userId}>
-									{user.card}
-								</Card>
-							</li>
-						))
-					) : (
-						<Card isOpen={false} selected={false} />
-					)}
-				</ul>
+				<MemberCards users={users} isOpen={isOpen} userId={userId.current} />
 			</Section>
 
 			{ownerRoomId && (
-				<Section title="Owner operations" className="flex gap-4">
-					{isOpen ? (
-						<Button type="button" onClick={close} className="font-bold">
-							CLOSE
-						</Button>
-					) : (
-						<Button type="button" onClick={open} className="font-bold">
-							OPEN
-						</Button>
-					)}
-					<Button
-						type="button"
-						variant="outline"
-						onClick={reset}
-						className="font-bold"
-					>
-						RESET
-					</Button>
+				<Section title="Owner operations">
+					<OwnerOperations
+						isOpen={isOpen}
+						onOpen={open}
+						onClose={close}
+						onReset={reset}
+					/>
 				</Section>
 			)}
 
