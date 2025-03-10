@@ -32,7 +32,7 @@ jobs:
         with:
           version: latest
       # 時間短縮のためテストで不要なサービスは除外して supabase を起動
-      - name: Supabase 起動
+      - name: Supabase 起動（バックグラウンド実行）
         run: supabase start -x gotrue,storage-api,imgproxy,inbucket,postgres-meta,studio,edge-runtime,logflare,vector,supavisor &
 
 
@@ -47,8 +47,8 @@ jobs:
           cache: "pnpm"
       - name: パッケージインストール
         run: pnpm install
-      - name: Playwright ブラウザインストール
-        run: pnpm --filter e2e exec playwright install --with-deps
+      - name: Playwright ブラウザインストール（バックグラウンド実行）
+        run: pnpm --filter e2e exec playwright install --with-deps &
 
       # キャッシュ復元時間を含めるとキャッシュなしのほうがトータルで早いため一旦無効化
       # - uses: actions/cache@v4
@@ -78,6 +78,21 @@ jobs:
 
       - name: Web ビルド
         run: pnpm --filter web run build
+
+      - name: Playwright インストール待ち
+        run: |
+          timeout=180
+          counter=0
+          until pgrep -f "playwright install" > /dev/null || [ $counter -gt $timeout ]; do
+            if [ $counter -gt $timeout ]; then
+              echo "タイムアウト"
+              exit 1
+            fi
+            echo "Waiting for Playwright installation to complete..."
+            sleep 1
+            counter=$((counter + 1))
+          done
+          echo "Playwright installation is complete!"
       - name: e2e テスト
         run: pnpm --filter e2e run test --project="${{ matrix.project }}"
 
