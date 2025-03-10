@@ -32,11 +32,9 @@ jobs:
         with:
           version: latest
       # 時間短縮のためテストで不要なサービスは除外して supabase を起動
-      - name: Supabase 起動
-        run: supabase start -x gotrue,storage-api,imgproxy,inbucket,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
+      - name: Supabase 起動（バックグラウンド実行）
+        run: supabase start -x gotrue,storage-api,imgproxy,inbucket,postgres-meta,studio,edge-runtime,logflare,vector,supavisor &
 
-      - name: DB リセット
-        run: supabase db reset
 
       - name: pnpm のセットアップ
         uses: pnpm/action-setup@v4
@@ -60,6 +58,23 @@ jobs:
       #     key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
       #     restore-keys: |
       #       ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+
+      - name: Supabase 起動まち
+        run: |
+          timeout=180
+          counter=0
+          until curl -s http://localhost:14321/rest/v1/ >/dev/null; do
+            if [ $counter -gt $timeout ]; then
+              echo "タイムアウト"
+              exit 1
+            fi
+            echo "Waiting for Supabase to be ready..."
+            sleep 1
+            counter=$((counter + 1))
+          done
+          echo "Supabase is ready!"
+      - name: DB リセット
+        run: supabase db reset
 
       - name: Web ビルド
         run: pnpm --filter web run build
