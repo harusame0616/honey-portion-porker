@@ -9,6 +9,15 @@
 		{
 			"matchUpdateTypes": ["minor", "patch", "pin"],
 			"automerge": true
+		},
+		{
+			"matchPackageNames": [
+				"react",
+				"react-dom",
+				"@types/react",
+				"@types/react-dom"
+			],
+			"groupName": "react関連パッケージ"
 		}
 	]
 }
