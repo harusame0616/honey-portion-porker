@@ -10,6 +10,7 @@ type Props = {
 	userId: string;
 };
 export function MemberCards({ users, isOpen, userId }: Props) {
+	console.log({ userId });
 	return (
 		<ul className="flex gap-4 flex-wrap">
 			{users.length ? (
@@ -28,7 +29,12 @@ export function MemberCards({ users, isOpen, userId }: Props) {
 					</li>
 				))
 			) : (
-				<Card isOpen={false} selected={false} />
+				<div className="flex flex-col items-center relative">
+					<Card isOpen={false} selected={false} key={userId} />
+					<div className="-ml-0.5 -mt-1.5 -mb-4">
+						<ChevronUpIcon role="img" aria-label="you" />
+					</div>
+				</div>
 			)}
 		</ul>
 	);
