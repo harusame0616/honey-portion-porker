@@ -35,8 +35,6 @@ jobs:
       - name: Supabase 起動
         run: supabase start -x gotrue,storage-api,imgproxy,inbucket,postgres-meta,studio,edge-runtime,logflare,vector,supavisor &
 
-      - name: DB リセット
-        run: supabase db reset
 
       - name: pnpm のセットアップ
         uses: pnpm/action-setup@v4
@@ -75,6 +73,9 @@ jobs:
             counter=$((counter + 1))
           done
           echo "Supabase is ready!"
+      - name: DB リセット
+        run: supabase db reset
+
       - name: Web ビルド
         run: pnpm --filter web run build
       - name: e2e テスト
