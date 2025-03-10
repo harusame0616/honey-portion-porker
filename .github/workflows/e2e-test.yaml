@@ -33,7 +33,7 @@ jobs:
           version: latest
       # 時間短縮のためテストで不要なサービスは除外して supabase を起動
       - name: Supabase 起動
-        run: supabase start -x studio,postgres-meta
+        run: supabase start -x gotrue,storage-api,imgproxy,kong,inbucket,postgrest,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
 
       - name: pnpm のセットアップ
         uses: pnpm/action-setup@v4
