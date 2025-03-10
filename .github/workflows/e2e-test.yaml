@@ -52,14 +52,15 @@ jobs:
       - name: Playwright ブラウザインストール
         run: pnpm --filter e2e exec playwright install --with-deps
 
+      # キャッシュ復元時間を含めるとキャッシュなしのほうがトータルで早いため一旦無効化
+      # - uses: actions/cache@v4
+      #   with:
+      #     path: |
+      #       ${{ github.workspace }}/packages/web/.next/cache
+      #     key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
 
-      - uses: actions/cache@v4
-        with:
-          path: |
-            ${{ github.workspace }}/packages/web/.next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
-          restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
       - name: Web ビルド
         run: pnpm --filter web run build
       - name: e2e テスト
