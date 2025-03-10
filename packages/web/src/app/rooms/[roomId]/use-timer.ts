@@ -9,7 +9,7 @@ type UseTimer = {
 
 export function useTimer(time: number, onTimeUp: () => void): UseTimer {
 	const [isActive, setIsActive, isActiveRef] = useStateWithRef(false);
-	const timerIdRef = useRef<NodeJS.Timeout | undefined>();
+	const timerIdRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
 	const startTimer = useCallback(() => {
 		setIsActive(true);
