@@ -33,7 +33,10 @@ jobs:
           version: latest
       # 時間短縮のためテストで不要なサービスは除外して supabase を起動
       - name: Supabase 起動
-        run: supabase start -x studio,postgres-meta
+        run: supabase start -x gotrue,storage-api,imgproxy,inbucket,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
+
+      - name: DB リセット
+        run: supabase db reset
 
       - name: pnpm のセットアップ
         uses: pnpm/action-setup@v4
@@ -49,8 +52,14 @@ jobs:
       - name: Playwright ブラウザインストール
         run: pnpm --filter e2e exec playwright install --with-deps
 
-      - name: DB リセット
-        run: pnpm dlx supabase db reset
+      # キャッシュ復元時間を含めるとキャッシュなしのほうがトータルで早いため一旦無効化
+      # - uses: actions/cache@v4
+      #   with:
+      #     path: |
+      #       ${{ github.workspace }}/packages/web/.next/cache
+      #     key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
 
       - name: Web ビルド
         run: pnpm --filter web run build
