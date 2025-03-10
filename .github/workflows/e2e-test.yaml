@@ -63,7 +63,7 @@ jobs:
         run: |
           timeout=180
           counter=0
-          until curl -s http://localhost:54321/rest/v1/ >/dev/null; do
+          until curl -s http://localhost:14321/rest/v1/ >/dev/null; do
             if [ $counter -gt $timeout ]; then
               echo "タイムアウト"
               exit 1
