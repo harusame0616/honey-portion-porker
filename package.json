@@ -1,15 +1,16 @@
 {
-  "name": "honey-portion-porker",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "renovate": "39.191.4"
-  }
+	"name": "honey-portion-porker",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"renovate": "39.191.4"
+	},
+	"packageManager": "pnpm@10.6.2"
 }
