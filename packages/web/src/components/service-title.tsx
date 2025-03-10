@@ -13,7 +13,9 @@ const titleFont = Itim({
 export function ServiceTitle() {
 	return (
 		<div className="flex items-end gap-1">
-			<Image src={icon} alt="" width={40} height={40} />
+			<div className="size-10 shrink-0">
+				<Image src={icon} alt="" priority loading="eager" />
+			</div>
 			<span className={cn(titleFont.className, "text-3xl font-bold ")}>
 				Honey Portion Poker
 			</span>

@@ -44,11 +44,14 @@ export function Card({ children, isOpen, selected }: Props) {
 					</>
 				)
 			) : (
-				<Image
-					alt={`${selected ? "選択済み" : "未選択"}の裏向きのカード`}
-					src={cardIcon}
-					width={30}
-				/>
+				<div className="size-8">
+					<Image
+						alt={`${selected ? "選択済み" : "未選択"}の裏向きのカード`}
+						src={cardIcon}
+						priority
+						loading="eager"
+					/>
+				</div>
 			)}
 		</div>
 	);
