@@ -14,7 +14,7 @@ export function ServiceTitle() {
 	return (
 		<div className="flex items-end gap-1">
 			<div className="size-10 shrink-0">
-				<Image src={icon} alt="" priority loading="eager" />
+				<Image src={icon} alt="" priority loading="eager" decoding="sync" />
 			</div>
 			<span className={cn(titleFont.className, "text-3xl font-bold ")}>
 				Honey Portion Poker

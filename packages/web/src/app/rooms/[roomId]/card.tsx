@@ -50,6 +50,7 @@ export function Card({ children, isOpen, selected }: Props) {
 						src={cardIcon}
 						priority
 						loading="eager"
+						decoding="sync"
 					/>
 				</div>
 			)}
