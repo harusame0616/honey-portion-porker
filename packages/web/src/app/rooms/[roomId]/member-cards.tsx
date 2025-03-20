@@ -1,6 +1,6 @@
 import { ChevronUpIcon } from "lucide-react";
 import { Card } from "./card";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 
 type MemberCardProps = {
 	number?: number;
@@ -55,21 +55,36 @@ type Props = {
 export function MemberCards({ users, isOpen, userId }: Props) {
 	return (
 		<ul className="flex gap-4 flex-wrap">
-			{users.length ? (
-				users.map(({ userId: memberId, card }) => (
-					<li key={memberId}>
-						<MemberCard
-							number={card}
-							isOpen={isOpen}
-							isMine={memberId === userId}
-						/>
-					</li>
-				))
-			) : (
-				<li>
-					<MemberCard isOpen={false} isMine />
-				</li>
-			)}
+			<AnimatePresence initial={false} mode="popLayout">
+				{users.length ? (
+					users.map(({ userId: memberId, card }) => (
+						<motion.li
+							key={memberId}
+							initial={{ opacity: 0, scale: 0.8 }}
+							animate={{ opacity: 1, scale: 1 }}
+							exit={{ opacity: 0, scale: 0.8 }}
+							transition={{ duration: 0.3 }}
+							layout
+						>
+							<MemberCard
+								number={card}
+								isOpen={isOpen}
+								isMine={memberId === userId}
+							/>
+						</motion.li>
+					))
+				) : (
+					<motion.li
+						key="empty"
+						initial={{ opacity: 0, scale: 0.8 }}
+						animate={{ opacity: 1, scale: 1 }}
+						exit={{ opacity: 0, scale: 0.8 }}
+						transition={{ duration: 0.3 }}
+					>
+						<MemberCard isOpen={false} isMine />
+					</motion.li>
+				)}
+			</AnimatePresence>
 		</ul>
 	);
 }
