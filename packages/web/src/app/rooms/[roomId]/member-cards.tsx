@@ -1,6 +1,6 @@
 import { ChevronUpIcon } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { Card } from "./card";
-import { motion, AnimatePresence } from "motion/react";
 
 type MemberCardProps = {
 	number?: number;

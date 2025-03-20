@@ -1,5 +1,5 @@
-import { Card } from "./card";
 import { motion } from "motion/react";
+import { Card } from "./card";
 
 const choices = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, -1];
 
