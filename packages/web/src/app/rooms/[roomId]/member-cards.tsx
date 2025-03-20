@@ -1,5 +1,6 @@
 import { ChevronUpIcon } from "lucide-react";
 import { Card } from "./card";
+import { motion } from "motion/react";
 
 type MemberCardProps = {
 	number?: number;
@@ -9,16 +10,36 @@ type MemberCardProps = {
 
 function MemberCard({ number, isOpen, isMine }: MemberCardProps) {
 	return (
-		<div className="flex flex-col items-center relative">
+		<motion.div
+			className="flex flex-col items-center relative"
+			animate={isOpen ? { rotateY: 0 } : { rotateY: 180 }}
+			transition={{
+				type: "spring",
+				stiffness: 260,
+				damping: 20,
+				duration: 0.5,
+			}}
+			initial={false}
+		>
 			<Card isOpen={isOpen} selected={!!number}>
 				{number}
 			</Card>
 			{isMine && (
-				<div className="-ml-0.5 -mt-1.5 -mb-4">
+				<motion.div
+					className="-ml-0.5 -mt-1.5 -mb-4"
+					initial={{ y: 0 }}
+					animate={{ y: [0, -5, 0] }}
+					transition={{
+						repeat: 1,
+						duration: 0.6,
+						ease: "easeInOut",
+						repeatDelay: 2,
+					}}
+				>
 					<ChevronUpIcon role="img" aria-label="you" />
-				</div>
+				</motion.div>
 			)}
-		</div>
+		</motion.div>
 	);
 }
 
