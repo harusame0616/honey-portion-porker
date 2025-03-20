@@ -10,23 +10,49 @@ type MemberCardProps = {
 
 function MemberCard({ number, isOpen, isMine }: MemberCardProps) {
 	return (
-		<motion.div
-			className="flex flex-col items-center relative"
-			animate={isOpen ? { rotateY: 0 } : { rotateY: 180 }}
-			transition={{
-				type: "spring",
-				stiffness: 260,
-				damping: 20,
-				duration: 0.5,
-			}}
-			initial={false}
-		>
-			<Card isOpen={isOpen} selected={!!number}>
-				{number}
-			</Card>
+		<div className="relative">
+			<motion.div
+				className="relative"
+				style={{
+					transformStyle: "preserve-3d",
+					perspective: "1000px",
+					width: "3rem",
+					height: "5rem",
+				}}
+				animate={isOpen ? { rotateY: 0 } : { rotateY: 180 }}
+				transition={{
+					type: "spring",
+					stiffness: 260,
+					damping: 20,
+				}}
+				initial={false}
+			>
+				<div
+					className="absolute inset-0"
+					style={{
+						backfaceVisibility: "hidden",
+						transform: "rotateY(0deg)",
+					}}
+				>
+					<Card isOpen={true} selected={!!number}>
+						{number}
+					</Card>
+				</div>
+				<div
+					className="absolute inset-0"
+					style={{
+						backfaceVisibility: "hidden",
+						transform: "rotateY(180deg)",
+					}}
+				>
+					<Card isOpen={false} selected={!!number}>
+						{null}
+					</Card>
+				</div>
+			</motion.div>
 			{isMine && (
 				<motion.div
-					className="-ml-0.5 -mt-1.5 -mb-4"
+					className="absolute -bottom-4 left-1/2 transform -translate-x-1/2"
 					initial={{ y: 0 }}
 					animate={{ y: [0, -5, 0] }}
 					transition={{
@@ -39,7 +65,7 @@ function MemberCard({ number, isOpen, isMine }: MemberCardProps) {
 					<ChevronUpIcon role="img" aria-label="you" />
 				</motion.div>
 			)}
-		</motion.div>
+		</div>
 	);
 }
 
