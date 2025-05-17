@@ -25,7 +25,7 @@ importers:
     dependencies:
       '@hookform/resolvers':
         specifier: 4.1.3
-        version: 4.1.3(react-hook-form@7.56.3(react@19.1.0))
+        version: 4.1.3(react-hook-form@7.56.4(react@19.1.0))
       '@radix-ui/react-checkbox':
         specifier: 1.2.3
         version: 1.2.3(@types/react-dom@19.1.5(@types/react@19.1.4))(@types/react@19.1.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -69,8 +69,8 @@ importers:
         specifier: 19.1.0
         version: 19.1.0(react@19.1.0)
       react-hook-form:
-        specifier: 7.56.3
-        version: 7.56.3(react@19.1.0)
+        specifier: 7.56.4
+        version: 7.56.4(react@19.1.0)
       tailwind-merge:
         specifier: 3.3.0
         version: 3.3.0
@@ -3121,8 +3121,8 @@ packages:
     peerDependencies:
       react: ^19.1.0
 
-  react-hook-form@7.56.3:
-    resolution: {integrity: sha512-IK18V6GVbab4TAo1/cz3kqajxbDPGofdF0w7VHdCo0Nt8PrPlOZcuuDq9YYIV1BtjcX78x0XsldbQRQnQXWXmw==}
+  react-hook-form@7.56.4:
+    resolution: {integrity: sha512-Rob7Ftz2vyZ/ZGsQZPaRdIefkgOSrQSPXfqBdvOPwJfoGnjwRJUs7EM7Kc1mcoDv3NOtqBzPGbcMB8CGn9CKgw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
@@ -4639,10 +4639,10 @@ snapshots:
 
   '@gwhitney/detect-indent@7.0.1': {}
 
-  '@hookform/resolvers@4.1.3(react-hook-form@7.56.3(react@19.1.0))':
+  '@hookform/resolvers@4.1.3(react-hook-form@7.56.4(react@19.1.0))':
     dependencies:
       '@standard-schema/utils': 0.3.0
-      react-hook-form: 7.56.3(react@19.1.0)
+      react-hook-form: 7.56.4(react@19.1.0)
 
   '@img/sharp-darwin-arm64@0.34.1':
     optionalDependencies:
@@ -7553,7 +7553,7 @@ snapshots:
       react: 19.1.0
       scheduler: 0.26.0
 
-  react-hook-form@7.56.3(react@19.1.0):
+  react-hook-form@7.56.4(react@19.1.0):
     dependencies:
       react: 19.1.0
 
