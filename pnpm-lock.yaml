@@ -54,8 +54,8 @@ importers:
         specifier: 4.1.0
         version: 4.1.0
       lucide-react:
-        specifier: 0.511.0
-        version: 0.511.0(react@19.1.0)
+        specifier: 0.526.0
+        version: 0.526.0(react@19.1.0)
       motion:
         specifier: 12.12.2
         version: 12.12.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -2593,8 +2593,8 @@ packages:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
     engines: {node: '>=10'}
 
-  lucide-react@0.511.0:
-    resolution: {integrity: sha512-VK5a2ydJ7xm8GvBeKLS9mu1pVK6ucef9780JVUjw6bAjJL/QXnd4Y0p7SPeOUMC27YhzNCZvm5d/QX0Tp3rc0w==}
+  lucide-react@0.526.0:
+    resolution: {integrity: sha512-uGWG/2RKuDLeQHCodn5cmJ9Zij80EstOdcBP+j//B2sr78w7woiEL4aMu6CRlRkyOyJ8sZry8QLhQTmZjynLdA==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -2904,6 +2904,7 @@ packages:
   openpgp@6.1.0:
     resolution: {integrity: sha512-fRTeitP+hoGJD3kbdUlAI++wE6MvfvXw1rBqHwmBMxIpLjowatJ2zb5ThkORpIkSz5F12wO+xCYRSTbT7M4qKA==}
     engines: {node: '>= 18.0.0'}
+    deprecated: This version is deprecated as it's vulnerable to CVE-2025-47934 (https://github.com/openpgpjs/openpgpjs/security/advisories/GHSA-8qff-qr5q-5pr8). Please update to v6.1.1 or later.
 
   p-all@3.0.0:
     resolution: {integrity: sha512-qUZbvbBFVXm6uJ7U/WDiO0fv6waBMbjlCm4E66oZdRR+egswICarIdHyVSZZHudH8T5SF8x/JG0q0duFzPnlBw==}
@@ -6965,7 +6966,7 @@ snapshots:
     dependencies:
       yallist: 4.0.0
 
-  lucide-react@0.511.0(react@19.1.0):
+  lucide-react@0.526.0(react@19.1.0):
     dependencies:
       react: 19.1.0
 
