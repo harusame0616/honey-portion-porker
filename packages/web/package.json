@@ -39,8 +39,8 @@
 		"@biomejs/biome": "1.9.4",
 		"@tailwindcss/postcss": "4.1.7",
 		"@types/node": "22.16.5",
-		"@types/react": "19.1.9",
-		"@types/react-dom": "19.1.7",
+		"@types/react": "19.1.13",
+		"@types/react-dom": "19.1.9",
 		"postcss": "8.5.6",
 		"tailwindcss": "4.1.7",
 		"typescript": "5.8.3"
