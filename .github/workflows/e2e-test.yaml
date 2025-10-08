@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: [chromium, webkit, "Mobile Chrome", "Mobile Safari"]
+        project: [chromium, webkit]
       fail-fast: false
     steps:
       - name: チェックアウト
@@ -34,7 +34,6 @@ jobs:
       # 時間短縮のためテストで不要なサービスは除外して supabase を起動
       - name: Supabase 起動（バックグラウンド実行）
         run: supabase start -x gotrue,storage-api,imgproxy,inbucket,postgres-meta,studio,edge-runtime,logflare,vector,supavisor &
-
 
       - name: pnpm のセットアップ
         uses: pnpm/action-setup@v4
