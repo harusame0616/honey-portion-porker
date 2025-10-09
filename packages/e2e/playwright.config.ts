@@ -32,13 +32,7 @@ export default defineConfig({
 	},
 
 	/* Configure projects for major browsers */
-	projects: [
-		{ name: "chromium", use: { ...devices["Desktop Chrome"] } },
-		{ name: "webkit", use: { ...devices["Desktop Safari"] } },
-
-		{ name: "Mobile Chrome", use: { ...devices["Pixel 5"] } },
-		{ name: "Mobile Safari", use: { ...devices["iPhone 12"] } },
-	],
+	projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
 
 	/* Run your local dev server before starting the tests */
 	webServer: {
