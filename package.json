@@ -9,7 +9,7 @@
 	"license": "ISC",
 	"main": "index.js",
 	"name": "honey-portion-porker",
-	"packageManager": "pnpm@10.11.1",
+	"packageManager": "pnpm@10.18.2",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"validate:fix": "biome check --write ."
