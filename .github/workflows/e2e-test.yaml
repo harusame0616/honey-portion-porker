@@ -25,7 +25,7 @@ jobs:
       fail-fast: false
     steps:
       - name: チェックアウト
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: supabase cli のセットアップ
         uses: supabase/setup-cli@v1
