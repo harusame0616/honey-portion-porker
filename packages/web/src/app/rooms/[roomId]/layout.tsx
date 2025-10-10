@@ -1,6 +1,6 @@
-import { ServiceTitle } from "@/components/service-title";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { ServiceTitle } from "@/components/service-title";
 
 export default function Layout({ children }: { children: ReactNode }) {
 	return (

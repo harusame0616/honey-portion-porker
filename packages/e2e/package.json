@@ -1,16 +1,12 @@
 {
-	"name": "e2e",
-	"version": "1.0.0",
-	"description": "",
-	"main": "index.js",
-	"scripts": {
-		"test": "playwright test"
-	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
 	"devDependencies": {
 		"@playwright/test": "1.56.0",
 		"@types/node": "22.18.9"
-	}
+	},
+	"license": "ISC",
+	"name": "e2e",
+	"scripts": {
+		"test": "playwright test"
+	},
+	"version": "1.0.0"
 }

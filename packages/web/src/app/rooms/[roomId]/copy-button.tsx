@@ -8,15 +8,15 @@ type Props = {
 export function CopyButton({ text }: Props) {
 	return (
 		<ReactionIconButton
-			variant="ghost"
-			size="icon"
-			type="button"
+			aria-live="polite"
 			onClick={() => {
 				navigator.clipboard.writeText(text);
 			}}
-			aria-live="polite"
+			size="icon"
+			type="button"
+			variant="ghost"
 		>
-			<ClipboardIcon role="img" aria-label="copy" />
+			<ClipboardIcon aria-label="copy" role="img" />
 		</ReactionIconButton>
 	);
 }

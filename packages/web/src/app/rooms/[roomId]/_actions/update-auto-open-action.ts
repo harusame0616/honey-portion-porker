@@ -10,8 +10,8 @@ export async function updateAutoOpenAction(
 		await updateAutoOpen(ownerRoomId, newAutoReset);
 	} catch {
 		return {
-			success: false,
 			message: "Failed to update auto open config",
+			success: false,
 		};
 	}
 

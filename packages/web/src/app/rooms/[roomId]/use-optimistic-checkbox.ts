@@ -1,5 +1,4 @@
-import { useEffect, useOptimistic, useState, useTransition } from "react";
-import { updateAutoResetConfigAction } from "./_actions/update-auto-reset-config";
+import { useOptimistic, useTransition } from "react";
 
 type Params = {
 	checked: boolean;
@@ -28,8 +27,8 @@ export function useOptimisticCheckbox({
 	}
 
 	return {
+		changeChecked,
 		isPending,
 		optimisticCheckedState,
-		changeChecked,
 	};
 }

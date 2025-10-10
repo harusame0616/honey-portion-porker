@@ -17,10 +17,10 @@ export function useTimerFinished() {
 	}, [isFinished]);
 
 	return {
-		isFinished,
 		finish: () => {
 			setIsFinished(true);
 		},
+		isFinished,
 		reset: () => {
 			setIsFinished(false);
 		},

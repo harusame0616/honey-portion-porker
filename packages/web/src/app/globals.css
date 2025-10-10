@@ -1,7 +1,9 @@
 @import "tailwindcss";
 
+/* biome-ignore lint/suspicious/noUnknownAtRules: Tailwind CSS v4 の機能 */
 @custom-variant dark (&:is(.dark *));
 
+/* biome-ignore lint/suspicious/noUnknownAtRules: Tailwind CSS v4 の機能 */
 @theme {
 	--color-background: hsl(var(--background));
 	--color-foreground: hsl(var(--foreground));
@@ -125,9 +127,11 @@
 
 @layer base {
 	* {
+		/* biome-ignore lint/suspicious/noUnknownAtRules: Tailwind CSS の @apply 機能 */
 		@apply border-border;
 	}
 	body {
+		/* biome-ignore lint/suspicious/noUnknownAtRules: Tailwind CSS の @apply 機能 */
 		@apply bg-background text-foreground;
 	}
 }

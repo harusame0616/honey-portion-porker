@@ -1,5 +1,5 @@
-import { RoomJoiningForm } from "@/app/room-joining-form";
 import Link from "next/link";
+import { RoomJoiningForm } from "@/app/room-joining-form";
 
 export default function NotFoundPage() {
 	return (
@@ -11,7 +11,7 @@ export default function NotFoundPage() {
 					<RoomJoiningForm />
 				</div>
 				<div className="flex justify-center mt-16">
-					<Link href="/" className="underline">
+					<Link className="underline" href="/">
 						トップへ
 					</Link>
 				</div>

@@ -1,9 +1,9 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
+import { Button } from "@/components/ui/button";
 import { createNewRoomAction } from "./_actions/create-new-room-action";
 
 export function NewRoomCreation() {
@@ -26,15 +26,15 @@ export function NewRoomCreation() {
 	return (
 		<div className="w-full">
 			<Button
-				disabled={isPending}
 				className="w-full font-bold"
+				disabled={isPending}
 				onClick={handleClick}
 			>
 				{isPending ? (
 					<ReloadIcon
+						aria-label="Creating new room"
 						className="animate-spin"
 						role="img"
-						aria-label="Creating new room"
 					/>
 				) : (
 					"CREATE ROOM"

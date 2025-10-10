@@ -1,11 +1,11 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { useRouter } from "next/navigation";
 import { useId } from "react";
 import { useForm } from "react-hook-form";
 import * as v from "valibot";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const formSchema = v.object({
 	roomId: v.pipe(
@@ -33,20 +33,20 @@ export function RoomJoiningForm() {
 	}
 
 	return (
-		<form onSubmit={handleSubmit(enterRoom)} noValidate>
+		<form noValidate onSubmit={handleSubmit(enterRoom)}>
 			<label className="mb-1 text-sm font-bold" htmlFor={roomIdInputId}>
 				ルーム ID
 			</label>
 			<div className="flex gap-1">
 				<Input
-					type="text"
 					required
+					type="text"
 					{...register("roomId")}
 					id={roomIdInputId}
 				/>
 				<Button className="font-bold">参加</Button>
 			</div>
-			<div className="text-destructive text-sm mt-1" aria-live="polite">
+			<div aria-live="polite" className="text-destructive text-sm mt-1">
 				{formState.errors.roomId?.message}
 			</div>
 		</form>

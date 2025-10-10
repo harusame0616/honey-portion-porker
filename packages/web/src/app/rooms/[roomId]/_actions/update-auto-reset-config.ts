@@ -10,8 +10,8 @@ export async function updateAutoResetConfigAction(
 		await updateAutoReset(ownerRoomId, newAutoReset);
 	} catch {
 		return {
-			success: false,
 			message: "Failed to update auto reset config",
+			success: false,
 		};
 	}
 
