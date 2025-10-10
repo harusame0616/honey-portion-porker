@@ -12,19 +12,19 @@ export default function Home() {
 			</header>
 
 			<main className="flex flex-col items-center">
-				<div className="font-bold text-3xl leading-normal bg-[hsl(45_35%_60%)] w-svw flex justify-center my-4">
-					<div className="max-w-2xl w-full p-6">
-						<div
+				<div className="bg-[hsl(45_35%_60%)] w-svw flex justify-center my-4 p-6">
+					<h2 className="max-w-2xl w-full font-bold text-3xl leading-normal">
+						<span
 							className="text-primary"
 							style={{
 								textShadow: "0 1px 3px rgb(122, 113, 86)",
 							}}
 						>
 							すぐ使えて設定を保持できる
-						</div>
-						<div>シンプルな</div>
-						<div>プランニングポーカー</div>
-					</div>
+						</span>
+						<span className="block">シンプルな</span>
+						<span className="block">プランニングポーカー</span>
+					</h2>
 				</div>
 
 				<div className="max-w-2xl w-full p-4">
@@ -36,13 +36,11 @@ export default function Home() {
 						URL を発行する必要はありません。
 					</p>
 
-					<div className="flex justify-center">
-						<div className="p-8 max-w-96 w-full">
-							<NewRoomCreation />
-							<div className="mt-8">
-								<div className="mb-2 text-sm">または既存のルームに参加する</div>
-								<RoomJoiningForm />
-							</div>
+					<div className="p-8 max-w-96 w-full mx-auto">
+						<NewRoomCreation />
+						<div className="mt-8">
+							<div className="mb-2 text-sm">または既存のルームに参加する</div>
+							<RoomJoiningForm />
 						</div>
 					</div>
 				</div>
