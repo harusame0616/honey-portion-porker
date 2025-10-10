@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { ReactNode } from "react";
 
 type Props = {
 	isOpen: boolean;
@@ -12,19 +11,19 @@ export function OwnerOperations({ isOpen, onOpen, onClose, onReset }: Props) {
 	return (
 		<div className="flex gap-4">
 			{isOpen ? (
-				<Button type="button" onClick={onClose} className="font-bold w-20">
+				<Button className="font-bold w-20" onClick={onClose} type="button">
 					CLOSE
 				</Button>
 			) : (
-				<Button type="button" onClick={onOpen} className="font-bold w-20">
+				<Button className="font-bold w-20" onClick={onOpen} type="button">
 					OPEN
 				</Button>
 			)}
 			<Button
+				className="font-bold"
+				onClick={onReset}
 				type="button"
 				variant="outline"
-				onClick={onReset}
-				className="font-bold"
 			>
 				RESET
 			</Button>

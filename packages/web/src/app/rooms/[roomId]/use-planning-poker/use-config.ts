@@ -6,10 +6,10 @@ export function useConfig(initialAutoReset: boolean, initialAutoOpen: boolean) {
 	const [autoOpen, setAutoOpen, autoOpenRef] = useStateWithRef(initialAutoOpen);
 
 	return {
-		autoReset,
 		autoOpen,
-		setAutoReset,
-		setAutoOpen,
 		autoOpenRef,
+		autoReset,
+		setAutoOpen,
+		setAutoReset,
 	};
 }

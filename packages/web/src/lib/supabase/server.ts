@@ -6,9 +6,9 @@ export async function createClient() {
 	const cookieStore = await cookies();
 
 	return createServerClient<Database>(
-		// biome-ignore lint/style/noNonNullAssertion: <explanation>
+		// biome-ignore lint/style/noNonNullAssertion: 環境変数は必須のため
 		process.env.NEXT_PUBLIC_SUPABASE_URL!,
-		// biome-ignore lint/style/noNonNullAssertion: <explanation>
+		// biome-ignore lint/style/noNonNullAssertion: 環境変数は必須のため
 		process.env.SUPABASE_SERVICE_ROLE_KEY!,
 		{
 			cookies: {
@@ -17,7 +17,7 @@ export async function createClient() {
 				},
 				setAll(cookiesToSet) {
 					try {
-						// biome-ignore lint/complexity/noForEach: <explanation>
+						// biome-ignore lint/suspicious/useIterableCallbackReturn: Supabase の公式サンプルコードのため
 						cookiesToSet.forEach(({ name, value, options }) =>
 							cookieStore.set(name, value, options),
 						);

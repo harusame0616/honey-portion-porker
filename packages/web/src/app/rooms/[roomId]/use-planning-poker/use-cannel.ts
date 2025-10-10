@@ -1,6 +1,6 @@
 import { createBrowserClient } from "@supabase/ssr";
 import type { RealtimeChannel } from "@supabase/supabase-js";
-import { type MutableRefObject, useCallback, useMemo, useRef } from "react";
+import { type MutableRefObject, useMemo, useRef } from "react";
 
 export type Channel = {
 	ref: MutableRefObject<RealtimeChannel>;
@@ -11,10 +11,10 @@ export function useChannel(roomId: string): Channel {
 
 	const channel = useMemo(
 		() => ({
-			ref: channelRef,
 			recreate: () => {
 				channelRef.current = createChannel(roomId);
 			},
+			ref: channelRef,
 		}),
 		[roomId],
 	);
@@ -24,9 +24,9 @@ export function useChannel(roomId: string): Channel {
 
 function createChannel(roomId: string) {
 	return createBrowserClient(
-		// biome-ignore lint/style/noNonNullAssertion: <explanation>
+		// biome-ignore lint/style/noNonNullAssertion: 環境変数は必須のため
 		process.env.NEXT_PUBLIC_SUPABASE_URL!,
-		// biome-ignore lint/style/noNonNullAssertion: <explanation>
+		// biome-ignore lint/style/noNonNullAssertion: 環境変数は必須のため
 		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 	).channel(roomId, { config: { broadcast: { self: true } } });
 }

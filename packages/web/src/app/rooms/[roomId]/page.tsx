@@ -1,7 +1,7 @@
-import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import { after } from "next/server";
 import * as v from "valibot";
+import { createClient } from "@/lib/supabase/server";
 import { Room } from "./room";
 
 async function getRoom(
@@ -16,23 +16,23 @@ async function getRoom(
 
 	if (roomSelect.error || !roomSelect.data.roomId) {
 		return {
-			success: false as const,
-			message: "ルームが見つかりません | Honey Portion Poker",
 			data: null,
+			message: "ルームが見つかりません | Honey Portion Poker",
+			success: false as const,
 		};
 	}
 
 	return {
-		success: true as const,
-		message: "",
 		data: {
-			roomId: roomSelect.data.roomId,
-			ownerRoomId: roomSelect.data.ownerRoomId,
+			autoOpen: roomSelect.data.autoOpen,
+			autoReset: roomSelect.data.autoReset,
 			memberRoomId: roomSelect.data.memberRoomId,
 			note: roomSelect.data.note,
-			autoReset: roomSelect.data.autoReset,
-			autoOpen: roomSelect.data.autoOpen,
+			ownerRoomId: roomSelect.data.ownerRoomId,
+			roomId: roomSelect.data.roomId,
 		},
+		message: "",
+		success: true as const,
 	};
 }
 
@@ -105,16 +105,16 @@ export default async function Page({
 
 	return (
 		<Room
-			roomId={roomGettingResult.data.roomId}
-			initialAutoReset={roomGettingResult.data.autoReset}
 			initialAutoOpen={roomGettingResult.data.autoOpen}
+			initialAutoReset={roomGettingResult.data.autoReset}
+			initialNote={roomGettingResult.data.note}
+			memberRoomId={roomGettingResult.data.memberRoomId}
 			ownerRoomId={
 				paramsParseResult.output.roomId === roomGettingResult.data.ownerRoomId
 					? roomGettingResult.data.ownerRoomId
 					: undefined
 			}
-			memberRoomId={roomGettingResult.data.memberRoomId}
-			initialNote={roomGettingResult.data.note}
+			roomId={roomGettingResult.data.roomId}
 		/>
 	);
 }

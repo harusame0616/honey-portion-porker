@@ -1,7 +1,6 @@
+import type { ComponentPropsWithoutRef, PropsWithChildren } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-
-import type { ComponentPropsWithoutRef, PropsWithChildren } from "react";
 
 export function LabeledCheckbox({
 	children,

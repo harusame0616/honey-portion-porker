@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import { CheckIcon } from "lucide-react";
 import {
 	type ComponentProps,
@@ -7,6 +6,7 @@ import {
 	useEffect,
 	useState,
 } from "react";
+import { Button } from "@/components/ui/button";
 
 type Props = ComponentProps<typeof Button>;
 export function ReactionIconButton({
@@ -27,17 +27,17 @@ export function ReactionIconButton({
 
 	return (
 		<Button
-			size="icon"
-			variant="ghost"
-			type="button"
 			onClick={(event) => {
 				onClick?.(event);
 				setIsFinished(true);
 			}}
+			size="icon"
+			type="button"
+			variant="ghost"
 			{...props}
 		>
 			{isFinished ? (
-				<CheckIcon role="img" aria-label="copied" className="text-primary" />
+				<CheckIcon aria-label="copied" className="text-primary" role="img" />
 			) : (
 				children
 			)}

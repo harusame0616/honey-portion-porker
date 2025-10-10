@@ -1,23 +1,23 @@
 {
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
 	"extends": ["config:js-app", "schedule:daily"],
-	"timezone": "Asia/Tokyo",
 	"labels": ["renovate"],
-	"schedule": ["after 9am before 1pm"],
-	"updateNotScheduled": false,
 	"packageRules": [
 		{
-			"matchUpdateTypes": ["minor", "patch", "pin"],
-			"automerge": true
+			"automerge": true,
+			"matchUpdateTypes": ["minor", "patch", "pin"]
 		},
 		{
+			"groupName": "react関連パッケージ",
 			"matchPackageNames": [
 				"react",
 				"react-dom",
 				"@types/react",
 				"@types/react-dom"
-			],
-			"groupName": "react関連パッケージ"
+			]
 		}
-	]
+	],
+	"schedule": ["after 9am before 1pm"],
+	"timezone": "Asia/Tokyo",
+	"updateNotScheduled": false
 }

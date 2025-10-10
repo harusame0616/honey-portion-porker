@@ -1,16 +1,15 @@
-import { cn } from "@/lib/utils";
 import { CoffeeIcon } from "lucide-react";
-import type { PropsWithChildren } from "react";
-
 import { Itim } from "next/font/google";
 import Image from "next/image";
+import type { PropsWithChildren } from "react";
+import { cn } from "@/lib/utils";
 import cardIcon from "../../_resources/icon.svg";
 
 const cuteFont = Itim({
-	subsets: ["latin"],
 	display: "swap",
-	weight: "400",
 	style: "normal",
+	subsets: ["latin"],
+	weight: "400",
 });
 
 type Props = PropsWithChildren<{
@@ -29,9 +28,9 @@ export function Card({ children, isOpen, selected }: Props) {
 			{isOpen ? (
 				children === -1 ? (
 					<CoffeeIcon
+						aria-label={`${selected ? "選択済み" : "未選択"}のコーヒーカード`}
 						className="size-10 text-2xl"
 						role="img"
-						aria-label={`${selected ? "選択済み" : "未選択"}のコーヒーカード`}
 						width={30}
 					/>
 				) : (
@@ -47,10 +46,10 @@ export function Card({ children, isOpen, selected }: Props) {
 				<div className="size-8">
 					<Image
 						alt={`${selected ? "選択済み" : "未選択"}の裏向きのカード`}
-						src={cardIcon}
-						priority
-						loading="eager"
 						decoding="sync"
+						loading="eager"
+						priority
+						src={cardIcon}
 					/>
 				</div>
 			)}

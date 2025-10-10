@@ -14,9 +14,9 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-	title: "Honey Portion Poker",
 	description:
 		"登録不要で設定を保持できるシンプルで簡単なオンライン・プランニングポーカー",
+	title: "Honey Portion Poker",
 };
 
 export default function RootLayout({

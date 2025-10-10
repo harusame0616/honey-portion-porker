@@ -12,20 +12,20 @@ function MemberCard({ number, isOpen, isMine }: MemberCardProps) {
 	return (
 		<div className="relative">
 			<motion.div
-				className="relative"
-				style={{
-					transformStyle: "preserve-3d",
-					perspective: "1000px",
-					width: "3rem",
-					height: "5rem",
-				}}
 				animate={isOpen ? { rotateY: 0 } : { rotateY: 180 }}
-				transition={{
-					type: "spring",
-					stiffness: 260,
-					damping: 20,
-				}}
+				className="relative"
 				initial={false}
+				style={{
+					height: "5rem",
+					perspective: "1000px",
+					transformStyle: "preserve-3d",
+					width: "3rem",
+				}}
+				transition={{
+					damping: 20,
+					stiffness: 260,
+					type: "spring",
+				}}
 			>
 				<div
 					className="absolute inset-0"
@@ -52,17 +52,17 @@ function MemberCard({ number, isOpen, isMine }: MemberCardProps) {
 			</motion.div>
 			{isMine && (
 				<motion.div
+					animate={{ y: [0, -5, 0] }}
 					className="absolute -bottom-4 left-1/2 transform -translate-x-1/2"
 					initial={{ y: 0 }}
-					animate={{ y: [0, -5, 0] }}
 					transition={{
-						repeat: 1,
 						duration: 0.6,
 						ease: "easeInOut",
+						repeat: 1,
 						repeatDelay: 2,
 					}}
 				>
-					<ChevronUpIcon role="img" aria-label="you" />
+					<ChevronUpIcon aria-label="you" role="img" />
 				</motion.div>
 			)}
 		</div>
@@ -85,29 +85,29 @@ export function MemberCards({ users, isOpen, userId }: Props) {
 				{users.length ? (
 					users.map(({ userId: memberId, card }) => (
 						<motion.li
-							key={memberId}
-							initial={{ opacity: 0, scale: 0.8 }}
 							animate={{ opacity: 1, scale: 1 }}
 							exit={{ opacity: 0, scale: 0.8 }}
-							transition={{ duration: 0.3 }}
+							initial={{ opacity: 0, scale: 0.8 }}
+							key={memberId}
 							layout
+							transition={{ duration: 0.3 }}
 						>
 							<MemberCard
-								number={card}
-								isOpen={isOpen}
 								isMine={memberId === userId}
+								isOpen={isOpen}
+								number={card}
 							/>
 						</motion.li>
 					))
 				) : (
 					<motion.li
-						key="empty"
-						initial={{ opacity: 0, scale: 0.8 }}
 						animate={{ opacity: 1, scale: 1 }}
 						exit={{ opacity: 0, scale: 0.8 }}
+						initial={{ opacity: 0, scale: 0.8 }}
+						key="empty"
 						transition={{ duration: 0.3 }}
 					>
-						<MemberCard isOpen={false} isMine />
+						<MemberCard isMine isOpen={false} />
 					</motion.li>
 				)}
 			</AnimatePresence>

@@ -13,9 +13,12 @@ export function ChoiceCards({ onCardClick, selectedCard }: Props) {
 			{choices.map((card) => (
 				<li key={card}>
 					<motion.button
-						type="button"
-						onClick={() => onCardClick(card)}
+						animate={card === selectedCard ? { y: -10 } : { y: 0 }}
+						initial={{ scale: 1 }}
 						key={card}
+						onClick={() => onCardClick(card)}
+						transition={{ damping: 20, stiffness: 300, type: "spring" }}
+						type="button"
 						whileHover={{
 							scale: 1.05,
 							transition: { duration: 0.2 },
@@ -24,9 +27,6 @@ export function ChoiceCards({ onCardClick, selectedCard }: Props) {
 							scale: 0.95,
 							transition: { duration: 0.1 },
 						}}
-						initial={{ scale: 1 }}
-						animate={card === selectedCard ? { y: -10 } : { y: 0 }}
-						transition={{ type: "spring", stiffness: 300, damping: 20 }}
 					>
 						<Card isOpen selected={card === selectedCard}>
 							{card}

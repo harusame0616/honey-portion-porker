@@ -17,23 +17,23 @@ export async function createNewRoomAction(): Promise<
 
 	try {
 		const result = await client.from("room").insert({
-			roomId: randomUUID(),
-			ownerRoomId,
 			memberRoomId,
+			ownerRoomId,
+			roomId: randomUUID(),
 		});
 
 		if (result.error) {
 			return {
-				success: false,
 				message: "ルームの作成に失敗しました。",
+				success: false,
 			};
 		}
 
-		return { success: true, data: { ownerRoomId, memberRoomId } };
-	} catch (error) {
+		return { data: { memberRoomId, ownerRoomId }, success: true };
+	} catch (_error) {
 		return {
-			success: false,
 			message: "ルームの作成に失敗しました。",
+			success: false,
 		};
 	}
 }

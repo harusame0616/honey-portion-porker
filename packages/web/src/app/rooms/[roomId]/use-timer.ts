@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useStateWithRef } from "./use-planning-poker/use-state-with-ref";
 
 type UseTimer = {
@@ -44,8 +44,8 @@ export function useTimer(time: number, onTimeUp: () => void): UseTimer {
 	}, [isActive, initializeTimer]);
 
 	return {
+		initializeTimer,
 		startTimer,
 		stopTimer,
-		initializeTimer,
 	};
 }

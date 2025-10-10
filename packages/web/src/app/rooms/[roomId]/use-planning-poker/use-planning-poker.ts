@@ -41,6 +41,8 @@ export function usePlanningPoker({
 	);
 
 	useRealtimeListener(channel, {
+		onClose: useCallback(() => setIsOpen(false), []),
+		onOpen: useCallback(() => setIsOpen(true), []),
 		onPresenceChange: useCallback(
 			(users) => {
 				setUsers(users);
@@ -56,18 +58,16 @@ export function usePlanningPoker({
 			},
 			[setUsers, initializeTimer, autoOpenRef],
 		),
-		onOpen: useCallback(() => setIsOpen(true), []),
-		onClose: useCallback(() => setIsOpen(false), []),
 		onReset: useCallback(() => {
 			setIsOpen(false);
+			realtimeCommand.unselectCard();
+		}, [realtimeCommand.unselectCard]),
+		onSubscribe: useCallback(() => {
 			realtimeCommand.unselectCard();
 		}, [realtimeCommand.unselectCard]),
 		onUpdateAutoOpen: useCallback(setAutoOpen, []),
 		onUpdateAutoReset: useCallback(setAutoReset, []),
 		onUpdateNote: useCallback(setNote, []),
-		onSubscribe: useCallback(() => {
-			realtimeCommand.unselectCard();
-		}, [realtimeCommand.unselectCard]),
 	});
 
 	useEffect(() => {
@@ -81,21 +81,8 @@ export function usePlanningPoker({
 
 	return {
 		...realtimeCommand,
-		users,
-		isOpen,
-		selectedUsers,
-		selectedCard,
-		autoReset,
 		autoOpen,
-		note,
-		userId,
-		changeAutoReset: useCallback(
-			async (checked: boolean) => {
-				setAutoReset(checked);
-				await realtimeCommand.changeAutoReset(checked);
-			},
-			[realtimeCommand.changeAutoReset, setAutoReset],
-		),
+		autoReset,
 		changeAutoOpen: useCallback(
 			async (checked: boolean) => {
 				setAutoOpen(checked);
@@ -103,5 +90,18 @@ export function usePlanningPoker({
 			},
 			[realtimeCommand.changeAutoOpen, setAutoOpen],
 		),
+		changeAutoReset: useCallback(
+			async (checked: boolean) => {
+				setAutoReset(checked);
+				await realtimeCommand.changeAutoReset(checked);
+			},
+			[realtimeCommand.changeAutoReset, setAutoReset],
+		),
+		isOpen,
+		note,
+		selectedCard,
+		selectedUsers,
+		userId,
+		users,
 	};
 }

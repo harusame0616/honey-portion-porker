@@ -1,6 +1,6 @@
-import { createClient } from "@/lib/supabase/server";
 import { sub } from "date-fns";
 import type { NextRequest } from "next/server";
+import { createClient } from "@/lib/supabase/server";
 
 async function cleanRoom() {
 	const client = await createClient();
