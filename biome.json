@@ -10,9 +10,6 @@
 		},
 		"enabled": true
 	},
-	"files": {
-		"ignoreUnknown": false
-	},
 	"formatter": {
 		"enabled": true,
 		"indentStyle": "tab"
