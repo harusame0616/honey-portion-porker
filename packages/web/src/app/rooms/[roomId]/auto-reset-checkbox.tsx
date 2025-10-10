@@ -1,5 +1,5 @@
-import { LabeledCheckbox } from "@/components/labeled-checkbox";
 import { CheckIcon, LoaderIcon } from "lucide-react";
+import { LabeledCheckbox } from "@/components/labeled-checkbox";
 import { updateAutoResetConfigAction } from "./_actions/update-auto-reset-config";
 import { useOptimisticCheckbox } from "./use-optimistic-checkbox";
 import { AUTO_OPEN_MINUTES } from "./use-planning-poker";
@@ -18,7 +18,6 @@ export function AutoResetCheckbox({
 	const { isFinished, finish, reset } = useTimerFinished();
 	const { isPending, changeChecked, optimisticCheckedState } =
 		useOptimisticCheckbox({
-			checked,
 			action: async (checked: boolean) => {
 				reset();
 				const result = await updateAutoResetConfigAction(ownerRoomId, checked);
@@ -27,33 +26,34 @@ export function AutoResetCheckbox({
 				}
 				finish();
 			},
+			checked,
 			onCheckedChange,
 		});
 
 	return (
 		<LabeledCheckbox
-			onCheckedChange={(checked) => {
-				changeChecked(checked === true);
-			}}
+			aria-live="polite"
 			checked={optimisticCheckedState}
 			className="text-sm"
 			disabled={isPending}
-			aria-live="polite"
+			onCheckedChange={(checked) => {
+				changeChecked(checked === true);
+			}}
 		>
 			Auto Reset{" "}
 			{isPending && !isFinished && (
 				<LoaderIcon
+					aria-label="saving"
 					className="animate-spin size-4 ml-2"
 					role="img"
-					aria-label="saving"
 				/>
 			)}
 			{isFinished && (
 				<CheckIcon
-					className="size-4 ml-2 text-green-600 font-bold"
-					strokeWidth={4}
-					role="img"
 					aria-label="saved"
+					className="size-4 ml-2 text-green-600 font-bold"
+					role="img"
+					strokeWidth={4}
 				/>
 			)}
 			<span className="text-xs text-muted-foreground ml-2">

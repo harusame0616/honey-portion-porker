@@ -5,8 +5,8 @@ export const runtime = "edge";
 
 // Image metadata
 export const size = {
-	width: 1200,
 	height: 630,
+	width: 1200,
 };
 
 export const contentType = "image/png";
@@ -23,15 +23,15 @@ export default async function Image() {
 		return new ImageResponse(
 			<div
 				style={{
-					width: "100%",
-					height: "100%",
+					alignItems: "center",
 					background: "#DED5BA",
-					borderRadius: "15px",
 					border: "8px solid #000",
+					borderRadius: "15px",
 					display: "flex",
 					flexDirection: "column",
-					alignItems: "center",
+					height: "100%",
 					justifyContent: "center",
+					width: "100%",
 				}}
 			>
 				<div
@@ -41,7 +41,8 @@ export default async function Image() {
 						gap: "0.5rem",
 					}}
 				>
-					<img src={iconUrl} width="80" height="80" alt="" />
+					{/* biome-ignore lint/performance/noImgElement: OG image generation requires native img tag */}
+					<img alt="" height="80" src={iconUrl} width="80" />
 					<div
 						style={{
 							fontSize: "4rem",
@@ -56,8 +57,8 @@ export default async function Image() {
 						display: "flex",
 						flexDirection: "column",
 						fontSize: "2rem",
-						marginTop: "2rem",
 						marginLeft: "-3.5rem",
+						marginTop: "2rem",
 					}}
 				>
 					<div
@@ -76,10 +77,10 @@ export default async function Image() {
 				...size,
 				fonts: [
 					{
-						name: "Itim",
 						data: font,
-						weight: 400,
+						name: "Itim",
 						style: "normal",
+						weight: 400,
 					},
 				],
 			},

@@ -1,6 +1,4 @@
-import { createBrowserClient } from "@supabase/ssr";
-import type { RealtimeChannel } from "@supabase/supabase-js";
-import { type MutableRefObject, useEffect } from "react";
+import { useEffect } from "react";
 import type { Channel } from "./use-cannel";
 
 type Presence = {
@@ -42,8 +40,8 @@ export function useRealtimeListener(
 					userId: string;
 				}>();
 				const newUsers = Object.values(newState).map(([{ card, userId }]) => ({
-					userId,
 					card,
+					userId,
 				}));
 				onPresenceChange(newUsers);
 			})

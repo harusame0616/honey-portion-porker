@@ -1,16 +1,16 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
 import * as v from "valibot";
+import { createClient } from "@/lib/supabase/server";
 
 const inputSchema = v.object({
-	ownerRoomId: v.string(),
 	note: v.string(),
+	ownerRoomId: v.string(),
 });
 
 const actionParamsSchema = v.object({
-	ownerRoomId: v.pipe(v.string(), v.uuid()),
 	note: v.pipe(v.string(), v.maxLength(4096)),
+	ownerRoomId: v.pipe(v.string(), v.uuid()),
 });
 type ActionState =
 	| {
@@ -31,10 +31,10 @@ export async function editNoteAction(
 	if (!inputsParsedResult.success) {
 		const nested = v.flatten(inputsParsedResult.issues).nested;
 		return {
-			success: false,
 			errors: { note: nested?.note?.[0] || "" },
-			message: "invalid request",
 			inputs: { note: "" },
+			message: "invalid request",
+			success: false,
 		};
 	}
 
@@ -46,17 +46,17 @@ export async function editNoteAction(
 		const nested = v.flatten(paramsParsedResult.issues).nested;
 
 		return {
-			success: false,
-			message: "invalid request",
 			errors: { note: nested?.note?.[0] || "" },
 			inputs: inputsParsedResult.output,
+			message: "invalid request",
+			success: false,
 		};
 	}
 
 	const { ownerRoomId, note } = paramsParsedResult.output;
 	await editNote(ownerRoomId, note);
 
-	return { success: true, inputs: { note } };
+	return { inputs: { note }, success: true };
 }
 
 async function editNote(ownerRoomId: string, note: string) {

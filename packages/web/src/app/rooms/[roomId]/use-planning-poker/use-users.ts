@@ -15,9 +15,9 @@ export function useUsers(myUserId: string): UseUsers {
 	const selectedUsers = users.filter((user) => user.card !== undefined);
 
 	return {
-		users,
-		setUsers,
 		selectedCard,
 		selectedUsers,
+		setUsers,
+		users,
 	};
 }

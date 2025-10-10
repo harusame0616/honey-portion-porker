@@ -1,9 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
 import { EditIcon } from "lucide-react";
 import Form from "next/form";
 import {
@@ -16,6 +12,10 @@ import {
 	useId,
 	useState,
 } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 import { editNoteAction } from "./_actions/edit-note-action";
 import { AutoOpenCheckbox } from "./auto-open-checkbox";
 import { AutoResetCheckbox } from "./auto-reset-checkbox";
@@ -58,11 +58,11 @@ export function Room({
 		note,
 		changeNote,
 	} = usePlanningPoker({
-		roomId,
-		ownerRoomId,
-		initialAutoReset,
 		initialAutoOpen,
+		initialAutoReset,
 		initialNote,
+		ownerRoomId,
+		roomId,
 	});
 	const [isNoteEditing, setIsNoteEditing] = useState(false);
 
@@ -72,31 +72,31 @@ export function Room({
 	return (
 		<div className="flex flex-col gap-4">
 			<Section
-				title="Note"
 				bar={
 					ownerRoomId && (
 						<div className="-mb-[6px]">
 							<Button
-								variant="ghost"
+								onClick={() => setIsNoteEditing((prev) => !prev)}
 								size="icon"
 								type="button"
-								onClick={() => setIsNoteEditing((prev) => !prev)}
+								variant="ghost"
 							>
 								<EditIcon />
 							</Button>
 						</div>
 					)
 				}
+				title="Note"
 			>
 				{ownerRoomId && isNoteEditing ? (
 					<NoteEditionForm
+						key={note}
 						note={note}
-						ownerRoomId={ownerRoomId}
 						onSubmit={async (newNote) => {
 							changeNote(newNote);
 							setIsNoteEditing(false);
 						}}
-						key={note}
+						ownerRoomId={ownerRoomId}
 					/>
 				) : (
 					<p className="whitespace-pre-wrap break-all">{note || "-"}</p>
@@ -105,7 +105,6 @@ export function Room({
 
 			<Section title="Your choices">
 				<ChoiceCards
-					selectedCard={selectedCard}
 					onCardClick={(card) => {
 						if (card === selectedCard) {
 							unselectCard();
@@ -113,25 +112,26 @@ export function Room({
 							selectCard(card);
 						}
 					}}
+					selectedCard={selectedCard}
 				/>
 			</Section>
 
 			<Section title="Member's cards">
-				<MemberCards users={users} isOpen={isOpen} userId={userId.current} />
+				<MemberCards isOpen={isOpen} userId={userId.current} users={users} />
 			</Section>
 
 			{ownerRoomId && (
 				<Section title="Owner operations">
 					<OwnerOperations
 						isOpen={isOpen}
-						onOpen={open}
 						onClose={close}
+						onOpen={open}
 						onReset={reset}
 					/>
 				</Section>
 			)}
 
-			<Section title="Result" className="text-sm">
+			<Section className="text-sm" title="Result">
 				<div>
 					Average:
 					<span className="font-bold">
@@ -159,32 +159,32 @@ export function Room({
 				</div>
 			</Section>
 			{ownerRoomId && (
-				<Section title="Configures" className="flex flex-col gap-2">
+				<Section className="flex flex-col gap-2" title="Configures">
 					<AutoResetCheckbox
-						ownerRoomId={ownerRoomId}
 						checked={autoReset}
 						onCheckedChange={changeAutoReset}
+						ownerRoomId={ownerRoomId}
 					/>
 					<AutoOpenCheckbox
-						ownerRoomId={ownerRoomId}
 						checked={autoOpen}
 						onCheckedChange={changeAutoOpen}
+						ownerRoomId={ownerRoomId}
 					/>
 				</Section>
 			)}
 
-			<Section title="Room information" className="flex flex-col gap-2">
+			<Section className="flex flex-col gap-2" title="Room information">
 				<div>
 					<label className="text-sm" htmlFor={memberRoomIdInputId}>
 						Member Room ID
 					</label>
 					<div className="flex">
 						<Input
-							value={memberRoomId}
-							name="roomId"
-							readOnly
 							className="max-w-80"
 							id={memberRoomIdInputId}
+							name="roomId"
+							readOnly
+							value={memberRoomId}
 						/>
 						<CopyButton text={memberRoomId} />
 					</div>
@@ -195,11 +195,11 @@ export function Room({
 					</label>
 					<div className="flex">
 						<Input
-							value={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/rooms/${memberRoomId}`}
-							name="roomId"
 							className="max-w-[605px]"
-							readOnly
 							id={memberRoomUrlInputId}
+							name="roomId"
+							readOnly
+							value={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/rooms/${memberRoomId}`}
 						/>
 						<CopyButton
 							text={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/rooms/${memberRoomId}`}
@@ -222,10 +222,10 @@ function NoteEditionForm({
 	note,
 }: NoteEditionFormProps) {
 	const [state, formAction, isPending] = useActionState(editNoteAction, {
-		success: false,
-		message: "",
 		errors: { note: "" },
 		inputs: { note },
+		message: "",
+		success: false,
 	});
 	useEffect(() => {
 		if (onSubmit && state.success && !isPending) {
@@ -234,8 +234,8 @@ function NoteEditionForm({
 	}, [state, isPending, onSubmit]);
 	return (
 		<Form action={formAction} className="flex flex-col gap-1">
-			<input type="hidden" value={ownerRoomId} name="ownerRoomId" />
-			<Textarea className="h-48" name="note" defaultValue={state.inputs.note} />
+			<input name="ownerRoomId" type="hidden" value={ownerRoomId} />
+			<Textarea className="h-48" defaultValue={state.inputs.note} name="note" />
 			<div className="text-destructive text-sm">
 				{!state.success && state.errors.note}
 			</div>
