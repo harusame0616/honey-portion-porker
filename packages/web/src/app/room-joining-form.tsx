@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 const formSchema = v.object({
 	roomId: v.pipe(
 		v.string(),
-		v.minLength(1, "ルーム ID の入力を入力してください。"),
+		v.minLength(1, "ルーム ID を入力してください。"),
 		v.uuid("ルーム ID は UUID 形式で入力してください。"),
 	),
 });
