@@ -39,7 +39,11 @@ export function CreateNewRoomButton() {
 					"CREATE ROOM"
 				)}
 			</Button>
-			<div className="text-destructive text-sm mt-1" role="alert">
+			<div
+				aria-atomic="true"
+				aria-live="polite"
+				className="text-destructive text-sm mt-1 min-h-5"
+			>
 				{errorMessage}
 			</div>
 		</>

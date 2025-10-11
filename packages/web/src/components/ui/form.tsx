@@ -149,13 +149,14 @@ const FormMessage = React.forwardRef<
 	const { error, formMessageId } = useFormField();
 	const body = error ? String(error?.message ?? "") : children;
 
-	if (!body) {
-		return null;
-	}
-
 	return (
 		<p
-			className={cn("text-[0.8rem] font-medium text-destructive", className)}
+			aria-atomic="true"
+			aria-live="polite"
+			className={cn(
+				"text-[0.8rem] font-medium text-destructive min-h-[1.25rem]",
+				className,
+			)}
 			id={formMessageId}
 			ref={ref}
 			{...props}
