@@ -1,6 +1,6 @@
 import { ServiceTitle } from "@/components/service-title";
-import { NewRoomCreation } from "./new-room-creation";
-import { RoomJoiningForm } from "./room-joining-form";
+import { CreateNewRoomButton } from "./create-new-room-button";
+import { JoinRoomForm } from "./room-joining-form";
 
 export default function Home() {
 	return (
@@ -14,12 +14,7 @@ export default function Home() {
 			<main className="flex flex-col items-center">
 				<div className="bg-[hsl(45_35%_60%)] w-svw flex justify-center my-4 p-6">
 					<h2 className="max-w-2xl w-full font-bold text-3xl leading-normal">
-						<span
-							className="text-primary"
-							style={{
-								textShadow: "0 1px 3px rgb(122, 113, 86)",
-							}}
-						>
+						<span className="text-primary text-shadow-md">
 							すぐ使えて設定を保持できる
 						</span>
 						<span className="block">シンプルな</span>
@@ -37,11 +32,11 @@ export default function Home() {
 					</p>
 
 					<div className="p-8 max-w-96 w-full mx-auto">
-						<NewRoomCreation />
-						<div className="mt-8">
-							<div className="mb-2 text-sm">または既存のルームに参加する</div>
-							<RoomJoiningForm />
+						<CreateNewRoomButton />
+						<div className="mt-8 mb-2 text-sm">
+							または既存のルームに参加する
 						</div>
+						<JoinRoomForm />
 					</div>
 				</div>
 			</main>

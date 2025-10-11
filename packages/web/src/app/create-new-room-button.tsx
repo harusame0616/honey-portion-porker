@@ -6,7 +6,7 @@ import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { createNewRoomAction } from "./_actions/create-new-room-action";
 
-export function NewRoomCreation() {
+export function CreateNewRoomButton() {
 	const [errorMessage, setErrorMessage] = useState("");
 	const [isPending, startTransition] = useTransition();
 	const router = useRouter();
@@ -19,12 +19,11 @@ export function NewRoomCreation() {
 			} else {
 				setErrorMessage(result.message);
 			}
-			console.log("result", result);
 		});
 	}
 
 	return (
-		<div className="w-full">
+		<>
 			<Button
 				className="w-full font-bold"
 				disabled={isPending}
@@ -40,7 +39,9 @@ export function NewRoomCreation() {
 					"CREATE ROOM"
 				)}
 			</Button>
-			<div className="text-destructive text-sm">{errorMessage}</div>
-		</div>
+			<div className="text-destructive text-sm mt-1" role="alert">
+				{errorMessage}
+			</div>
+		</>
 	);
 }
