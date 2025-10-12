@@ -1,29 +1,27 @@
 "use server";
 
+import { fail, type Result, tryCatchAsync } from "@harusame0616/result";
 import { createClient } from "@/lib/supabase/server";
 
 export async function updateAutoResetConfigAction(
 	ownerRoomId: string,
 	newAutoReset: boolean,
-) {
-	try {
-		await updateAutoReset(ownerRoomId, newAutoReset);
-	} catch {
-		return {
-			message: "Failed to update auto reset config",
-			success: false,
-		};
-	}
-
-	return { success: true };
-}
-
-async function updateAutoReset(ownerRoomId: string, autoReset: boolean) {
+): Promise<Result<void, string>> {
 	const client = await createClient();
-	await client
-		.from("room")
-		.update({
-			autoReset,
-		})
-		.eq("ownerRoomId", ownerRoomId);
+
+	return tryCatchAsync(
+		async () => {
+			const result = await client
+				.from("room")
+				.update({
+					autoReset: newAutoReset,
+				})
+				.eq("ownerRoomId", ownerRoomId);
+
+			if (result.error) {
+				return fail("自動リセット設定の更新に失敗しました");
+			}
+		},
+		() => "自動リセット設定の更新に失敗しました",
+	);
 }

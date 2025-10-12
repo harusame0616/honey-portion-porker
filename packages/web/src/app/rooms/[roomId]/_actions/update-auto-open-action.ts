@@ -1,29 +1,27 @@
 "use server";
 
+import { fail, type Result, tryCatchAsync } from "@harusame0616/result";
 import { createClient } from "@/lib/supabase/server";
 
 export async function updateAutoOpenAction(
 	ownerRoomId: string,
 	newAutoReset: boolean,
-) {
-	try {
-		await updateAutoOpen(ownerRoomId, newAutoReset);
-	} catch {
-		return {
-			message: "Failed to update auto open config",
-			success: false,
-		};
-	}
-
-	return { success: true };
-}
-
-async function updateAutoOpen(ownerRoomId: string, autoOpen: boolean) {
+): Promise<Result<void, string>> {
 	const client = await createClient();
-	await client
-		.from("room")
-		.update({
-			autoOpen,
-		})
-		.eq("ownerRoomId", ownerRoomId);
+
+	return tryCatchAsync(
+		async () => {
+			const result = await client
+				.from("room")
+				.update({
+					autoOpen: newAutoReset,
+				})
+				.eq("ownerRoomId", ownerRoomId);
+
+			if (result.error) {
+				return fail("自動公開設定の更新に失敗しました");
+			}
+		},
+		() => "自動公開設定の更新に失敗しました",
+	);
 }

@@ -222,22 +222,30 @@ function NoteEditionForm({
 	note,
 }: NoteEditionFormProps) {
 	const [state, formAction, isPending] = useActionState(editNoteAction, {
-		errors: { note: "" },
-		inputs: { note },
-		message: "",
+		error: {
+			errors: { note: "" },
+			inputs: { note },
+			message: "",
+		},
 		success: false,
 	});
 	useEffect(() => {
 		if (onSubmit && state.success && !isPending) {
-			onSubmit(state.inputs.note);
+			onSubmit(state.data.inputs.note);
 		}
 	}, [state, isPending, onSubmit]);
 	return (
 		<Form action={formAction} className="flex flex-col gap-1">
 			<input name="ownerRoomId" type="hidden" value={ownerRoomId} />
-			<Textarea className="h-48" defaultValue={state.inputs.note} name="note" />
+			<Textarea
+				className="h-48"
+				defaultValue={
+					state.success ? state.data.inputs.note : state.error.inputs.note
+				}
+				name="note"
+			/>
 			<div className="text-destructive text-sm">
-				{!state.success && state.errors.note}
+				{!state.success && state.error.errors.note}
 			</div>
 			<div>
 				<Button disabled={isPending}>Save</Button>
