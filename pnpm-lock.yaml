@@ -32,6 +32,9 @@ importers:
 
   packages/web:
     dependencies:
+      '@harusame0616/result':
+        specifier: 0.1.2
+        version: 0.1.2
       '@hookform/resolvers':
         specifier: 5.2.2
         version: 5.2.2(react-hook-form@7.65.0(react@19.2.0))
@@ -407,6 +410,9 @@ packages:
   '@gwhitney/detect-indent@7.0.1':
     resolution: {integrity: sha512-7bQW+gkKa2kKZPeJf6+c6gFK9ARxQfn+FKy9ScTBppyKRWH2KzsmweXUoklqeEiHiNVWaeP5csIdsNq6w7QhzA==}
     engines: {node: '>=12.20'}
+
+  '@harusame0616/result@0.1.2':
+    resolution: {integrity: sha512-JW+rjMZKzGY63hRGaYgKxYat1MTu1uzGuiqOmNojItkToP2lYwoSo7+KazI3TpoTlFlDCG4bGsUlZDLxYbLN9g==}
 
   '@hookform/resolvers@5.2.2':
     resolution: {integrity: sha512-A/IxlMLShx3KjV/HeTcTfaMxdwy690+L/ZADoeaTltLx+CVuzkeVIPuybK3jrRfw7YZnmdKsVVHAlEPIAEUNlA==}
@@ -4793,6 +4799,8 @@ snapshots:
     optional: true
 
   '@gwhitney/detect-indent@7.0.1': {}
+
+  '@harusame0616/result@0.1.2': {}
 
   '@hookform/resolvers@5.2.2(react-hook-form@7.65.0(react@19.2.0))':
     dependencies:

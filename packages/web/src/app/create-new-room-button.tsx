@@ -17,7 +17,7 @@ export function CreateNewRoomButton() {
 			if (result.success) {
 				router.push(`/rooms/${result.data.ownerRoomId}`);
 			} else {
-				setErrorMessage(result.message);
+				setErrorMessage(result.error);
 			}
 		});
 	}
