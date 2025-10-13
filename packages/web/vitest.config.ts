@@ -8,10 +8,16 @@ export default defineConfig({
 		alias: {
 			"@": path.resolve(__dirname, "./src"),
 		},
+		extensions: [".mjs", ".js", ".mts", ".ts", ".jsx", ".tsx", ".json"],
 	},
 	test: {
 		environment: "jsdom",
 		globals: true,
 		setupFiles: ["./vitest.setup.ts"],
+		server: {
+			deps: {
+				inline: ["@harusame0616/result"],
+			},
+		},
 	},
 });
