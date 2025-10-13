@@ -1,18 +1,34 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, expect, test, vi } from "vitest";
+import { test as baseTest, expect, vi } from "vitest";
 import { editNoteAction } from "./_actions/edit-note-action";
 import { EditNoteForm } from "./edit-note-form";
 
 // モックの準備
 vi.mock("./_actions/edit-note-action");
 
-beforeEach(() => {
-	vi.mocked(editNoteAction).mockReset();
+const test = baseTest.extend<{
+	user: ReturnType<typeof userEvent.setup>;
+	mockOnSubmit: ReturnType<typeof vi.fn<(newNote: string) => void>>;
+	mockEditNoteAction: ReturnType<typeof vi.mocked<typeof editNoteAction>>;
+}>({
+	// biome-ignore lint/correctness/noEmptyPattern: Vitest fixtures require object destructuring
+	mockEditNoteAction: async ({}, use) => {
+		const mock = vi.mocked(editNoteAction);
+		mock.mockReset();
+		await use(mock);
+	},
+	// biome-ignore lint/correctness/noEmptyPattern: Vitest fixtures require object destructuring
+	mockOnSubmit: async ({}, use) => {
+		await use(vi.fn<(newNote: string) => void>());
+	},
+	// biome-ignore lint/correctness/noEmptyPattern: Vitest fixtures require object destructuring
+	user: async ({}, use) => {
+		await use(userEvent.setup());
+	},
 });
 
-test("note がテキストエリアに表示される", () => {
-	const mockOnSubmit = vi.fn();
+test("note がテキストエリアに表示される", ({ mockOnSubmit }) => {
 	render(
 		<EditNoteForm
 			note="テストノート"
@@ -25,11 +41,11 @@ test("note がテキストエリアに表示される", () => {
 	expect(textarea).toHaveValue("テストノート");
 });
 
-test("4096文字を入力して送信できる", async () => {
-	const user = userEvent.setup();
-	const mockOnSubmit = vi.fn();
-	const mockEditNoteAction = vi.mocked(editNoteAction);
-
+test("4096文字を入力して送信できる", async ({
+	user,
+	mockOnSubmit,
+	mockEditNoteAction,
+}) => {
 	mockEditNoteAction.mockResolvedValue({ data: undefined, success: true });
 
 	render(
@@ -54,10 +70,11 @@ test("4096文字を入力して送信できる", async () => {
 	expect(mockOnSubmit).toHaveBeenCalledWith(text4096);
 });
 
-test("0文字で送信できる", async () => {
-	const user = userEvent.setup();
-	const mockOnSubmit = vi.fn();
-	const mockEditNoteAction = vi.mocked(editNoteAction);
+test("0文字で送信できる", async ({
+	user,
+	mockOnSubmit,
+	mockEditNoteAction,
+}) => {
 	mockEditNoteAction.mockResolvedValue({ data: undefined, success: true });
 
 	render(
@@ -85,11 +102,11 @@ test("0文字で送信できる", async () => {
 	expect(mockOnSubmit).toHaveBeenCalledWith("");
 });
 
-test("4097文字を入力して送信するとエラーが表示される。", async () => {
-	const user = userEvent.setup();
-	const mockOnSubmit = vi.fn();
-	const mockEditNoteAction = vi.mocked(editNoteAction);
-
+test("4097文字を入力して送信するとエラーが表示される。", async ({
+	user,
+	mockOnSubmit,
+	mockEditNoteAction,
+}) => {
 	render(
 		<EditNoteForm note="" onSubmit={mockOnSubmit} ownerRoomId="test-room-id" />,
 	);
@@ -109,10 +126,11 @@ test("4097文字を入力して送信するとエラーが表示される。", a
 	expect(mockOnSubmit).not.toHaveBeenCalled();
 });
 
-test("編集に成功すると入力内容を引数に onSubmit が呼ばれる", async () => {
-	const user = userEvent.setup();
-	const mockOnSubmit = vi.fn();
-	const mockEditNoteAction = vi.mocked(editNoteAction);
+test("編集に成功すると入力内容を引数に onSubmit が呼ばれる", async ({
+	user,
+	mockOnSubmit,
+	mockEditNoteAction,
+}) => {
 	mockEditNoteAction.mockResolvedValue({ data: undefined, success: true });
 
 	render(
@@ -141,10 +159,11 @@ test("編集に成功すると入力内容を引数に onSubmit が呼ばれる"
 	expect(mockOnSubmit).toHaveBeenCalledWith("更新されたノート");
 });
 
-test("編集に失敗するとエラーメッセージが表示され、onSubmit が呼ばれない", async () => {
-	const user = userEvent.setup();
-	const mockOnSubmit = vi.fn();
-	const mockEditNoteAction = vi.mocked(editNoteAction);
+test("編集に失敗するとエラーメッセージが表示され、onSubmit が呼ばれない", async ({
+	user,
+	mockOnSubmit,
+	mockEditNoteAction,
+}) => {
 	mockEditNoteAction.mockResolvedValue({
 		error: "更新に失敗しました",
 		success: false,
@@ -170,10 +189,11 @@ test("編集に失敗するとエラーメッセージが表示され、onSubmit
 	expect(mockOnSubmit).not.toHaveBeenCalled();
 });
 
-test("送信中はSaveボタンがdisabledになり、送信完了後に再び有効になる", async () => {
-	const user = userEvent.setup();
-	const mockOnSubmit = vi.fn();
-	const mockEditNoteAction = vi.mocked(editNoteAction);
+test("送信中はSaveボタンがdisabledになり、送信完了後に再び有効になる", async ({
+	user,
+	mockOnSubmit,
+	mockEditNoteAction,
+}) => {
 	let resolvePromise!: () => void;
 	const promise = new Promise<{ success: true; data: undefined }>((resolve) => {
 		resolvePromise = () => resolve({ data: undefined, success: true });
