@@ -50,9 +50,9 @@
 		"lint:check": "biome lint .",
 		"lint:write": "biome format --write .",
 		"start": "next start",
-		"test": "vitest",
+		"test": "vitest --run",
 		"test:ui": "vitest --ui",
-		"test:watch": "vitest --watch",
+		"test:watch": "vitest",
 		"validate:fix": "biome check --write ."
 	},
 	"version": "0.1.0"
