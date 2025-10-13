@@ -16,7 +16,7 @@ export function AutoOpenCheckbox({
 	const { isPending, changeChecked, optimisticCheckedState, isFinished } =
 		useOptimisticCheckbox({
 			action: async (checked: boolean) => {
-				await updateAutoOpenAction(ownerRoomId, checked);
+				return await updateAutoOpenAction(ownerRoomId, checked);
 			},
 			checked,
 			onCheckedChange,

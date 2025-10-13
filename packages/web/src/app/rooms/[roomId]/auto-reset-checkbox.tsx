@@ -17,7 +17,7 @@ export function AutoResetCheckbox({
 	const { isPending, changeChecked, optimisticCheckedState, isFinished } =
 		useOptimisticCheckbox({
 			action: async (checked: boolean) => {
-				await updateAutoResetConfigAction(ownerRoomId, checked);
+				return await updateAutoResetConfigAction(ownerRoomId, checked);
 			},
 			checked,
 			onCheckedChange,
