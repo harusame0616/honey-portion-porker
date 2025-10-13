@@ -1,4 +1,5 @@
 import { useOptimistic, useTransition } from "react";
+import { useTimerFinished } from "./use-timer-finished";
 
 type Params = {
 	checked: boolean;
@@ -12,22 +13,26 @@ export function useOptimisticCheckbox({
 	action,
 }: Params) {
 	const [isPending, startTransition] = useTransition();
+	const { isFinished, finish, reset } = useTimerFinished();
 
 	const [optimisticCheckedState, setOptimisticCheckedState] =
 		useOptimistic(checked);
 
 	function changeChecked(checked: boolean) {
 		startTransition(async () => {
+			reset();
 			setOptimisticCheckedState(checked);
 
 			await action(checked);
 
 			await onCheckedChange(checked);
+			finish();
 		});
 	}
 
 	return {
 		changeChecked,
+		isFinished,
 		isPending,
 		optimisticCheckedState,
 	};

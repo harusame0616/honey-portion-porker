@@ -3,7 +3,6 @@ import { LabeledCheckbox } from "@/components/labeled-checkbox";
 import { updateAutoResetConfigAction } from "./_actions/update-auto-reset-config";
 import { useOptimisticCheckbox } from "./use-optimistic-checkbox";
 import { AUTO_OPEN_MINUTES } from "./use-planning-poker";
-import { useTimerFinished } from "./use-timer-finished";
 
 type props = {
 	ownerRoomId: string;
@@ -15,16 +14,10 @@ export function AutoResetCheckbox({
 	onCheckedChange,
 	checked,
 }: props) {
-	const { isFinished, finish, reset } = useTimerFinished();
-	const { isPending, changeChecked, optimisticCheckedState } =
+	const { isPending, changeChecked, optimisticCheckedState, isFinished } =
 		useOptimisticCheckbox({
 			action: async (checked: boolean) => {
-				reset();
-				const result = await updateAutoResetConfigAction(ownerRoomId, checked);
-				if (!result.success) {
-					return;
-				}
-				finish();
+				await updateAutoResetConfigAction(ownerRoomId, checked);
 			},
 			checked,
 			onCheckedChange,
