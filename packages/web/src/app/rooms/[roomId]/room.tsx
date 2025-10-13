@@ -158,10 +158,11 @@ export function Room({
 			{ownerRoomId && (
 				<Section className="flex flex-col gap-2" title="Configures">
 					<ActionCheckbox
-						action={updateAutoResetConfigAction}
+						action={(checked) =>
+							updateAutoResetConfigAction(ownerRoomId, checked)
+						}
 						checked={autoReset}
 						onCheckedChange={changeAutoReset}
-						ownerRoomId={ownerRoomId}
 					>
 						Auto Reset{" "}
 						<span className="text-xs text-muted-foreground ml-2">
@@ -170,10 +171,9 @@ export function Room({
 						</span>
 					</ActionCheckbox>
 					<ActionCheckbox
-						action={updateAutoOpenAction}
+						action={(checked) => updateAutoOpenAction(ownerRoomId, checked)}
 						checked={autoOpen}
 						onCheckedChange={changeAutoOpen}
-						ownerRoomId={ownerRoomId}
 					>
 						Auto Open{" "}
 						<span className="text-xs text-muted-foreground ml-2">

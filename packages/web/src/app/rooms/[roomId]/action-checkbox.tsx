@@ -5,17 +5,12 @@ import { LabeledCheckbox } from "@/components/labeled-checkbox";
 import { useOptimisticCheckbox } from "./use-optimistic-checkbox";
 
 type Props = {
-	ownerRoomId: string;
 	checked: boolean;
 	onCheckedChange: (checked: boolean) => Promise<void>;
-	action: (
-		ownerRoomId: string,
-		checked: boolean,
-	) => Promise<Result<void, string>>;
+	action: (checked: boolean) => Promise<Result<void, string>>;
 };
 
 export function ActionCheckbox({
-	ownerRoomId,
 	onCheckedChange,
 	checked,
 	action,
@@ -23,9 +18,7 @@ export function ActionCheckbox({
 }: PropsWithChildren<Props>) {
 	const { isPending, changeChecked, optimisticCheckedState, isFinished } =
 		useOptimisticCheckbox({
-			action: async (checked: boolean) => {
-				return await action(ownerRoomId, checked);
-			},
+			action,
 			checked,
 			onCheckedChange,
 		});
