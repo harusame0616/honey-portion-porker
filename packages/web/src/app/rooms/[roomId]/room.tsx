@@ -1,22 +1,30 @@
 "use client";
 
+import { valibotResolver } from "@hookform/resolvers/valibot";
 import { EditIcon } from "lucide-react";
-import Form from "next/form";
 import {
 	type DetailedHTMLProps,
 	type HTMLAttributes,
 	type PropsWithChildren,
 	type ReactNode,
-	useActionState,
-	useEffect,
 	useId,
 	useState,
 } from "react";
+import { useForm } from "react-hook-form";
+import * as v from "valibot";
 import { Button } from "@/components/ui/button";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { editNoteAction } from "./_actions/edit-note-action";
+import { NOTE_MAX_LENGTH } from "./_actions/edit-note-action.constants";
 import { AutoOpenCheckbox } from "./auto-open-checkbox";
 import { AutoResetCheckbox } from "./auto-reset-checkbox";
 import { ChoiceCards } from "./choice-cards";
@@ -211,6 +219,18 @@ export function Room({
 	);
 }
 
+const noteFormSchema = v.object({
+	note: v.pipe(
+		v.string(),
+		v.maxLength(
+			NOTE_MAX_LENGTH,
+			`${NOTE_MAX_LENGTH}文字以内で入力してください`,
+		),
+	),
+});
+
+type NoteFormSchema = v.InferOutput<typeof noteFormSchema>;
+
 type NoteEditionFormProps = {
 	ownerRoomId: string;
 	note: string;
@@ -221,35 +241,51 @@ function NoteEditionForm({
 	onSubmit,
 	note,
 }: NoteEditionFormProps) {
-	const [state, formAction, isPending] = useActionState(editNoteAction, {
-		error: {
-			errors: { note: "" },
-			inputs: { note },
-			message: "",
+	const form = useForm<NoteFormSchema>({
+		defaultValues: {
+			note,
 		},
-		success: false,
+		resolver: valibotResolver(noteFormSchema),
 	});
-	useEffect(() => {
-		if (onSubmit && state.success && !isPending) {
-			onSubmit(state.data.inputs.note);
+
+	const submit = async ({ note }: NoteFormSchema) => {
+		const result = await editNoteAction({
+			note,
+			ownerRoomId,
+		});
+
+		if (result.success) {
+			onSubmit(note);
+		} else {
+			form.setError("note", {
+				message: result.error,
+				type: "manual",
+			});
 		}
-	}, [state, isPending, onSubmit]);
+	};
+
 	return (
-		<Form action={formAction} className="flex flex-col gap-1">
-			<input name="ownerRoomId" type="hidden" value={ownerRoomId} />
-			<Textarea
-				className="h-48"
-				defaultValue={
-					state.success ? state.data.inputs.note : state.error.inputs.note
-				}
-				name="note"
-			/>
-			<div className="text-destructive text-sm">
-				{!state.success && state.error.errors.note}
-			</div>
-			<div>
-				<Button disabled={isPending}>Save</Button>
-			</div>
+		<Form {...form}>
+			<form
+				className="flex flex-col gap-1"
+				onSubmit={form.handleSubmit(submit)}
+			>
+				<FormField
+					control={form.control}
+					name="note"
+					render={({ field }) => (
+						<FormItem>
+							<FormControl>
+								<Textarea className="h-48" {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<div>
+					<Button disabled={form.formState.isSubmitting}>Save</Button>
+				</div>
+			</form>
 		</Form>
 	);
 }
