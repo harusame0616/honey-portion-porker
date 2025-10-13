@@ -1,0 +1,34 @@
+name: ユニットテスト
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  test:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - name: チェックアウト
+        uses: actions/checkout@v5
+      - name: pnpm のセットアップ
+        uses: pnpm/action-setup@v4
+      - name: Node.js のセットアップ
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: "./.node-version"
+          cache: "pnpm"
+      - name: パッケージインストール
+        run: pnpm install
+      - name: ユニットテスト実行
+        run: pnpm --filter web run test
