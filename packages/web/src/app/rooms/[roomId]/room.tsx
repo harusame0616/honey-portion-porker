@@ -12,14 +12,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { AutoOpenCheckbox } from "./auto-open-checkbox";
-import { AutoResetCheckbox } from "./auto-reset-checkbox";
+import { updateAutoOpenAction } from "./_actions/update-auto-open-action";
+import { updateAutoResetConfigAction } from "./_actions/update-auto-reset-config";
+import { ActionCheckbox } from "./action-checkbox";
 import { ChoiceCards } from "./choice-cards";
 import { CopyButton } from "./copy-button";
 import { EditNoteForm } from "./edit-note-form";
 import { MemberCards } from "./member-cards";
 import { OwnerOperations } from "./owner-operations";
-import { usePlanningPoker } from "./use-planning-poker";
+import { AUTO_OPEN_MINUTES, usePlanningPoker } from "./use-planning-poker";
 
 export function Room({
 	roomId,
@@ -156,16 +157,29 @@ export function Room({
 			</Section>
 			{ownerRoomId && (
 				<Section className="flex flex-col gap-2" title="Configures">
-					<AutoResetCheckbox
+					<ActionCheckbox
+						action={updateAutoResetConfigAction}
 						checked={autoReset}
 						onCheckedChange={changeAutoReset}
 						ownerRoomId={ownerRoomId}
-					/>
-					<AutoOpenCheckbox
+					>
+						Auto Reset{" "}
+						<span className="text-xs text-muted-foreground ml-2">
+							（選択肢をオープンしたあと、操作のない時間が {AUTO_OPEN_MINUTES}
+							分経過した場合、自動でリセットする）
+						</span>
+					</ActionCheckbox>
+					<ActionCheckbox
+						action={updateAutoOpenAction}
 						checked={autoOpen}
 						onCheckedChange={changeAutoOpen}
 						ownerRoomId={ownerRoomId}
-					/>
+					>
+						Auto Open{" "}
+						<span className="text-xs text-muted-foreground ml-2">
+							（すべてのユーザーがカードを選択した際に自動でオープンする）
+						</span>
+					</ActionCheckbox>
 				</Section>
 			)}
 

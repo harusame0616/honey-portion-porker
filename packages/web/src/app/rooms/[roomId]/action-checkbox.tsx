@@ -1,22 +1,30 @@
+import type { Result } from "@harusame0616/result";
 import { CheckIcon, LoaderIcon } from "lucide-react";
+import type { PropsWithChildren } from "react";
 import { LabeledCheckbox } from "@/components/labeled-checkbox";
-import { updateAutoOpenAction } from "./_actions/update-auto-open-action";
 import { useOptimisticCheckbox } from "./use-optimistic-checkbox";
 
 type Props = {
 	ownerRoomId: string;
 	checked: boolean;
 	onCheckedChange: (checked: boolean) => Promise<void>;
+	action: (
+		ownerRoomId: string,
+		checked: boolean,
+	) => Promise<Result<void, string>>;
 };
-export function AutoOpenCheckbox({
+
+export function ActionCheckbox({
 	ownerRoomId,
 	onCheckedChange,
 	checked,
-}: Props) {
+	action,
+	children,
+}: PropsWithChildren<Props>) {
 	const { isPending, changeChecked, optimisticCheckedState, isFinished } =
 		useOptimisticCheckbox({
 			action: async (checked: boolean) => {
-				return await updateAutoOpenAction(ownerRoomId, checked);
+				return await action(ownerRoomId, checked);
 			},
 			checked,
 			onCheckedChange,
@@ -32,7 +40,7 @@ export function AutoOpenCheckbox({
 				changeChecked(checked === true);
 			}}
 		>
-			Auto Open{" "}
+			{children}{" "}
 			{isPending && !isFinished && (
 				<LoaderIcon
 					aria-label="saving"
@@ -48,9 +56,6 @@ export function AutoOpenCheckbox({
 					strokeWidth={4}
 				/>
 			)}
-			<span className="text-xs text-muted-foreground ml-2">
-				（すべてのユーザーがカードを選択した際に自動でオープンする）
-			</span>
 		</LabeledCheckbox>
 	);
 }
