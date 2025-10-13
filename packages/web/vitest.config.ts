@@ -13,11 +13,11 @@ export default defineConfig({
 	test: {
 		environment: "jsdom",
 		globals: true,
-		setupFiles: ["./vitest.setup.ts"],
 		server: {
 			deps: {
 				inline: ["@harusame0616/result"],
 			},
 		},
+		setupFiles: ["./vitest.setup.ts"],
 	},
 });
