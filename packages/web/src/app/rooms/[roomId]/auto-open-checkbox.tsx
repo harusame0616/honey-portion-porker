@@ -2,7 +2,6 @@ import { CheckIcon, LoaderIcon } from "lucide-react";
 import { LabeledCheckbox } from "@/components/labeled-checkbox";
 import { updateAutoOpenAction } from "./_actions/update-auto-open-action";
 import { useOptimisticCheckbox } from "./use-optimistic-checkbox";
-import { useTimerFinished } from "./use-timer-finished";
 
 type Props = {
 	ownerRoomId: string;
@@ -14,16 +13,10 @@ export function AutoOpenCheckbox({
 	onCheckedChange,
 	checked,
 }: Props) {
-	const { isFinished, finish, reset } = useTimerFinished();
-	const { isPending, changeChecked, optimisticCheckedState } =
+	const { isPending, changeChecked, optimisticCheckedState, isFinished } =
 		useOptimisticCheckbox({
 			action: async (checked: boolean) => {
-				reset();
-				const result = await updateAutoOpenAction(ownerRoomId, checked);
-				if (!result.success) {
-					return;
-				}
-				finish();
+				return await updateAutoOpenAction(ownerRoomId, checked);
 			},
 			checked,
 			onCheckedChange,
