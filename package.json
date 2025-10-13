@@ -3,7 +3,7 @@
 	"description": "",
 	"devDependencies": {
 		"@biomejs/biome": "catalog:",
-		"renovate": "41.145.2"
+		"renovate": "41.146.0"
 	},
 	"keywords": [],
 	"license": "ISC",
