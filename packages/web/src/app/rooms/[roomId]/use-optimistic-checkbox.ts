@@ -1,10 +1,11 @@
+import type { Result } from "@harusame0616/result";
 import { useOptimistic, useTransition } from "react";
 import { useTimerFinished } from "./use-timer-finished";
 
 type Params = {
 	checked: boolean;
 	onCheckedChange: (newChecked: boolean) => Promise<void>;
-	action: (newChecked: boolean) => Promise<void>;
+	action: (newChecked: boolean) => Promise<Result<void, string>>;
 };
 
 export function useOptimisticCheckbox({
@@ -23,7 +24,10 @@ export function useOptimisticCheckbox({
 			reset();
 			setOptimisticCheckedState(checked);
 
-			await action(checked);
+			const result = await action(checked);
+			if (!result.success) {
+				return;
+			}
 
 			await onCheckedChange(checked);
 			finish();
