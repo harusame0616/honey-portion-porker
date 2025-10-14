@@ -1,9 +1,6 @@
 {
 	"$schema": "https://turbo.build/schema.json",
 	"globalEnv": ["SUPABASE_SERVICE_ROLE_KEY"],
-	"remoteCache": {
-		"signature": true
-	},
 	"tasks": {
 		"build": {
 			"dependsOn": ["^build"],
