@@ -3,6 +3,7 @@ import { after } from "next/server";
 import * as v from "valibot";
 import { createClient } from "@/lib/supabase/server";
 import { Room } from "./room";
+import { RSCRoom } from "./sc-room";
 
 async function getRoom(
 	roomId: string,
@@ -103,18 +104,21 @@ export default async function Page({
 		notFound();
 	}
 
+	const ownerRoomId =
+		paramsParseResult.output.roomId === roomGettingResult.data.ownerRoomId
+			? roomGettingResult.data.ownerRoomId
+			: undefined;
+
 	return (
-		<Room
-			initialAutoOpen={roomGettingResult.data.autoOpen}
-			initialAutoReset={roomGettingResult.data.autoReset}
-			initialNote={roomGettingResult.data.note}
-			memberRoomId={roomGettingResult.data.memberRoomId}
-			ownerRoomId={
-				paramsParseResult.output.roomId === roomGettingResult.data.ownerRoomId
-					? roomGettingResult.data.ownerRoomId
-					: undefined
-			}
-			roomId={roomGettingResult.data.roomId}
-		/>
+		<div className="space-y-4">
+			<RSCRoom roomId={paramsParseResult.output.roomId} />
+			<Room
+				initialAutoOpen={roomGettingResult.data.autoOpen}
+				initialAutoReset={roomGettingResult.data.autoReset}
+				memberRoomId={roomGettingResult.data.memberRoomId}
+				ownerRoomId={ownerRoomId}
+				roomId={roomGettingResult.data.roomId}
+			/>
+		</div>
 	);
 }

@@ -1,15 +1,12 @@
 "use client";
 
-import { EditIcon } from "lucide-react";
 import {
 	type DetailedHTMLProps,
 	type HTMLAttributes,
 	type PropsWithChildren,
 	type ReactNode,
 	useId,
-	useState,
 } from "react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { updateAutoOpenAction } from "./_actions/update-auto-open-action";
@@ -17,21 +14,18 @@ import { updateAutoResetConfigAction } from "./_actions/update-auto-reset-config
 import { ActionCheckbox } from "./action-checkbox";
 import { ChoiceCards } from "./choice-cards";
 import { CopyButton } from "./copy-button";
-import { EditNoteForm } from "./edit-note-form";
 import { MemberCards } from "./member-cards";
 import { OwnerOperations } from "./owner-operations";
 import { AUTO_OPEN_MINUTES, usePlanningPoker } from "./use-planning-poker";
 
 export function Room({
 	roomId,
-	initialNote,
 	ownerRoomId,
 	memberRoomId,
 	initialAutoReset,
 	initialAutoOpen,
 }: {
 	roomId: string;
-	initialNote: string;
 	ownerRoomId?: string;
 	memberRoomId: string;
 	initialAutoReset: boolean;
@@ -52,54 +46,18 @@ export function Room({
 		changeAutoOpen,
 		autoOpen,
 		autoReset,
-		note,
-		changeNote,
 	} = usePlanningPoker({
 		initialAutoOpen,
 		initialAutoReset,
-		initialNote,
 		ownerRoomId,
 		roomId,
 	});
-	const [isNoteEditing, setIsNoteEditing] = useState(false);
 
 	const memberRoomIdInputId = useId();
 	const memberRoomUrlInputId = useId();
 
 	return (
 		<div className="flex flex-col gap-4">
-			<Section
-				bar={
-					ownerRoomId && (
-						<div className="-mb-[6px]">
-							<Button
-								onClick={() => setIsNoteEditing((prev) => !prev)}
-								size="icon"
-								type="button"
-								variant="ghost"
-							>
-								<EditIcon />
-							</Button>
-						</div>
-					)
-				}
-				title="Note"
-			>
-				{ownerRoomId && isNoteEditing ? (
-					<EditNoteForm
-						key={note}
-						note={note}
-						onSubmit={async (newNote) => {
-							changeNote(newNote);
-							setIsNoteEditing(false);
-						}}
-						ownerRoomId={ownerRoomId}
-					/>
-				) : (
-					<p className="whitespace-pre-wrap break-all">{note || "-"}</p>
-				)}
-			</Section>
-
 			<Section title="Your choices">
 				<ChoiceCards
 					onCardClick={(card) => {
