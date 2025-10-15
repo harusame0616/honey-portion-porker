@@ -3,9 +3,9 @@ import { after } from "next/server";
 import { Suspense } from "react";
 import * as v from "valibot";
 import { createClient } from "@/lib/supabase/server";
-import { Room } from "./room";
 import { RoomInformationContainer } from "./_room-information/room-information-container";
 import { RoomInformationSkeleton } from "./_room-information/room-information-skeleton";
+import { Room } from "./room";
 import { RSCRoom } from "./sc-room";
 
 async function getRoom(
