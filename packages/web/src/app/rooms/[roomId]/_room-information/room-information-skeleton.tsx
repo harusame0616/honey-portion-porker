@@ -1,7 +1,7 @@
 import { useId } from "react";
+import { Section } from "@/components/section";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Section } from "../section";
 
 export function RoomInformationSkeleton() {
 	const memberRoomIdInputId = useId();

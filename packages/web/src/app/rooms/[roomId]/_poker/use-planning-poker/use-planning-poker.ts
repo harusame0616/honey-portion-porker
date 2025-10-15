@@ -8,7 +8,7 @@ import { useRealtimeListener } from "./use-realtime-listener";
 import { useUsers } from "./use-users";
 
 type Params = {
-	roomId: string;
+	memberRoomId: string;
 	ownerRoomId?: string;
 	initialAutoReset: boolean;
 	initialAutoOpen: boolean;
@@ -17,7 +17,7 @@ type Params = {
 export const AUTO_OPEN_MINUTES = 1;
 
 export function usePlanningPoker({
-	roomId,
+	memberRoomId,
 	ownerRoomId,
 	initialAutoReset,
 	initialAutoOpen,
@@ -29,7 +29,7 @@ export function usePlanningPoker({
 	const [isOpen, setIsOpen] = useState(false);
 	const { autoReset, autoOpen, setAutoReset, setAutoOpen, autoOpenRef } =
 		useConfig(initialAutoReset, initialAutoOpen);
-	const channel = useChannel(roomId);
+	const channel = useChannel(memberRoomId);
 	const realtimeCommand = useRealtimeCommand(channel, userId.current);
 
 	const { startTimer, stopTimer, initializeTimer } = useTimer(

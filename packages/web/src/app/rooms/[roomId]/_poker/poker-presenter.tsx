@@ -1,27 +1,21 @@
 "use client";
 
-import type {
-	DetailedHTMLProps,
-	HTMLAttributes,
-	PropsWithChildren,
-	ReactNode,
-} from "react";
-import { cn } from "@/lib/utils";
-import { updateAutoOpenAction } from "./_actions/update-auto-open-action";
-import { updateAutoResetConfigAction } from "./_actions/update-auto-reset-config";
+import { Section } from "@/components/section";
 import { ActionCheckbox } from "./action-checkbox";
 import { ChoiceCards } from "./choice-cards";
 import { MemberCards } from "./member-cards";
 import { OwnerOperations } from "./owner-operations";
+import { updateAutoOpenAction } from "./update-auto-open-action";
+import { updateAutoResetConfigAction } from "./update-auto-reset-config";
 import { AUTO_OPEN_MINUTES, usePlanningPoker } from "./use-planning-poker";
 
-export function Room({
-	roomId,
+export function PokerPresenter({
+	memberRoomId,
 	ownerRoomId,
 	initialAutoReset,
 	initialAutoOpen,
 }: {
-	roomId: string;
+	memberRoomId: string;
 	ownerRoomId?: string;
 	initialAutoReset: boolean;
 	initialAutoOpen: boolean;
@@ -44,12 +38,12 @@ export function Room({
 	} = usePlanningPoker({
 		initialAutoOpen,
 		initialAutoReset,
+		memberRoomId,
 		ownerRoomId,
-		roomId,
 	});
 
 	return (
-		<div className="flex flex-col gap-4">
+		<>
 			<Section title="Your choices">
 				<ChoiceCards
 					onCardClick={(card) => {
@@ -132,27 +126,6 @@ export function Room({
 					</ActionCheckbox>
 				</Section>
 			)}
-		</div>
-	);
-}
-
-function Section({
-	children,
-	title,
-	bar,
-	className,
-	...props
-}: PropsWithChildren<{ title: string; bar?: ReactNode }> &
-	DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>) {
-	return (
-		<section>
-			<div className="flex items-end">
-				<h2 className="font-bold">{title}</h2>
-				<div>{bar}</div>
-			</div>
-			<div {...props} className={cn("bg-muted p-4 rounded-md", className)}>
-				{children}
-			</div>
-		</section>
+		</>
 	);
 }

@@ -3,7 +3,7 @@ import { Itim } from "next/font/google";
 import Image from "next/image";
 import type { PropsWithChildren } from "react";
 import { cn } from "@/lib/utils";
-import cardIcon from "../../_resources/icon.svg";
+import cardIcon from "../../../_resources/icon.svg";
 
 const cuteFont = Itim({
 	display: "swap",

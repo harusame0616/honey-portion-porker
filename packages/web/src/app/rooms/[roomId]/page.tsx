@@ -3,42 +3,12 @@ import { after } from "next/server";
 import { Suspense } from "react";
 import * as v from "valibot";
 import { createClient } from "@/lib/supabase/server";
+import { NoteServerContainer } from "./_note/note-server-container";
+import { NoteSkeleton } from "./_note/note-skeleton";
+import { PokerContainer } from "./_poker/poker-container";
+import { PokerSkeleton } from "./_poker/poker-skeleton";
 import { RoomInformationContainer } from "./_room-information/room-information-container";
 import { RoomInformationSkeleton } from "./_room-information/room-information-skeleton";
-import { Room } from "./room";
-import { RSCRoom } from "./sc-room";
-
-async function getRoom(
-	roomId: string,
-	client: Awaited<ReturnType<typeof createClient>>,
-) {
-	const roomSelect = await client
-		.from("room")
-		.select("*")
-		.or(`ownerRoomId.eq.${roomId},memberRoomId.eq.${roomId}`)
-		.single();
-
-	if (roomSelect.error || !roomSelect.data.roomId) {
-		return {
-			data: null,
-			message: "ルームが見つかりません | Honey Portion Poker",
-			success: false as const,
-		};
-	}
-
-	return {
-		data: {
-			autoOpen: roomSelect.data.autoOpen,
-			autoReset: roomSelect.data.autoReset,
-			memberRoomId: roomSelect.data.memberRoomId,
-			note: roomSelect.data.note,
-			ownerRoomId: roomSelect.data.ownerRoomId,
-			roomId: roomSelect.data.roomId,
-		},
-		message: "",
-		success: true as const,
-	};
-}
 
 export async function generateMetadata({
 	params,
@@ -52,19 +22,23 @@ export async function generateMetadata({
 		};
 	}
 
-	const room = await getRoom(
-		paramsParseResult.output.roomId,
-		await createClient(),
-	);
+	const client = await createClient();
+	const roomSelect = await client
+		.from("room")
+		.select("ownerRoomId")
+		.or(
+			`ownerRoomId.eq.${paramsParseResult.output.roomId},memberRoomId.eq.${paramsParseResult.output.roomId}`,
+		)
+		.single();
 
-	if (!room.success) {
+	if (roomSelect.error) {
 		return {
-			title: room.message,
+			title: "ルームが見つかりません | Honey Portion Poker",
 		};
 	}
 
 	return {
-		title: `${room.data.ownerRoomId === paramsParseResult.output.roomId ? "オーナー" : "メンバー"}ルーム | Honey Portion Poker`,
+		title: `${roomSelect.data.ownerRoomId === paramsParseResult.output.roomId ? "オーナー" : "メンバー"}ルーム | Honey Portion Poker`,
 	};
 }
 
@@ -98,29 +72,14 @@ export default async function Page({
 		await updateRoom(paramsParseResult.output.roomId, client);
 	});
 
-	const roomGettingResult = await getRoom(
-		paramsParseResult.output.roomId,
-		client,
-	);
-
-	if (!roomGettingResult.success) {
-		notFound();
-	}
-
-	const ownerRoomId =
-		paramsParseResult.output.roomId === roomGettingResult.data.ownerRoomId
-			? roomGettingResult.data.ownerRoomId
-			: undefined;
-
 	return (
 		<div className="space-y-4">
-			<RSCRoom roomId={paramsParseResult.output.roomId} />
-			<Room
-				initialAutoOpen={roomGettingResult.data.autoOpen}
-				initialAutoReset={roomGettingResult.data.autoReset}
-				ownerRoomId={ownerRoomId}
-				roomId={roomGettingResult.data.roomId}
-			/>
+			<Suspense fallback={<NoteSkeleton />}>
+				<NoteServerContainer roomId={paramsParseResult.output.roomId} />
+			</Suspense>
+			<Suspense fallback={<PokerSkeleton />}>
+				<PokerContainer roomId={paramsParseResult.output.roomId} />
+			</Suspense>
 			<Suspense fallback={<RoomInformationSkeleton />}>
 				<RoomInformationContainer roomId={paramsParseResult.output.roomId} />
 			</Suspense>
