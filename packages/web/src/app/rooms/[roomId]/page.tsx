@@ -1,7 +1,10 @@
 import { notFound } from "next/navigation";
 import { after } from "next/server";
+import { Suspense } from "react";
 import * as v from "valibot";
 import { createClient } from "@/lib/supabase/server";
+import { RoomInformationContainer } from "./_room-information/room-information-container";
+import { RoomInformationSkeleton } from "./_room-information/room-information-skeleton";
 import { Room } from "./room";
 import { RSCRoom } from "./sc-room";
 
@@ -115,10 +118,12 @@ export default async function Page({
 			<Room
 				initialAutoOpen={roomGettingResult.data.autoOpen}
 				initialAutoReset={roomGettingResult.data.autoReset}
-				memberRoomId={roomGettingResult.data.memberRoomId}
 				ownerRoomId={ownerRoomId}
 				roomId={roomGettingResult.data.roomId}
 			/>
+			<Suspense fallback={<RoomInformationSkeleton />}>
+				<RoomInformationContainer roomId={paramsParseResult.output.roomId} />
+			</Suspense>
 		</div>
 	);
 }

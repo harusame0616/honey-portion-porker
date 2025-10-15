@@ -1,19 +1,16 @@
 "use client";
 
-import {
-	type DetailedHTMLProps,
-	type HTMLAttributes,
-	type PropsWithChildren,
-	type ReactNode,
-	useId,
+import type {
+	DetailedHTMLProps,
+	HTMLAttributes,
+	PropsWithChildren,
+	ReactNode,
 } from "react";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { updateAutoOpenAction } from "./_actions/update-auto-open-action";
 import { updateAutoResetConfigAction } from "./_actions/update-auto-reset-config";
 import { ActionCheckbox } from "./action-checkbox";
 import { ChoiceCards } from "./choice-cards";
-import { CopyButton } from "./copy-button";
 import { MemberCards } from "./member-cards";
 import { OwnerOperations } from "./owner-operations";
 import { AUTO_OPEN_MINUTES, usePlanningPoker } from "./use-planning-poker";
@@ -21,13 +18,11 @@ import { AUTO_OPEN_MINUTES, usePlanningPoker } from "./use-planning-poker";
 export function Room({
 	roomId,
 	ownerRoomId,
-	memberRoomId,
 	initialAutoReset,
 	initialAutoOpen,
 }: {
 	roomId: string;
 	ownerRoomId?: string;
-	memberRoomId: string;
 	initialAutoReset: boolean;
 	initialAutoOpen: boolean;
 }) {
@@ -52,9 +47,6 @@ export function Room({
 		ownerRoomId,
 		roomId,
 	});
-
-	const memberRoomIdInputId = useId();
-	const memberRoomUrlInputId = useId();
 
 	return (
 		<div className="flex flex-col gap-4">
@@ -140,41 +132,6 @@ export function Room({
 					</ActionCheckbox>
 				</Section>
 			)}
-
-			<Section className="flex flex-col gap-2" title="Room information">
-				<div>
-					<label className="text-sm" htmlFor={memberRoomIdInputId}>
-						Member Room ID
-					</label>
-					<div className="flex">
-						<Input
-							className="max-w-80"
-							id={memberRoomIdInputId}
-							name="roomId"
-							readOnly
-							value={memberRoomId}
-						/>
-						<CopyButton text={memberRoomId} />
-					</div>
-				</div>
-				<div>
-					<label className="text-sm" htmlFor={memberRoomUrlInputId}>
-						Member Room URL
-					</label>
-					<div className="flex">
-						<Input
-							className="max-w-[605px]"
-							id={memberRoomUrlInputId}
-							name="roomId"
-							readOnly
-							value={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/rooms/${memberRoomId}`}
-						/>
-						<CopyButton
-							text={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/rooms/${memberRoomId}`}
-						/>
-					</div>
-				</div>
-			</Section>
 		</div>
 	);
 }
