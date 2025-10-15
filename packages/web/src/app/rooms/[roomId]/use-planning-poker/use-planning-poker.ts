@@ -64,7 +64,6 @@ export function usePlanningPoker({
 		}, [realtimeCommand.unselectCard]),
 		onUpdateAutoOpen: useCallback(setAutoOpen, []),
 		onUpdateAutoReset: useCallback(setAutoReset, []),
-		onUpdateNote: useCallback(() => {}, []),
 	});
 
 	useEffect(() => {

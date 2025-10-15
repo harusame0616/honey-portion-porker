@@ -13,7 +13,6 @@ type PokerEvent = {
 	onReset: () => void;
 	onUpdateAutoOpen: (value: boolean) => void;
 	onUpdateAutoReset: (value: boolean) => void;
-	onUpdateNote: (value: string) => void;
 	onSubscribe: () => void;
 };
 export function useRealtimeListener(
