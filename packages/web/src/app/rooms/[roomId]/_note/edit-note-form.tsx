@@ -10,9 +10,9 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
+import { Section } from "../section";
 import { editNoteAction } from "./edit-note-action";
 import { NOTE_MAX_LENGTH } from "./edit-note-action.constants";
-import { Section } from "../section";
 
 const noteFormSchema = v.object({
 	note: v.pipe(
