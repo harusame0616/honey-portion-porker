@@ -1,4 +1,4 @@
-import { Section } from "../section";
+import { Section } from "@/components/section";
 
 type NotePresenterProps = {
 	note: string;

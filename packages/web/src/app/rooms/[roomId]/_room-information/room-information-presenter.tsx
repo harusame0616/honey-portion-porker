@@ -1,9 +1,9 @@
 "use client";
 
 import { useId } from "react";
+import { Section } from "@/components/section";
 import { Input } from "@/components/ui/input";
-import { CopyButton } from "../copy-button";
-import { Section } from "../section";
+import { CopyButton } from "./copy-button";
 
 export function RoomInformationPresenter({
 	memberRoomId,

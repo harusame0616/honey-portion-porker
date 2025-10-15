@@ -1,5 +1,5 @@
+import { Section } from "@/components/section";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Section } from "../section";
 
 export function NoteSkeleton() {
 	return (

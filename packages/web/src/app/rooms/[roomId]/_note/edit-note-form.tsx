@@ -1,6 +1,7 @@
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { useForm } from "react-hook-form";
 import * as v from "valibot";
+import { Section } from "@/components/section";
 import { Button } from "@/components/ui/button";
 import {
 	Form,
@@ -10,7 +11,6 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { Section } from "../section";
 import { editNoteAction } from "./edit-note-action";
 import { NOTE_MAX_LENGTH } from "./edit-note-action.constants";
 
