@@ -12,9 +12,7 @@ import { RoomInformationSkeleton } from "./_room-information/room-information-sk
 
 export async function generateMetadata({
 	params,
-}: {
-	params: Promise<{ roomId: string }>;
-}) {
+}: PageProps<"/rooms/[roomId]">) {
 	const paramsParseResult = v.safeParse(paramsSchema, await params);
 	if (!paramsParseResult.success) {
 		return {
@@ -58,9 +56,7 @@ const paramsSchema = v.object({
 
 export default async function Page({
 	params,
-}: {
-	params: Promise<{ roomId: string }>;
-}) {
+}: PageProps<"/rooms/[roomId]">) {
 	const paramsParseResult = v.safeParse(paramsSchema, await params);
 
 	if (!paramsParseResult.success) {

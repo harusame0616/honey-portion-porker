@@ -1,0 +1,12 @@
+{
+	"permissions": {
+		"allow": [
+			"Bash(git mv:*)",
+			"Bash(gh issue create:*)",
+			"Bash(git add:*)",
+			"Bash(git commit -m \"$(cat <<''EOF''\ntest.extend を使ってテストコンテキストを改善\n\nVitest の test.extend 機能を使用してテストコードをリファクタリング:\n- test.extend で user、mockOnSubmit、mockEditNoteAction を fixture として定義\n- 各テストで繰り返し定義されていた共通のセットアップコードを削除\n- DRY 原則に従い、コードの重複を大幅に削減\n- beforeEach の削除（mockReset は fixture 内で実行）\n\nこれにより、テストコードの保守性と可読性が向上した。\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+		],
+		"ask": [],
+		"deny": []
+	}
+}

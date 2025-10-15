@@ -1,8 +1,7 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
 import { ServiceTitle } from "@/components/service-title";
 
-export default function Layout({ children }: { children: ReactNode }) {
+export default function Layout({ children }: LayoutProps<"/rooms/[roomId]">) {
 	return (
 		<div>
 			<header className="bg-primary p-4 shadow-md flex">
