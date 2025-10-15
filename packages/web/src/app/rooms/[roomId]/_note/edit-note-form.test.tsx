@@ -5,7 +5,7 @@ import { editNoteAction } from "./edit-note-action";
 import { EditNoteForm } from "./edit-note-form";
 
 // モックの準備
-vi.mock("./_actions/edit-note-action");
+vi.mock("./edit-note-action");
 
 const test = baseTest.extend<{
 	user: ReturnType<typeof userEvent.setup>;
@@ -15,7 +15,7 @@ const test = baseTest.extend<{
 	// biome-ignore lint/correctness/noEmptyPattern: Vitest fixtures require object destructuring
 	mockEditNoteAction: async ({}, use) => {
 		const mock = vi.mocked(editNoteAction);
-		mock.mockReset();
+		mock.mockClear();
 		await use(mock);
 	},
 	// biome-ignore lint/correctness/noEmptyPattern: Vitest fixtures require object destructuring
