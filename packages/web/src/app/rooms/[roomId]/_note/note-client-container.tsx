@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { EditNoteForm } from "../edit-note-form";
+import { EditNoteForm } from "./edit-note-form";
 import { NoteEditablePresenter } from "./note-editable-presenter";
 
 type NoteClientContainerProps = {

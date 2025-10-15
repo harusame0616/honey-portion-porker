@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { test as baseTest, expect, vi } from "vitest";
-import { editNoteAction } from "./_actions/edit-note-action";
+import { editNoteAction } from "./edit-note-action";
 import { EditNoteForm } from "./edit-note-form";
 
 // モックの準備
@@ -9,7 +9,7 @@ vi.mock("./_actions/edit-note-action");
 
 const test = baseTest.extend<{
 	user: ReturnType<typeof userEvent.setup>;
-	mockOnSubmit: ReturnType<typeof vi.fn<(newNote: string) => void>>;
+	mockOnSubmit: ReturnType<typeof vi.fn<() => void>>;
 	mockEditNoteAction: ReturnType<typeof vi.mocked<typeof editNoteAction>>;
 }>({
 	// biome-ignore lint/correctness/noEmptyPattern: Vitest fixtures require object destructuring
@@ -20,7 +20,7 @@ const test = baseTest.extend<{
 	},
 	// biome-ignore lint/correctness/noEmptyPattern: Vitest fixtures require object destructuring
 	mockOnSubmit: async ({}, use) => {
-		await use(vi.fn<(newNote: string) => void>());
+		await use(vi.fn<() => void>());
 	},
 	// biome-ignore lint/correctness/noEmptyPattern: Vitest fixtures require object destructuring
 	user: async ({}, use) => {
@@ -67,7 +67,7 @@ test("4096文字を入力して送信できる", async ({
 		});
 	});
 
-	expect(mockOnSubmit).toHaveBeenCalledWith(text4096);
+	expect(mockOnSubmit).toHaveBeenCalled();
 });
 
 test("0文字で送信できる", async ({
@@ -99,7 +99,7 @@ test("0文字で送信できる", async ({
 		});
 	});
 
-	expect(mockOnSubmit).toHaveBeenCalledWith("");
+	expect(mockOnSubmit).toHaveBeenCalled();
 });
 
 test("4097文字を入力して送信するとエラーが表示される。", async ({
@@ -156,7 +156,7 @@ test("編集に成功すると入力内容を引数に onSubmit が呼ばれる"
 		});
 	});
 
-	expect(mockOnSubmit).toHaveBeenCalledWith("更新されたノート");
+	expect(mockOnSubmit).toHaveBeenCalled();
 });
 
 test("編集に失敗するとエラーメッセージが表示され、onSubmit が呼ばれない", async ({
