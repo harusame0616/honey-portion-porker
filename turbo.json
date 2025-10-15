@@ -1,0 +1,51 @@
+{
+	"$schema": "https://turbo.build/schema.json",
+	"globalEnv": ["SUPABASE_SERVICE_ROLE_KEY"],
+	"tasks": {
+		"build": {
+			"dependsOn": ["^build"],
+			"outputs": [".next/**", "!.next/cache/**", "dist/**"]
+		},
+		"dev": {
+			"cache": false,
+			"persistent": true
+		},
+		"format:check": {
+			"outputs": []
+		},
+		"format:write": {
+			"cache": false,
+			"outputs": []
+		},
+		"lint-format:check": {
+			"outputs": []
+		},
+		"lint-format:write": {
+			"cache": false,
+			"outputs": []
+		},
+		"lint:check": {
+			"outputs": []
+		},
+		"lint:write": {
+			"cache": false,
+			"outputs": []
+		},
+		"test": {
+			"dependsOn": ["^build"],
+			"outputs": ["coverage/**"]
+		},
+		"test:ui": {
+			"cache": false,
+			"persistent": true
+		},
+		"test:watch": {
+			"cache": false,
+			"persistent": true
+		},
+		"validate:fix": {
+			"cache": false,
+			"outputs": []
+		}
+	}
+}
