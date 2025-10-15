@@ -12,7 +12,6 @@ type Params = {
 	ownerRoomId?: string;
 	initialAutoReset: boolean;
 	initialAutoOpen: boolean;
-	initialNote: string;
 };
 
 export const AUTO_OPEN_MINUTES = 1;
@@ -22,7 +21,6 @@ export function usePlanningPoker({
 	ownerRoomId,
 	initialAutoReset,
 	initialAutoOpen,
-	initialNote,
 }: Params) {
 	const userId = useRef<string>(uuid());
 	const { users, setUsers, selectedUsers, selectedCard } = useUsers(
@@ -31,7 +29,6 @@ export function usePlanningPoker({
 	const [isOpen, setIsOpen] = useState(false);
 	const { autoReset, autoOpen, setAutoReset, setAutoOpen, autoOpenRef } =
 		useConfig(initialAutoReset, initialAutoOpen);
-	const [note, setNote] = useState(initialNote);
 	const channel = useChannel(roomId);
 	const realtimeCommand = useRealtimeCommand(channel, userId.current);
 
@@ -67,7 +64,6 @@ export function usePlanningPoker({
 		}, [realtimeCommand.unselectCard]),
 		onUpdateAutoOpen: useCallback(setAutoOpen, []),
 		onUpdateAutoReset: useCallback(setAutoReset, []),
-		onUpdateNote: useCallback(setNote, []),
 	});
 
 	useEffect(() => {
@@ -98,7 +94,6 @@ export function usePlanningPoker({
 			[realtimeCommand.changeAutoReset, setAutoReset],
 		),
 		isOpen,
-		note,
 		selectedCard,
 		selectedUsers,
 		userId,

@@ -13,7 +13,6 @@ type PokerEvent = {
 	onReset: () => void;
 	onUpdateAutoOpen: (value: boolean) => void;
 	onUpdateAutoReset: (value: boolean) => void;
-	onUpdateNote: (value: string) => void;
 	onSubscribe: () => void;
 };
 export function useRealtimeListener(
@@ -25,7 +24,6 @@ export function useRealtimeListener(
 		onReset,
 		onUpdateAutoOpen,
 		onUpdateAutoReset,
-		onUpdateNote,
 		onSubscribe,
 	}: PokerEvent,
 ) {
@@ -54,9 +52,6 @@ export function useRealtimeListener(
 			.on("broadcast", { event: "update-auto-reset" }, ({ value }) => {
 				onUpdateAutoReset(value);
 			})
-			.on("broadcast", { event: "update-note" }, ({ value }) => {
-				onUpdateNote(value);
-			})
 			.subscribe(async (status) => {
 				if (status !== "SUBSCRIBED") {
 					return;
@@ -74,7 +69,6 @@ export function useRealtimeListener(
 		onReset,
 		onUpdateAutoOpen,
 		onUpdateAutoReset,
-		onUpdateNote,
 		onSubscribe,
 		channel,
 	]);
