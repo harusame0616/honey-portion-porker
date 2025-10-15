@@ -5,7 +5,7 @@ const choices = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, -1];
 
 export function PokerSkeleton() {
 	return (
-		<div className="flex flex-col gap-4">
+		<>
 			{/* Your choices section */}
 			<section>
 				<h2 className="font-bold">Your choices</h2>
@@ -45,6 +45,6 @@ export function PokerSkeleton() {
 					<Skeleton className="h-5 w-32" />
 				</div>
 			</section>
-		</div>
+		</>
 	);
 }
