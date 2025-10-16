@@ -10,7 +10,7 @@
 	"license": "ISC",
 	"main": "index.js",
 	"name": "honey-portion-porker",
-	"packageManager": "pnpm@10.18.2",
+	"packageManager": "pnpm@10.18.3",
 	"scripts": {
 		"build": "turbo run build",
 		"dev": "turbo run dev",
