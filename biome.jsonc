@@ -12,6 +12,7 @@
 	},
 	"formatter": {
 		"enabled": true,
+		"ignore": ["packages/web/tsconfig.json"],
 		"indentStyle": "tab"
 	},
 	"javascript": {
