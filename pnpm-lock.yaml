@@ -39,7 +39,7 @@ importers:
         specifier: 41.146.0
         version: 41.146.0(encoding@0.1.13)(typanion@3.14.0)
       turbo:
-        specifier: ^2.5.8
+        specifier: 2.5.8
         version: 2.5.8
 
   packages/e2e:
