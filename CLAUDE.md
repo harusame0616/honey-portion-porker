@@ -1,4 +1,17 @@
-# テストコード
+# CLAUDE.md
 
-- 初期化や並列実行の制御など、必要な場合のみ `describe` を使用する
-- `it` ではなく `test` を使用する
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## ドキュメント
+
+@docs/quick-reference.md
+
+@docs/project-overview.md
+
+@docs/development-guidelines.md
+
+@docs/testing.md
+
+@docs/tech-stack.md
+
+@docs/mcp.md
