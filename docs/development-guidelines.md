@@ -102,12 +102,7 @@ export default async function Page(props: PageProps<"/foos/[fooId]">) {
     return notFound();
   }
 
-  return (
-    <UserPage
-      userId={paramsResult.output.userId}
-      bar={searchParamsParseResult.output.bar}
-    />
-  );
+  return <UserPage userId={fooId} bar={searchParamsParseResult.output.bar} />;
 }
 ```
 
