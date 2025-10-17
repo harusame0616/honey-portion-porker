@@ -72,8 +72,6 @@ jobs:
             counter=$((counter + 1))
           done
           echo "Supabase is ready!"
-      - name: DB リセット
-        run: supabase db reset
 
       - name: Web ビルド
         run: pnpm run build
