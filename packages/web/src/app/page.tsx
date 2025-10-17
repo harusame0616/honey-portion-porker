@@ -15,9 +15,9 @@ export default function Home() {
 				<div className="bg-[hsl(45_35%_60%)] w-svw flex justify-center my-4 p-6">
 					<h2 className="max-w-2xl w-full font-bold text-3xl leading-normal">
 						<span className="text-primary text-shadow-md">
-							すぐ使えて設定を保持できる
+							ログイン不要、URL共有だけ
 						</span>
-						<span className="block">シンプルな</span>
+						<span className="block">リアルタイムな</span>
 						<span className="block">プランニングポーカー</span>
 					</h2>
 				</div>
