@@ -48,20 +48,18 @@
 - **ClientContainer**: インタラクティブなロジック、状態管理などのクライアントサイド処理
 
 ```tsx
-// users-server-container.tsx
+// RSC
 export async function UsersServerContainer() {
-  const user = await getUsers();
-
-  return <UserDetailClientContainer user={user} />;
+  const users = await getUsers();
+  return <UsersClientContainer users={users} />;
 }
 
-// users-client-container.tsx (RCC)
-("use client");
-
-export function UsersClientContainer({ user }: { user: User }) {
-  const { filteredUsers, filter } = useFilteredUser();
-
-  return <UsersPresenter user={filteredUsers} onFilterChange={filter} />;
+// RCC
+"use client";
+export function UsersClientContainer({ users }: { users: User[] }) {
+  const [filter, setFilter] = useState("");
+  const filteredUsers = users.filter(u => u.name.includes(filter));
+  return <UsersPresenter users={filteredUsers} onFilterChange={setFilter} />;
 }
 ```
 
@@ -81,28 +79,24 @@ export function UsersClientContainer({ user }: { user: User }) {
 - **Layout コンポーネント**: Next.js 組み込みの `LayoutProps` を使用
 
 ```typescript
-// page.tsx
 import type { PageProps } from "next";
 import * as v from "valibot";
 import { notFound } from "next/navigation";
 
-// layout の場合は PageProps が LayoutProps に変わるだけで基本的な考え方は同じ
+const searchParamsSchema = v.object({
+  bar: v.pipe(v.string(), v.regex(/\d+/), v.transform(Number)),
+});
+
 export default async function Page(props: PageProps<"/foos/[fooId]">) {
-  const { fooId } = await props.params; // 組み込みの PageProps により正しい型付けがされている
+  const { fooId } = await props.params;
   const rawSearchParams = await props.searchParams;
+  const result = v.safeParse(searchParamsSchema, rawSearchParams);
 
-  const searchParamsParseResult = v.safeParse(
-    v.object({
-      bar: v.pipe(v.string(), v.regex(/\d+/), v.transform(Number)),
-    }),
-    rawSearchParams
-  );
-
-  if (!searchParamsParseResult.success) {
+  if (!result.success) {
     return notFound();
   }
 
-  return <UserPage userId={fooId} bar={searchParamsParseResult.output.bar} />;
+  return <UserPage userId={fooId} bar={result.output.bar} />;
 }
 ```
 
@@ -110,28 +104,32 @@ export default async function Page(props: PageProps<"/foos/[fooId]">) {
 
 ```typescript
 // page.tsx
+import type { PageProps } from "next";
+
 export default async function Page(props: PageProps<"/">) {
   return <FooPage />;
 }
 
 // foo-page.tsx
+import { Suspense } from "react";
+
 export default async function FooPage() {
   return (
     <div>
       <Suspense fallback={<BarSkeleton />}>
         <BarContainer />
       </Suspense>
-      <Suspense fallback={<HogeSkeleton />}>
-        <HogeContainer />
-      </Suspense>
     </div>
   );
 }
 
-// foo.tsx
+// bar-container.tsx
+async function getBar() {
+  // データ取得処理
+}
+
 export default async function BarContainer() {
   const bar = await getBar();
-
   return <BarPresenter bar={bar} />;
 }
 ```
@@ -147,10 +145,8 @@ Container / Presenter / Skeleton / そのファイルでのみ使用するヘル
 1. Server Component と Client Component の分離が必要な場合
 2. Client Component から呼び出す Server Action
 3. 複数箇所から呼び出される共通の関数、共通のコンポーネント
-4. ファイルが肥大している
-   - 目安：500 行以上
+4. ファイルが肥大している（目安：500 行以上）
 5. テスタビリティー確保のため
-   - 基本的には結合テストを優先するため、外部に露出する必要のない関数はテストしないが、重要なロジックや複雑なロジックのテストが必要になる場合など
 
 #### ファイル構成パターン
 
@@ -233,47 +229,43 @@ app/rooms/[roomId]/
 
 以下の 3 つのパターンを目的に応じて使い分けます：
 
-| パターン               | 用途                                 | 呼び出し元 | "use server" |
-| ---------------------- | ------------------------------------ | ---------- | ------------ |
-| **Server Action**      | データの作成・更新・削除（Mutation） | RSC / RCC  | ✅ 必須      |
-| **Route Handler**      | Client Component からのデータ取得    | RCC のみ   | ❌ 不要      |
-| **通常のサーバー関数** | Server Component からのデータ取得    | RSC のみ   | ❌ 不要      |
+| パターン               | 用途                                  | 呼び出し元 | "use server" |
+| ---------------------- | ------------------------------------- | ---------- | ------------ |
+| **Server Action**      | データの作成・更新・削除（Mutation）  | RSC / RCC  | ✅ 必須      |
+| **Route Handler**      | Client Component からのデータ取得など | RCC のみ   | ❌ 不要      |
+| **通常のサーバー関数** | Server Component からのデータ取得     | RSC のみ   | ❌ 不要      |
 
-#### Server Action（"use server"）: Mutation 専用
+#### Server Action
 
-- 例: データの作成、更新、削除
+データの作成、更新、削除
+
 - ファイル配置: 使用するファイルと同じファイルに配置（ファイル分割の原則に従う）
   - クライアントコンポーネントから呼び出す場合はファイルを分ける
 - 関数名: `doEntityAction`（例: `createUserAction`）
 - 必ず `"use server"` ディレクティブを使用
 
-#### Route Handler: Client Component からのデータ取得
+#### Route Handler
+
+Client Component からのデータ取得、Webhook による外部との連携や定期実行処理など Server Action で対応できないもの
 
 - 例: 検索クエリに応じたデータ取得、無限スクロールのデータ読み込み
 - ファイル配置: `app/api/` ディレクトリ配下に配置
 - 関数名: doEntityRouteHandler として定義し export で as を使って HTTP メソッドとして公開
-
 - `"use server"` ディレクティブは**不要**
-
-**実装例:**
 
 ```typescript
 // app/api/users/route.ts
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
-export async function getUsers(request: Request) {
-  // 認証チェック
+export async function getUsersRouteHandler(request: Request) {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
     return NextResponse.json({ error: "認証が必要です" }, { status: 401 });
   }
 
-  // データ取得
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("query");
 
@@ -286,7 +278,7 @@ export async function getUsers(request: Request) {
   return NextResponse.json({ users: data ?? [] });
 }
 
-export { getUsers as GET };
+export { getUsersRouteHandler as GET };
 ```
 
 #### 通常のサーバー関数: Server Component からのデータ取得
@@ -303,25 +295,17 @@ export { getUsers as GET };
 **必ず認証チェックを実装する**
 
 ```typescript
-// ✅ Good: Container と同一ファイルに配置（1箇所でのみ使用）
 // user-list-container.tsx
-
 import { createClient } from "@/lib/supabase/server";
-import type { User } from "@/types/user";
 
-// データ取得関数（このファイルでのみ使用）
 async function getUsers(): Promise<User[]> {
-  // 認証チェック
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    return []; // または throw new Error("認証が必要です")
+    return [];
   }
 
-  // データ取得
   const { data } = await supabase
     .from("users")
     .select("*")
@@ -331,10 +315,8 @@ async function getUsers(): Promise<User[]> {
   return data ?? [];
 }
 
-// Container
 export async function UserListContainer() {
   const users = await getUsers();
-
   return <UserListPresenter users={users} />;
 }
 ```
@@ -360,8 +342,6 @@ export async function UserListContainer() {
 - `@harusame0616/result` の Result 型を返す
 - FormData または Object を受け取る
 
-**実装例:**
-
 ```typescript
 // create-user-action.ts
 "use server";
@@ -375,7 +355,6 @@ import * as v from "valibot";
 const createUserSchema = v.object({
   name: v.string(),
   email: v.pipe(v.string(), v.email()),
-  role: v.optional(v.string(), "user"),
 });
 
 type CreateUserInput = v.InferOutput<typeof createUserSchema>;
@@ -385,20 +364,12 @@ export async function createUserAction(
   input: CreateUserInput
 ): Promise<CreateUserResult> {
   try {
-    // バリデーション
     const validated = v.parse(createUserSchema, input);
-
-    // Supabase クライアント取得
     const supabase = await createClient();
 
-    // ユーザー作成
     const { data, error } = await supabase
       .from("users")
-      .insert({
-        name: validated.name,
-        email: validated.email,
-        role: validated.role,
-      })
+      .insert(validated)
       .select()
       .single();
 
@@ -406,9 +377,7 @@ export async function createUserAction(
       return fail(`ユーザーの作成に失敗しました: ${error.message}`);
     }
 
-    // キャッシュの再検証
     revalidatePath("/users");
-
     return succeed({ id: data.id });
   } catch (error) {
     if (error instanceof v.ValiError) {
@@ -454,7 +423,6 @@ type UserRole = (typeof UserRole)[keyof typeof UserRole];
 - **関数の戻り値**: 明示する
 
 ```typescript
-// ✅ Good
 function getUser(userId: string): Promise<User> {
   // ...
 }
@@ -484,7 +452,7 @@ import { TZDate } from "@date-fns/tz";
 const now = new TZDate(new Date(), "Asia/Tokyo");
 
 // JST での特定の日時を作成
-const startDate = new TZDate(2024, 0, 1, 0, 0, 0, 0, "Asia/Tokyo"); // 2024年1月1日 00:00:00 JST
+const startDate = new TZDate(2024, 0, 1, 0, 0, 0, 0, "Asia/Tokyo");
 ```
 
 **注意点:**

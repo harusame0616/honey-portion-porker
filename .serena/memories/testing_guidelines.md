@@ -1,49 +1,22 @@
-# テスト実装ガイドライン
+# テストガイドライン
 
-## テスト作成の原則
+## 基本原則
 
-1. **振る舞いベースのテスト**: 内部実装ではなく、外部から観測可能な振る舞いをテストする
-2. **統合テストの優先**: 極力 Mock を避け、実際の依存関係を含めた統合テストを作成する
-3. **Fixture 優先**: beforeEach/afterEach よりも fixture を使った形を優先する
-4. **早すぎる抽象化を避ける**: 必要になるまで抽象化は行わない（YAGNI原則）
-
-## テストレベル別の指針
-
-### E2E（Playwright）
-
-- 主要なユーザーフロー
-- クリティカルパスのみ
-- 複数ページにまたがる操作
-
-### Component（Testing Library + Vitest）
-
-- クライアントコンポーネントの振る舞い
-- ユーザーインタラクション
-- 状態管理
-- イベントハンドリング
-
-### Integration/Medium（Vitest）
-
-- Server Actions
-- Route Handlers
-- 外部 API 連携
-- データベース操作
-
-### Unit/Small（Vitest）
-
-- ユーティリティ関数
-- カスタムフック
-- ビジネスロジック
-- 純粋関数
+- **振る舞いベース**: 内部実装でなく外部から見える動作をテスト
+- **統合テスト優先**: Mock は最小限、実際の依存関係でテスト
+- **ユーザー視点**: ユーザーが要素を見つける方法でクエリ
+- **テストの独立性**: 各テストが他に依存しない
+- **テストの再現性**: 同じ条件で常に同じ結果
+- **AHA > DRY**: 早すぎる抽象化を避ける（YAGNI 原則）
+- **AAA パターン**: Arrange - Act - Assert
+- **Fixture 優先**: beforeEach/afterEach より test.extend を使用
+- **日本語で記述**: テストケースの説明は日本語で記述
+- **分岐を避ける**: テストコード内で if による条件分岐を避ける
 
 ## describe と test の使用
 
-- **基本**: `describe` と `test` を使用
-- **describe の使用制限**: まとめるためだけの `describe` によるグループ化は避ける
-- **describe を使う場合**: 並列処理の制御などで必要な場合のみ利用
-
 ```typescript
-// ❌ 避けるべき: 単にグループ化するためだけの describe
+// ❌ 避ける: まとめるだけの describe
 describe("ユーザー機能", () => {
   test("ユーザーを作成できる", () => {});
 });
@@ -57,55 +30,126 @@ describe.sequential("データベース操作", () => {
 });
 ```
 
-## Fixture パターン
-
-### Vitest での Fixture 使用
+## クエリの優先順位
 
 ```typescript
-const myTest = test.extend<{
-  testUser: User;
+// 1. アクセシブルな方法（優先）
+getByRole("button", { name: "送信" });
+getByLabelText("メールアドレス");
+getByPlaceholderText("名前を入力");
+getByText("こんにちは");
+
+// 2. 最後の手段
+getByTestId("submit-button"); // 避ける
+```
+
+## Fixture パターン（優先）
+
+test.extend を使って共通のセットアップを定義する。beforeEach/afterEach は避ける。
+
+### Vitest での Fixture
+
+```typescript
+// my-test.ts - fixture 定義
+import { test as baseTest } from "vitest";
+
+export const test = baseTest.extend<{
+  testUser: { id: string; name: string };
 }>({
   testUser: async ({}, use) => {
-    const user = await createTestUser();
+    const user = await createTestUser({ name: "Test User" });
     await use(user);
-    await deleteTestUser(user);
+    await deleteTestUser(user.id);
   },
 });
 
-myTest("期待される振る舞いの説明", async ({ testUser }) => {
-  // テスト実装
+// user.test.ts - 使用例
+import { test } from "./my-test";
+
+test("ユーザーが投稿を作成できる", async ({ testUser }) => {
+  const post = await createPost({ userId: testUser.id, content: "Hello" });
+  expect(post.userId).toBe(testUser.id);
 });
 ```
 
-### Playwright での Fixture 使用
+### Playwright での Fixture
 
 ```typescript
-type MyFixtures = {
-  authenticatedPage: Page;
-};
+import { test as baseTest } from "@playwright/test";
 
-const test = base.extend<MyFixtures>({
+export const test = baseTest.extend<{
+  authenticatedPage: Page;
+}>({
   authenticatedPage: async ({ page }, use) => {
-    // ログイン処理
+    await page.goto("/login");
+    await page.getByLabel("メールアドレス").fill("test@example.com");
+    await page.getByRole("button", { name: "ログイン" }).click();
     await use(page);
   },
 });
 ```
 
-## MSW (Mock Service Worker) の活用
+## テストレベル別の対象
 
-外部 API やバックエンドのモックには MSW を使用する
+### E2E（Playwright）
 
-## カバレッジ目標
+主要なユーザーフロー、クリティカルパス、複数ページにまたがる操作
 
-- **全体**: 80%以上
-- **ビジネスロジック**: 90%以上
-- **ユーティリティ関数**: 95%以上
-- **UI コンポーネント**: 70%以上
-- **E2E テスト**: クリティカルパスの 100%
+### Integration/Medium（Vitest）
 
-## その他
+Server Actions、Route Handlers、データベース操作、外部 API 連携
 
-- テストコードにも format と lint を実行
-- 日本語でテストケースの説明を記述
-- 既存のテストパターンとの一貫性を保つ
+### Component（Testing Library）
+
+クライアントコンポーネント、クライアントコンポーネントと結合したカスタムフック
+
+### Unit/Small（Vitest）
+
+ユーティリティ関数、カスタムフック
+ただしいずれもコンポーネントテストや結合テストを優先し、エッジケースや結合テストでテストできない部分のみを実施する
+
+## 実装の詳細をテストしない
+
+```typescript
+// ❌ 悪い例
+expect(component.state.count).toBe(1);
+expect(wrapper.find("button").prop("onClick")).toBeDefined();
+
+// ✅ 良い例
+await userEvent.click(screen.getByRole("button", { name: "増加" }));
+expect(screen.getByText("カウント: 1")).toBeInTheDocument();
+```
+
+## 非同期処理
+
+```typescript
+// ✅ findBy を優先（自動待機）
+const element = await screen.findByText("読み込み完了");
+
+// 複雑な条件のみ waitFor
+await waitFor(() => {
+  expect(screen.getByText("複雑な条件")).toBeInTheDocument();
+});
+```
+
+## モック
+
+外部 API やバックエンドのモックには MSW を使用。Mock は最小限に。
+
+```typescript
+// ❌ 過度なモック
+vi.mock("./utils");
+vi.mock("./api");
+vi.mock("./components/Button");
+
+// ✅ 必要な部分のみ
+vi.mock("./api");
+```
+
+## デバッグ
+
+```typescript
+screen.debug(); // 現在のDOM構造
+screen.debug(screen.getByRole("button")); // 特定要素
+screen.logTestingPlaygroundURL(); // ブラウザで確認
+```
