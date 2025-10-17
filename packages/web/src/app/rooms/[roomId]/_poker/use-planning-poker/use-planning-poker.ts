@@ -58,10 +58,10 @@ export function usePlanningPoker({
 		onReset: useCallback(() => {
 			setIsOpen(false);
 			realtimeCommand.unselectCard();
-		}, [realtimeCommand.unselectCard]),
+		}, [realtimeCommand]),
 		onSubscribe: useCallback(() => {
 			realtimeCommand.unselectCard();
-		}, [realtimeCommand.unselectCard]),
+		}, [realtimeCommand]),
 		onUpdateAutoOpen: useCallback(setAutoOpen, []),
 		onUpdateAutoReset: useCallback(setAutoReset, []),
 	});
@@ -84,14 +84,14 @@ export function usePlanningPoker({
 				setAutoOpen(checked);
 				await realtimeCommand.changeAutoOpen(checked);
 			},
-			[realtimeCommand.changeAutoOpen, setAutoOpen],
+			[realtimeCommand, setAutoOpen],
 		),
 		changeAutoReset: useCallback(
 			async (checked: boolean) => {
 				setAutoReset(checked);
 				await realtimeCommand.changeAutoReset(checked);
 			},
-			[realtimeCommand.changeAutoReset, setAutoReset],
+			[realtimeCommand, setAutoReset],
 		),
 		isOpen,
 		selectedCard,
