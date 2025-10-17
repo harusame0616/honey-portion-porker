@@ -1,8 +1,5 @@
 {
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": [
-    "serena-mcp-server"
-  ],
   "permissions": {
     "allow": [
       "mcp__serena",
