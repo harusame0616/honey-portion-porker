@@ -30,7 +30,8 @@ export async function createNewRoomAction(): Promise<
 	});
 
 	if (!insertResult.success) {
-		return fail("ルームの作成に失敗しました");
+		console.error(insertResult.error)
+		return fail(`${insertResult.error.message}/${insertResult.error.name}`);
 	}
 
 	return succeed({ memberRoomId, ownerRoomId });
