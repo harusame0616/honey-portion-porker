@@ -189,6 +189,7 @@ test("Auto Reset をONにすると、OPEN後1分でカードが自動リセッ�
 			.getByRole("textbox", {
 				name: /^Member Room ID$/,
 			})
+			.inputValue();
 
 		memberPage = await browser.newPage();
 		await memberPage.goto(`/rooms/${memberRoomId}`);
