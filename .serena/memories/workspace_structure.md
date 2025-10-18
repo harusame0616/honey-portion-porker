@@ -2,7 +2,7 @@
 
 ```
 honey-portion-porker/
-├── packages/
+├── apps/
 │   ├── web/                    # Next.js 15 アプリケーション
 │   │   ├── src/
 │   │   │   ├── app/           # App Router のページとレイアウト
@@ -32,9 +32,9 @@ honey-portion-porker/
 
 ## 主要ディレクトリの説明
 
-- **`packages/web/src/app`**: Next.js の App Router によるページ定義。各ディレクトリがルートに対応
-- **`packages/web/src/app/rooms/[roomId]`**: プランニングポーカーのルーム画面（動的ルート）
-- **`packages/web/src/app/_actions`**: Server Actions（データの作成・更新・削除）
-- **`packages/web/src/components`**: 複数ページで使用される共通コンポーネント
-- **`packages/web/src/lib`**: ユーティリティ関数やライブラリ設定
-- **`packages/e2e/tests`**: Playwright による E2E テスト
+- **`apps/web/src/app`**: Next.js の App Router によるページ定義。各ディレクトリがルートに対応
+- **`apps/web/src/app/rooms/[roomId]`**: プランニングポーカーのルーム画面（動的ルート）
+- **`apps/web/src/app/_actions`**: Server Actions（データの作成・更新・削除）
+- **`apps/web/src/components`**: 複数ページで使用される共通コンポーネント
+- **`apps/web/src/lib`**: ユーティリティ関数やライブラリ設定
+- **`apps/e2e/tests`**: Playwright による E2E テスト

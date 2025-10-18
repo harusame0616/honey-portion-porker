@@ -30,7 +30,7 @@ pnpm test:ui
 pnpm test:watch
 
 # E2E テスト実行（Playwright）
-cd packages/e2e
+cd apps/e2e
 pnpm test
 ```
 
