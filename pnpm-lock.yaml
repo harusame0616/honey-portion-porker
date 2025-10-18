@@ -44,12 +44,18 @@ importers:
 
   apps/e2e:
     devDependencies:
+      '@biomejs/biome':
+        specifier: 'catalog:'
+        version: 2.2.6
       '@playwright/test':
         specifier: 1.56.0
         version: 1.56.0
       '@types/node':
         specifier: 22.18.10
         version: 22.18.10
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
 
   apps/web:
     dependencies:

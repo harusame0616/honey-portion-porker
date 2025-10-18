@@ -13,21 +13,14 @@
 		"format:check": {
 			"outputs": []
 		},
-		"format:write": {
-			"cache": false,
-			"outputs": []
-		},
-		"lint-format:check": {
-			"outputs": []
-		},
-		"lint-format:write": {
+		"format:fix": {
 			"cache": false,
 			"outputs": []
 		},
 		"lint:check": {
 			"outputs": []
 		},
-		"lint:write": {
+		"lint:fix": {
 			"cache": false,
 			"outputs": []
 		},
@@ -42,6 +35,12 @@
 		"test:watch": {
 			"cache": false,
 			"persistent": true
+		},
+		"type:check": {
+			"outputs": []
+		},
+		"validate:check": {
+			"outputs": []
 		},
 		"validate:fix": {
 			"cache": false,
