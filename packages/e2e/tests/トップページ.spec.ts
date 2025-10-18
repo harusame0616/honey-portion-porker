@@ -1,10 +1,14 @@
-import { test as base, type Page } from "@playwright/test";
+import { test as base, expect, type Page } from "@playwright/test";
 
-const _test = base.extend<{ topPage: Page }>({
+const test = base.extend<{ topPage: Page }>({
 	topPage: async ({ page }, use) => {
 		await page.goto("/");
 		await use(page);
 	},
+});
+
+test("ページタイトルが正しく表示される", async ({ topPage }) => {
+	await expect(topPage).toHaveTitle("Honey Portion Poker");
 });
 
 // NOTE: 以下のテストケースはルームページのテストの過程で検証されるため実施しない
