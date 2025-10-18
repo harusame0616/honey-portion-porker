@@ -15,16 +15,13 @@
 
 ## describe と test の使用
 
-```typescript
-// ❌ 避ける: まとめるだけの describe
-describe("ユーザー機能", () => {
-  test("ユーザーを作成できる", () => {});
-});
+基本的にはフラットな構造で `test()` を使用する。並列処理制御が必要な場合のみ `describe.sequential()` を使用する。
 
+```typescript
 // ✅ 推奨: フラットな構造
 test("ユーザーを作成できる", () => {});
 
-// ✅ OK: 並列処理制御が必要な場合
+// ✅ OK: 並列処理制御が必要な場合のみ
 describe.sequential("データベース操作", () => {
   test("ユーザーを作成する", async () => {});
 });
@@ -50,25 +47,27 @@ test.extend を使って共通のセットアップを定義する。beforeEach/
 ### Vitest での Fixture
 
 ```typescript
-// my-test.ts - fixture 定義
-import { test as baseTest } from "vitest";
+import { test as baseTest, vi } from "vitest";
+import userEvent from "@testing-library/user-event";
 
+// モックや userEvent などの共通セットアップを fixture として定義
 export const test = baseTest.extend<{
-  testUser: { id: string; name: string };
+  user: ReturnType<typeof userEvent.setup>;
+  mockOnSubmit: ReturnType<typeof vi.fn<() => void>>;
 }>({
-  testUser: async ({}, use) => {
-    const user = await createTestUser({ name: "Test User" });
-    await use(user);
-    await deleteTestUser(user.id);
+  user: async ({}, use) => {
+    await use(userEvent.setup());
+  },
+  mockOnSubmit: async ({}, use) => {
+    await use(vi.fn<() => void>());
   },
 });
 
-// user.test.ts - 使用例
-import { test } from "./my-test";
-
-test("ユーザーが投稿を作成できる", async ({ testUser }) => {
-  const post = await createPost({ userId: testUser.id, content: "Hello" });
-  expect(post.userId).toBe(testUser.id);
+// 使用例
+test("ボタンをクリックすると onSubmit が呼ばれる", async ({ user, mockOnSubmit }) => {
+  render(<MyComponent onSubmit={mockOnSubmit} />);
+  await user.click(screen.getByRole("button"));
+  expect(mockOnSubmit).toHaveBeenCalled();
 });
 ```
 
@@ -84,7 +83,7 @@ export const test = baseTest.extend<{
     await page.goto("/login");
     await page.getByLabel("メールアドレス").fill("test@example.com");
     await page.getByRole("button", { name: "ログイン" }).click();
-    await use(page);
+    await use(page); // use() は await する
   },
 });
 ```
@@ -93,20 +92,41 @@ export const test = baseTest.extend<{
 
 ### E2E（Playwright）
 
-主要なユーザーフロー、クリティカルパス、複数ページにまたがる操作
+- 主要なユーザーフロー、クリティカルパス、複数ページにまたがる操作
+- E2E テストは実行コストが高いため、効率化のため別の観点でも１つのテストの流れの中でまとめられるのはまとめて実施する
+- テストの可読性のため `test.step` で処理のまとまりに名前をつける
+
+```typescript
+test("foo チェックボックスがチェックされていない場合、名前入力フィールドが無効", async ({
+  page,
+}) => {
+  await test.step("foo チェックボックスの初期状態が未チェックなことを確認", async () => {
+    const fooCheckbox = page.getByRole("checkbox", { name: "foo" });
+    await expect(fooCheckbox).not.toBeChecked();
+  });
+
+  await test.step("名前入力フィールドが無効なことを確認", async () => {
+    const nameInput = page.getByRole("textbox", { name: "名前" });
+    await expect(nameInput).toBeDisabled();
+  });
+});
+```
+
+### Component/Small（Testing Library）
+
+- クライアントコンポーネント、クライアントコンポーネントと結合したカスタムフック
+- １つのテストにつき１つの観点で実施
 
 ### Integration/Medium（Vitest）
 
-Server Actions、Route Handlers、データベース操作、外部 API 連携
-
-### Component（Testing Library）
-
-クライアントコンポーネント、クライアントコンポーネントと結合したカスタムフック
+- Server Actions、Route Handlers、データベース操作、外部 API 連携
+- １つのテストにつき１つの観点で実施
 
 ### Unit/Small（Vitest）
 
-ユーティリティ関数、カスタムフック
-ただしいずれもコンポーネントテストや結合テストを優先し、エッジケースや結合テストでテストできない部分のみを実施する
+- ユーティリティ関数、カスタムフック
+- １つのテストにつき１つの観点で実施
+- コンポーネントテストや結合テストを優先し、エッジケースや結合テストでテストできない部分のみを実施する
 
 ## 実装の詳細をテストしない
 
@@ -134,7 +154,7 @@ await waitFor(() => {
 
 ## モック
 
-外部 API やバックエンドのモックには MSW を使用。Mock は最小限に。
+Mock は最小限に。必要な部分のみモックする。
 
 ```typescript
 // ❌ 過度なモック
