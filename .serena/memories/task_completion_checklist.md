@@ -19,7 +19,7 @@ pnpm validate:fix
 pnpm test
 
 # E2E テスト（必要に応じて）
-cd packages/e2e
+cd apps/e2e
 pnpm test
 ```
 
