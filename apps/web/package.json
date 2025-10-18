@@ -51,7 +51,7 @@
 		"test": "vitest --run",
 		"test:ui": "vitest --ui",
 		"test:watch": "vitest",
-		"type:check": "tsc --noEmit"
+		"type:check": "echo \"No type check (Next.js doesn't recommend tsc: https://github.com/vercel/next.js/issues/53732)\""
 	},
 	"version": "0.1.0"
 }
