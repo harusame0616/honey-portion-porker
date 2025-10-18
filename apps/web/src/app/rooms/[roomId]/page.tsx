@@ -54,9 +54,7 @@ const paramsSchema = v.object({
 	roomId: v.pipe(v.string(), v.uuid()),
 });
 
-export default async function Page({
-	params,
-}: PageProps<"/rooms/[roomId]">) {
+export default async function Page({ params }: PageProps<"/rooms/[roomId]">) {
 	const paramsParseResult = v.safeParse(paramsSchema, await params);
 
 	if (!paramsParseResult.success) {

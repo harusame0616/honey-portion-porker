@@ -19,9 +19,7 @@ export const metadata: Metadata = {
 	title: "Honey Portion Poker",
 };
 
-export default function RootLayout({
-	children,
-}: LayoutProps<'/'>) {
+export default function RootLayout({ children }: LayoutProps<"/">) {
 	return (
 		<html lang="ja">
 			<body

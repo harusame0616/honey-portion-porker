@@ -38,13 +38,6 @@
 		},
 		"type:check": {
 			"outputs": []
-		},
-		"validate:check": {
-			"outputs": []
-		},
-		"validate:fix": {
-			"cache": false,
-			"outputs": []
 		}
 	}
 }

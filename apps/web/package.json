@@ -51,9 +51,7 @@
 		"test": "vitest --run",
 		"test:ui": "vitest --ui",
 		"test:watch": "vitest",
-		"type:check": "tsc --noEmit",
-		"validate:check": "biome check .",
-		"validate:fix": "biome check --write ."
+		"type:check": "tsc --noEmit"
 	},
 	"version": "0.1.0"
 }

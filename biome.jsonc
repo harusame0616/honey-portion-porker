@@ -13,7 +13,7 @@
 	"formatter": {
 		"enabled": true,
 		// nextjs の typed route を有効にすると dev のたびに tsconfig.json が生成されるため除外する
-		"includes": ["!apps/web/tsconfig.json"],
+		"includes": ["**/*","!apps/web/tsconfig.json"],
 		"indentStyle": "tab"
 	},
 	"javascript": {

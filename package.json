@@ -22,8 +22,8 @@
 		"test:ui": "turbo run test:ui",
 		"test:watch": "turbo run test:watch",
 		"type:check": "turbo run type:check",
-		"validate:check": "turbo run validate:check",
-		"validate:fix": "turbo run validate:fix"
+		"validate:check": "turbo run format:check lint:check type:check",
+		"validate:fix": "turbo run format:fix lint:fix"
 	},
 	"version": "1.0.0"
 }

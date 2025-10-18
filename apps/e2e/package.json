@@ -13,9 +13,7 @@
 		"lint:check": "biome lint .",
 		"lint:fix": "biome lint --write .",
 		"test": "playwright test",
-		"type:check": "tsc --noEmit",
-		"validate:check": "biome check .",
-		"validate:fix": "biome check --write ."
+		"type:check": "tsc --noEmit"
 	},
 	"version": "1.0.0"
 }
