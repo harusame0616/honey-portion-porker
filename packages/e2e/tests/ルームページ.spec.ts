@@ -1,7 +1,22 @@
 import { randomUUID } from "node:crypto";
 import { test as baseTest, expect, type Page } from "@playwright/test";
 
-const test = baseTest.extend<{ ownerPage: Page }>({
+const test = baseTest.extend<{ memberPage: Page; ownerPage: Page }>({
+	memberPage: async ({ browser, ownerPage }, use) => {
+		const memberRoomId = await ownerPage
+			.getByRole("textbox", {
+				name: /^Member Room ID$/,
+			})
+			.inputValue();
+
+		const memberPage = await browser.newPage();
+		await memberPage.goto(`/rooms/${memberRoomId}`);
+		await expect(memberPage).toHaveTitle(
+			"メンバールーム | Honey Portion Poker",
+		);
+		await use(memberPage);
+		await memberPage.close();
+	},
 	ownerPage: async ({ page }, use) => {
 		await page.goto("/");
 		await page.getByRole("button", { name: /^CREATE ROOM$/ }).click();
@@ -46,24 +61,9 @@ test("存在しないルームページからの復帰", async ({
 });
 
 test("カードの選択、オープン、リセット", async ({
+	memberPage,
 	ownerPage,
-	browser,
 }) => {
-	let memberPage: Page;
-
-	await test.step("メンバールームに参加", async () => {
-		const memberRoomId = await ownerPage
-			.getByRole("textbox", {
-				name: /^Member Room ID$/,
-			})
-			.inputValue();
-
-		memberPage = await browser.newPage();
-		await memberPage.goto(`/rooms/${memberRoomId}`);
-		await expect(memberPage).toHaveTitle(
-			"メンバールーム | Honey Portion Poker",
-		);
-	});
 
 	await test.step("参加人数分の Member's cards が表示されていることを確認", async () => {
 		await expect(
@@ -173,29 +173,14 @@ test("カードの選択、オープン、リセット", async ({
 
 
 test("Auto Reset ON時の自動リセットと設定の永続化", async ({
+	memberPage,
 	ownerPage,
-	browser,
 }) => {
-	let memberPage: Page;
 	const ownerRoomId = ownerPage.url().split("/").pop() || "";
 
 	await test.step("初期状態で Auto Reset がOFFであることを確認", async () => {
 		const autoResetCheckbox = ownerPage.getByLabel("Auto Reset");
 		await expect(autoResetCheckbox).not.toBeChecked();
-	});
-
-	await test.step("メンバールームに参加", async () => {
-		const memberRoomId = await ownerPage
-			.getByRole("textbox", {
-				name: /^Member Room ID$/,
-			})
-			.inputValue();
-
-		memberPage = await browser.newPage();
-		await memberPage.goto(`/rooms/${memberRoomId}`);
-		await expect(memberPage).toHaveTitle(
-			"メンバールーム | Honey Portion Poker",
-		);
 	});
 
 	await test.step("Auto Reset チェックボックスをONにする", async () => {
@@ -255,8 +240,6 @@ test("Auto Reset ON時の自動リセットと設定の永続化", async ({
 		).toHaveCount(2);
 	});
 
-	await memberPage.close();
-
 	await test.step("ページをリロードしてAuto Reset設定が保持されることを確認", async () => {
 		await ownerPage.reload();
 		const autoResetCheckbox = ownerPage.getByLabel("Auto Reset");
@@ -277,29 +260,12 @@ test("Auto Reset ON時の自動リセットと設定の永続化", async ({
 });
 
 test("Auto Reset OFF時は自動リセットされない", async ({
+	memberPage,
 	ownerPage,
-	browser,
 }) => {
-	let memberPage: Page;
-
 	await test.step("初期状態で Auto Reset がOFFであることを確認", async () => {
 		const autoResetCheckbox = ownerPage.getByLabel("Auto Reset");
 		await expect(autoResetCheckbox).not.toBeChecked();
-	});
-
-
-	await test.step("メンバールームに参加", async () => {
-		const memberRoomId = await ownerPage
-			.getByRole("textbox", {
-				name: /^Member Room ID$/,
-			})
-			.inputValue();
-
-		memberPage = await browser.newPage();
-		await memberPage.goto(`/rooms/${memberRoomId}`);
-		await expect(memberPage).toHaveTitle(
-			"メンバールーム | Honey Portion Poker",
-		);
 	});
 
 	await test.step("両方のユーザーがカードを選択", async () => {
@@ -355,33 +321,15 @@ test("Auto Reset OFF時は自動リセットされない", async ({
 				.filter({ hasText: "選択済みの2のカード" }),
 		).toHaveCount(2);
 	});
-
-	await memberPage.close();
 });
 
 test("Auto Reset ON時でもOPEN前は自動リセットされない", async ({
+	memberPage,
 	ownerPage,
-	browser,
 }) => {
-	let memberPage: Page;
-
 	await test.step("初期状態で Auto Reset がOFFであることを確認", async () => {
 		const autoResetCheckbox = ownerPage.getByLabel("Auto Reset");
 		await expect(autoResetCheckbox).not.toBeChecked();
-	});
-
-	await test.step("メンバールームに参加", async () => {
-		const memberRoomId = await ownerPage
-			.getByRole("textbox", {
-				name: /^Member Room ID$/,
-			})
-			.inputValue();
-
-		memberPage = await browser.newPage();
-		await memberPage.goto(`/rooms/${memberRoomId}`);
-		await expect(memberPage).toHaveTitle(
-			"メンバールーム | Honey Portion Poker",
-		);
 	});
 
 	await test.step("Auto Reset チェックボックスをONにする", async () => {
@@ -429,34 +377,17 @@ test("Auto Reset ON時でもOPEN前は自動リセットされない", async ({
 			}),
 		).toHaveCount(1);
 	});
-
-	await memberPage.close();
 });
 
 test("Auto Open ON時の自動オープンと設定の永続化", async ({
+	memberPage,
 	ownerPage,
-	browser,
 }) => {
-	let memberPage: Page;
 	const ownerRoomId = ownerPage.url().split("/").pop() || "";
 
 	await test.step("初期状態で Auto Open がOFFであることを確認", async () => {
 		const autoOpenCheckbox = ownerPage.getByLabel("Auto Open");
 		await expect(autoOpenCheckbox).not.toBeChecked();
-	});
-
-	await test.step("メンバールームに参加", async () => {
-		const memberRoomId = await ownerPage
-			.getByRole("textbox", {
-				name: /^Member Room ID$/,
-			})
-			.inputValue();
-
-		memberPage = await browser.newPage();
-		await memberPage.goto(`/rooms/${memberRoomId}`);
-		await expect(memberPage).toHaveTitle(
-			"メンバールーム | Honey Portion Poker",
-		);
 	});
 
 	await test.step("Auto Open チェックボックスをONにする", async () => {
@@ -505,8 +436,6 @@ test("Auto Open ON時の自動オープンと設定の永続化", async ({
 		).toHaveCount(2);
 	});
 
-	await memberPage.close();
-
 	await test.step("ページをリロードしてAuto Open設定が保持されることを確認", async () => {
 		await ownerPage.reload();
 		const autoOpenCheckbox = ownerPage.getByLabel("Auto Open");
@@ -527,28 +456,12 @@ test("Auto Open ON時の自動オープンと設定の永続化", async ({
 });
 
 test("Auto Open OFF時は自動オープンされない", async ({
+	memberPage,
 	ownerPage,
-	browser,
 }) => {
-	let memberPage: Page;
-
 	await test.step("初期状態で Auto Open がOFFであることを確認", async () => {
 		const autoOpenCheckbox = ownerPage.getByLabel("Auto Open");
 		await expect(autoOpenCheckbox).not.toBeChecked();
-	});
-
-	await test.step("メンバールームに参加", async () => {
-		const memberRoomId = await ownerPage
-			.getByRole("textbox", {
-				name: /^Member Room ID$/,
-			})
-			.inputValue();
-
-		memberPage = await browser.newPage();
-		await memberPage.goto(`/rooms/${memberRoomId}`);
-		await expect(memberPage).toHaveTitle(
-			"メンバールーム | Honey Portion Poker",
-		);
 	});
 
 	await test.step("両方のユーザーがカードを選択", async () => {
@@ -588,6 +501,4 @@ test("Auto Open OFF時は自動オープンされない", async ({
 			}),
 		).toHaveCount(2);
 	});
-
-	await memberPage.close();
 });
