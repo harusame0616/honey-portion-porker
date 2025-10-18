@@ -432,3 +432,162 @@ test("Auto Reset ON時でもOPEN前は自動リセットされない", async ({
 
 	await memberPage.close();
 });
+
+test("Auto Open ON時の自動オープンと設定の永続化", async ({
+	ownerPage,
+	browser,
+}) => {
+	let memberPage: Page;
+	const ownerRoomId = ownerPage.url().split("/").pop() || "";
+
+	await test.step("初期状態で Auto Open がOFFであることを確認", async () => {
+		const autoOpenCheckbox = ownerPage.getByLabel("Auto Open");
+		await expect(autoOpenCheckbox).not.toBeChecked();
+	});
+
+	await test.step("メンバールームに参加", async () => {
+		const memberRoomId = await ownerPage
+			.getByRole("textbox", {
+				name: /^Member Room ID$/,
+			})
+			.inputValue();
+
+		memberPage = await browser.newPage();
+		await memberPage.goto(`/rooms/${memberRoomId}`);
+		await expect(memberPage).toHaveTitle(
+			"メンバールーム | Honey Portion Poker",
+		);
+	});
+
+	await test.step("Auto Open チェックボックスをONにする", async () => {
+		const autoOpenCheckbox = ownerPage.getByLabel("Auto Open");
+		await autoOpenCheckbox.check();
+		await expect(autoOpenCheckbox).toBeChecked();
+	});
+
+	await test.step("1人目がカードを選択（まだオープンしない）", async () => {
+		await ownerPage
+			.getByRole("button", { name: /^未選択の 1 のカード$/ })
+			.click();
+
+		// まだオープンしていないことを確認
+		await expect(
+			ownerPage.getByRole("listitem").filter({ hasText: "選択済みの1のカード" }),
+		).toHaveCount(0);
+	});
+
+	await test.step("2人目がカードを選択すると自動的にオープンされる", async () => {
+		await memberPage
+			.getByRole("button", { name: /^未選択の 2 のカード$/ })
+			.click();
+
+		// 自動的にオープンされることを確認
+		await expect(
+			ownerPage
+				.getByRole("listitem")
+				.filter({ hasText: "選択済みの1のカード" }),
+		).toHaveCount(2);
+		await expect(
+			ownerPage
+				.getByRole("listitem")
+				.filter({ hasText: "選択済みの2のカード" }),
+		).toHaveCount(1);
+
+		await expect(
+			memberPage
+				.getByRole("listitem")
+				.filter({ hasText: "選択済みの1のカード" }),
+		).toHaveCount(1);
+		await expect(
+			memberPage
+				.getByRole("listitem")
+				.filter({ hasText: "選択済みの2のカード" }),
+		).toHaveCount(2);
+	});
+
+	await memberPage.close();
+
+	await test.step("ページをリロードしてAuto Open設定が保持されることを確認", async () => {
+		await ownerPage.reload();
+		const autoOpenCheckbox = ownerPage.getByLabel("Auto Open");
+		await expect(autoOpenCheckbox).toBeChecked();
+	});
+
+	await test.step("別のページから同じルームにアクセスしてAuto Open設定が保持されることを確認", async () => {
+		await ownerPage.goto("/");
+		await ownerPage
+			.getByRole("textbox", { name: /^ルーム ID$/ })
+			.fill(ownerRoomId);
+		await ownerPage.getByRole("button", { name: /^参加$/ }).click();
+		await expect(ownerPage).toHaveTitle(/^オーナールーム | Honey Portion Poker$/);
+
+		const autoOpenCheckbox = ownerPage.getByLabel("Auto Open");
+		await expect(autoOpenCheckbox).toBeChecked();
+	});
+});
+
+test("Auto Open OFF時は自動オープンされない", async ({
+	ownerPage,
+	browser,
+}) => {
+	let memberPage: Page;
+
+	await test.step("初期状態で Auto Open がOFFであることを確認", async () => {
+		const autoOpenCheckbox = ownerPage.getByLabel("Auto Open");
+		await expect(autoOpenCheckbox).not.toBeChecked();
+	});
+
+	await test.step("メンバールームに参加", async () => {
+		const memberRoomId = await ownerPage
+			.getByRole("textbox", {
+				name: /^Member Room ID$/,
+			})
+			.inputValue();
+
+		memberPage = await browser.newPage();
+		await memberPage.goto(`/rooms/${memberRoomId}`);
+		await expect(memberPage).toHaveTitle(
+			"メンバールーム | Honey Portion Poker",
+		);
+	});
+
+	await test.step("両方のユーザーがカードを選択", async () => {
+		await ownerPage
+			.getByRole("button", { name: /^未選択の 1 のカード$/ })
+			.click();
+		await memberPage
+			.getByRole("button", { name: /^未選択の 2 のカード$/ })
+			.click();
+	});
+
+	await test.step("全員が選択してもAuto OpenがOFFなので自動オープンされないことを確認", async () => {
+		// まだオープンしていないことを確認（選択済みだが表示されない）
+		await expect(
+			ownerPage.getByRole("listitem").filter({ hasText: "選択済みの1のカード" }),
+		).toHaveCount(0);
+		await expect(
+			ownerPage.getByRole("listitem").filter({ hasText: "選択済みの2のカード" }),
+		).toHaveCount(0);
+
+		await expect(
+			memberPage.getByRole("listitem").filter({ hasText: "選択済みの1のカード" }),
+		).toHaveCount(0);
+		await expect(
+			memberPage.getByRole("listitem").filter({ hasText: "選択済みの2のカード" }),
+		).toHaveCount(0);
+
+		// 裏向きのカードが表示されていることを確認
+		await expect(
+			ownerPage.getByRole("listitem").filter({
+				has: ownerPage.getByRole("img", { name: "選択済みの裏向きのカード" }),
+			}),
+		).toHaveCount(2);
+		await expect(
+			memberPage.getByRole("listitem").filter({
+				has: memberPage.getByRole("img", { name: "選択済みの裏向きのカード" }),
+			}),
+		).toHaveCount(2);
+	});
+
+	await memberPage.close();
+});
