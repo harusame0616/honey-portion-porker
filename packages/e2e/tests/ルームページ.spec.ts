@@ -201,7 +201,6 @@ test("Auto Reset をONにすると、OPEN後1分でカードが自動リセッ�
 		const autoResetCheckbox = ownerPage.getByLabel("Auto Reset");
 		await autoResetCheckbox.check();
 		await expect(autoResetCheckbox).toBeChecked();
-		expect(autoResetCheckbox).toBeDis
 	});
 
 	await test.step("両方のユーザーがカードを選択", async () => {
