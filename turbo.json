@@ -38,6 +38,15 @@
 		},
 		"type:check": {
 			"outputs": []
+		},
+		"validate:check": {
+			"dependsOn": ["format:check", "lint:check", "type:check"],
+			"outputs": []
+		},
+		"validate:fix": {
+			"cache": false,
+			"dependsOn": ["format:fix", "lint:fix"],
+			"outputs": []
 		}
 	}
 }
