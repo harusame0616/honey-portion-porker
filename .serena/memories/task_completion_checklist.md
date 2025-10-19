@@ -5,8 +5,7 @@
 ### 1. コード品質チェック
 
 ```bash
-# lint + format の自動修正を実行
-pnpm validate:fix
+pnpm validate:check
 ```
 
 - エラーが無くなるまで修正を行う
@@ -28,3 +27,5 @@ pnpm test
 ```bash
 pnpm build
 ```
+
+### 4. タスクで加えた内容が適切に memory に反映されていることを確認する

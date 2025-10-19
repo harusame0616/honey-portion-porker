@@ -3,6 +3,8 @@
 		"@biomejs/biome": "catalog:",
 		"@playwright/test": "1.56.1",
 		"@types/node": "22.18.10",
+		"cspell": "catalog:",
+		"knip": "catalog:",
 		"typescript": "5.9.3"
 	},
 	"license": "ISC",
@@ -10,6 +12,7 @@
 	"scripts": {
 		"format:check": "biome format .",
 		"format:fix": "biome format --write .",
+		"knip:check": "knip",
 		"lint:check": "biome lint .",
 		"lint:fix": "biome lint --write .",
 		"spell:check": "cspell \"**/*\"",

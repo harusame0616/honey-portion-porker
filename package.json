@@ -3,7 +3,6 @@
 	"description": "",
 	"devDependencies": {
 		"@biomejs/biome": "catalog:",
-		"cspell": "^9.2.1",
 		"renovate": "41.151.1",
 		"turbo": "2.5.8"
 	},
@@ -17,6 +16,7 @@
 		"dev": "turbo run dev",
 		"format:check": "turbo run format:check",
 		"format:fix": "turbo run format:fix",
+		"knip:check": "turbo run knip:check",
 		"lint:check": "turbo run lint:check",
 		"lint:fix": "turbo run lint:fix",
 		"spell:check": "turbo run spell:check",
@@ -24,7 +24,7 @@
 		"test:ui": "turbo run test:ui",
 		"test:watch": "turbo run test:watch",
 		"type:check": "turbo run type:check",
-		"validate:check": "turbo run format:check lint:check type:check spell:check",
+		"validate:check": "turbo run format:check lint:check type:check spell:check knip:check",
 		"validate:fix": "turbo run format:fix lint:fix"
 	},
 	"version": "1.0.0"

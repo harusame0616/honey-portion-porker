@@ -1,0 +1,9 @@
+{
+	"$schema": "https://unpkg.com/knip@5/schema.json",
+	"ignore": [
+		"**/database.types.ts",
+		"**/robot.ts",
+		"**/src/components/ui/*.tsx"
+	],
+	"ignoreDependencies": ["tailwindcss-animate", "tailwindcss"]
+}

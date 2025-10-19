@@ -17,6 +17,9 @@
 			"cache": false,
 			"outputs": []
 		},
+		"knip:check": {
+			"outputs": []
+		},
 		"lint:check": {
 			"outputs": []
 		},
@@ -43,7 +46,7 @@
 			"outputs": []
 		},
 		"validate:check": {
-			"dependsOn": ["format:check", "lint:check", "type:check", "spell:check"],
+			"dependsOn": ["format:check", "lint:check", "type:check", "spell:check", "knip:check"],
 			"outputs": []
 		},
 		"validate:fix": {
