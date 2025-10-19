@@ -39,7 +39,7 @@ export function JoinRoomForm() {
 
 	return (
 		<Form {...form}>
-			<form noValidate onSubmit={form.handleSubmit(enterRoom)}>
+			<form noValidate onSubmit={form.handleSubmit(enterRoom)} role="form">
 				<FormField
 					control={form.control}
 					name="roomId"
