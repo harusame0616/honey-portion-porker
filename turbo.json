@@ -24,6 +24,9 @@
 			"cache": false,
 			"outputs": []
 		},
+		"spell:check": {
+			"outputs": []
+		},
 		"test": {
 			"dependsOn": ["^build"],
 			"outputs": ["coverage/**"]
@@ -40,7 +43,7 @@
 			"outputs": []
 		},
 		"validate:check": {
-			"dependsOn": ["format:check", "lint:check", "type:check"],
+			"dependsOn": ["format:check", "lint:check", "type:check", "spell:check"],
 			"outputs": []
 		},
 		"validate:fix": {

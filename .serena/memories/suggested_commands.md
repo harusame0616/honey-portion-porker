@@ -34,7 +34,7 @@ cd apps/e2e
 pnpm test
 ```
 
-## Linting / Formatting / Type Check コマンド
+## Linting / Formatting / Spell Check / Type Check コマンド
 
 ```bash
 # Lint チェック
@@ -49,10 +49,13 @@ pnpm format:check
 # Format 自動修正
 pnpm format:fix
 
+# Spell チェック
+pnpm spell:check
+
 # Type チェック
 pnpm type:check
 
-# 統合チェック（lint + format + type）
+# 統合チェック（lint + format + spell + type）
 pnpm validate:check
 
 # 統合修正（lint + format の自動修正）
@@ -67,8 +70,9 @@ pnpm validate:fix
 - `format:fix` - フォーマット自動修正
 - `lint:check` - Lint チェック
 - `lint:fix` - Lint 自動修正
+- `spell:check` - スペルチェック
 - `type:check` - 型チェック（Next.js の web パッケージでは警告メッセージのみ）
-- `validate:check` - lint & format & type のチェック
+- `validate:check` - lint & format & spell & type のチェック
 - `validate:fix` - lint & format の自動修正
 
 **重要**: 以前の `*:write` 形式は廃止され、`*:fix` に統一されました。

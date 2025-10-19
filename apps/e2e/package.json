@@ -12,6 +12,7 @@
 		"format:fix": "biome format --write .",
 		"lint:check": "biome lint .",
 		"lint:fix": "biome lint --write .",
+		"spell:check": "cspell \"**/*\"",
 		"test": "playwright test",
 		"type:check": "tsc --noEmit"
 	},

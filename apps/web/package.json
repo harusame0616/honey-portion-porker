@@ -47,6 +47,7 @@
 		"format:fix": "biome format --write .",
 		"lint:check": "biome lint .",
 		"lint:fix": "biome lint --write .",
+		"spell:check": "cspell \"**/*\"",
 		"start": "next start",
 		"test": "vitest --run",
 		"test:ui": "vitest --ui",

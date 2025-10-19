@@ -1,0 +1,36 @@
+{
+  "version": "0.2",
+  "language": "en,ja",
+  "words": [
+    "biomejs",
+    "supabase",
+    "turbo",
+    "turborepo",
+    "turbopack",
+    "vitest",
+    "playwright",
+    "pnpm",
+    "porker",
+    "harusame"
+  ],
+  "ignorePaths": [
+    "node_modules",
+    "dist",
+    "build",
+    ".next",
+    "coverage",
+    "*.log",
+    "*.svg",
+    "*.tsbuildinfo",
+    "pnpm-lock.yaml",
+    "package-lock.json",
+    ".turbo",
+    ".serena",
+    "playwright-report",
+    "test-results"
+  ],
+  "ignoreRegExpList": [
+    "/\\b[0-9a-f]{7,40}\\b/gi",
+    "/https?:\\/\\/[^\\s]+/g"
+  ]
+}
