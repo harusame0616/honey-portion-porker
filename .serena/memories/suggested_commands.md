@@ -34,30 +34,51 @@ cd apps/e2e
 pnpm test
 ```
 
-## Linting / Formatting コマンド
+## Linting / Formatting / Type Check コマンド
 
 ```bash
 # Lint チェック
 pnpm lint:check
 
 # Lint 自動修正
-pnpm lint:write
+pnpm lint:fix
 
 # Format チェック
 pnpm format:check
 
 # Format 自動修正
-pnpm format:write
+pnpm format:fix
 
-# Lint + Format チェック
-pnpm lint-format:check
+# Type チェック
+pnpm type:check
 
-# Lint + Format 自動修正
-pnpm lint-format:write
+# 統合チェック（lint + format + type）
+pnpm validate:check
 
-# 統合検証＆修正（推奨）
+# 統合修正（lint + format の自動修正）
 pnpm validate:fix
 ```
+
+## npm スクリプト統一仕様
+
+以下の命名規則で統一されています：
+
+- `format:check` - フォーマットチェック
+- `format:fix` - フォーマット自動修正
+- `lint:check` - Lint チェック
+- `lint:fix` - Lint 自動修正
+- `type:check` - 型チェック（Next.js の web パッケージでは警告メッセージのみ）
+- `validate:check` - lint & format & type のチェック
+- `validate:fix` - lint & format の自動修正
+
+**重要**: 以前の `*:write` 形式は廃止され、`*:fix` に統一されました。
+
+## パフォーマンス
+
+Turborepo のキャッシュ機能により、変更がない場合は高速に完了：
+
+- チェック系タスクはキャッシュ有効（例: lint:check: 447ms → 51ms）
+- 修正系タスクはキャッシュ無効（確実に実行）
 
 ## システムユーティリティコマンド（macOS）
 

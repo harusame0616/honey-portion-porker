@@ -1,12 +1,19 @@
 {
 	"devDependencies": {
+		"@biomejs/biome": "catalog:",
 		"@playwright/test": "1.56.0",
-		"@types/node": "22.18.10"
+		"@types/node": "22.18.10",
+		"typescript": "5.9.3"
 	},
 	"license": "ISC",
 	"name": "e2e",
 	"scripts": {
-		"test": "playwright test"
+		"format:check": "biome format .",
+		"format:fix": "biome format --write .",
+		"lint:check": "biome lint .",
+		"lint:fix": "biome lint --write .",
+		"test": "playwright test",
+		"type:check": "tsc --noEmit"
 	},
 	"version": "1.0.0"
 }

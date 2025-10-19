@@ -10,6 +10,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+
 defaults:
   run:
     shell: bash
@@ -30,5 +34,5 @@ jobs:
           cache: "pnpm"
       - name: パッケージインストール
         run: pnpm install
-      - name: Lint & フォーマットチェック
-        run: pnpm --filter "*" lint-format:check
+      - name: Lint & フォーマット & 型チェック
+        run: pnpm validate:check

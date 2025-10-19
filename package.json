@@ -15,15 +15,15 @@
 		"build": "turbo run build",
 		"dev": "turbo run dev",
 		"format:check": "turbo run format:check",
-		"format:write": "turbo run format:write",
-		"lint-format:check": "turbo run lint-format:check",
-		"lint-format:write": "turbo run lint-format:write",
+		"format:fix": "turbo run format:fix",
 		"lint:check": "turbo run lint:check",
-		"lint:write": "turbo run lint:write",
+		"lint:fix": "turbo run lint:fix",
 		"test": "turbo run test",
 		"test:ui": "turbo run test:ui",
 		"test:watch": "turbo run test:watch",
-		"validate:fix": "turbo run validate:fix"
+		"type:check": "turbo run type:check",
+		"validate:check": "turbo run format:check lint:check type:check",
+		"validate:fix": "turbo run format:fix lint:fix"
 	},
 	"version": "1.0.0"
 }
