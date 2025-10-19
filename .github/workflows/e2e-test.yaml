@@ -35,10 +35,6 @@ jobs:
         uses: supabase/setup-cli@v1
         with:
           version: latest
-      # 時間短縮のためテストで不要なサービスは除外して supabase を起動
-      - name: Supabase 起動（バックグラウンド実行）
-        run: supabase start -x gotrue,storage-api,imgproxy,inbucket,postgres-meta,studio,edge-runtime,logflare,vector,supavisor &
-
       - name: pnpm のセットアップ
         uses: pnpm/action-setup@v4
       - name: Node.js セットアップ
@@ -49,20 +45,9 @@ jobs:
       - name: パッケージインストール
         run: pnpm install
 
-      - name: Supabase 起動まち
-        run: |
-          timeout=180
-          counter=0
-          until curl -s http://localhost:14321/rest/v1/ >/dev/null; do
-            if [ $counter -gt $timeout ]; then
-              echo "タイムアウト"
-              exit 1
-            fi
-            echo "Waiting for Supabase to be ready..."
-            sleep 1
-            counter=$((counter + 1))
-          done
-          echo "Supabase is ready!"
+      # 時間短縮のためテストで不要なサービスは除外して supabase を起動
+      - name: Supabase 起動
+        run: supabase start -x gotrue,storage-api,imgproxy,inbucket,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
 
       - name: Web ビルド
         run: pnpm run build
