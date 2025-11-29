@@ -11,4 +11,4 @@ catalog:
   cspell: 9.3.2
   jsdom: 27.2.0
   knip: 5.70.2
-  vitest: 3.2.4
+  vitest: 4.0.14
