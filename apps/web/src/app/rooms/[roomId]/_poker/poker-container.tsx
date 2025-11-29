@@ -1,11 +1,20 @@
+import { createClient } from "@supabase/supabase-js";
+import { cacheLife, cacheTag } from "next/cache";
 import { notFound } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { CACHE_TAGS } from "@/lib/cache-tags";
+import type { Database } from "@/lib/supabase/database.types";
 import { PokerPresenter } from "./poker-presenter";
 
-async function getRoom(
-	roomId: string,
-	client: Awaited<ReturnType<typeof createClient>>,
-) {
+async function getRoom(roomId: string) {
+	"use cache";
+	cacheLife("permanent");
+
+	const client = createClient<Database>(
+		// biome-ignore lint/style/noNonNullAssertion: 一時的に無効化。あとで型安全のシステムを導入予定
+		process.env.NEXT_PUBLIC_SUPABASE_URL!,
+		// biome-ignore lint/style/noNonNullAssertion: 一時的に無効化。あとで型安全のシステムを導入予定
+		process.env.SUPABASE_SERVICE_ROLE_KEY!,
+	).schema("honey_portion_porker");
 	const roomSelect = await client
 		.from("room")
 		.select("autoOpen, autoReset, ownerRoomId, memberRoomId")
@@ -20,6 +29,11 @@ async function getRoom(
 		};
 	}
 
+	cacheTag(
+		CACHE_TAGS.poker(roomSelect.data.ownerRoomId),
+		CACHE_TAGS.poker(roomSelect.data.memberRoomId),
+	);
+
 	return {
 		data: {
 			autoOpen: roomSelect.data.autoOpen,
@@ -32,16 +46,16 @@ async function getRoom(
 	};
 }
 
-export async function PokerContainer({ roomId }: { roomId: string }) {
-	const client = await createClient();
-	const roomGettingResult = await getRoom(roomId, client);
+export async function PokerContainer({ roomId }: { roomId: Promise<string> }) {
+	const resolvedRoomId = await roomId;
+	const roomGettingResult = await getRoom(resolvedRoomId);
 
 	if (!roomGettingResult.success) {
 		notFound();
 	}
 
 	const ownerRoomId =
-		roomId === roomGettingResult.data.ownerRoomId
+		resolvedRoomId === roomGettingResult.data.ownerRoomId
 			? roomGettingResult.data.ownerRoomId
 			: undefined;
 
