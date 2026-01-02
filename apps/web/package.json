@@ -29,7 +29,7 @@
 		"@testing-library/jest-dom": "catalog:",
 		"@testing-library/react": "catalog:",
 		"@testing-library/user-event": "catalog:",
-		"@types/node": "22.18.10",
+		"@types/node": "22.19.3",
 		"@types/react": "19.2.7",
 		"@types/react-dom": "19.2.3",
 		"@vitejs/plugin-react": "catalog:",
