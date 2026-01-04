@@ -37,7 +37,7 @@ export async function generateMetadata({
 	};
 }
 
-async function updateRoom(roomId: string) {
+async function _updateRoom(roomId: string) {
 	const client = createClient<Database>(
 		// biome-ignore lint/style/noNonNullAssertion: 一時的に無効化。あとで型安全のシステムを導入予定
 		process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -54,14 +54,11 @@ export default async function Page({ params }: PageProps<"/rooms/[roomId]">) {
 	// params.then() で roomId を Promise として取得
 	const roomId = params.then((p) => p.roomId);
 
-	// after 内で updateRoom を実行
-	after(async () => {
-		const { roomId: resolvedRoomId } = await params;
-		await updateRoom(resolvedRoomId);
-	});
-
 	return (
 		<div className="space-y-4">
+			<Suspense fallback={null}>
+				<UpdateRoom roomId={roomId} />
+			</Suspense>
 			<Suspense fallback={<NoteSkeleton />}>
 				<NoteServerContainer roomId={roomId} />
 			</Suspense>
@@ -73,4 +70,12 @@ export default async function Page({ params }: PageProps<"/rooms/[roomId]">) {
 			</Suspense>
 		</div>
 	);
+}
+
+async function UpdateRoom({ roomId }: { roomId: Promise<string> }) {
+	after(async () => {
+		roomId;
+	});
+
+	return null;
 }
