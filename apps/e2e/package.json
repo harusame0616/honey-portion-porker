@@ -2,7 +2,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "catalog:",
 		"@playwright/test": "1.57.0",
-		"@types/node": "22.19.3",
+		"@types/node": "24.10.4",
 		"cspell": "catalog:",
 		"knip": "catalog:",
 		"typescript": "5.9.3"
