@@ -1,6 +1,6 @@
-import { createBrowserClient } from "@supabase/ssr";
-import type { RealtimeChannel } from "@supabase/supabase-js";
+import { createClient, type RealtimeChannel } from "@supabase/supabase-js";
 import { type MutableRefObject, useMemo, useRef } from "react";
+import type { Database } from "@/lib/supabase/database.types";
 
 export type Channel = {
 	ref: MutableRefObject<RealtimeChannel>;
@@ -23,7 +23,7 @@ export function useChannel(roomId: string): Channel {
 }
 
 function createChannel(roomId: string) {
-	return createBrowserClient(
+	return createClient<Database>(
 		// biome-ignore lint/style/noNonNullAssertion: 環境変数は必須のため
 		process.env.NEXT_PUBLIC_SUPABASE_URL!,
 		// biome-ignore lint/style/noNonNullAssertion: 環境変数は必須のため
