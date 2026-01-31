@@ -4,7 +4,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "catalog:",
 		"renovate": "42.71.0",
-		"turbo": "2.7.4"
+		"turbo": "2.8.1"
 	},
 	"keywords": [],
 	"license": "ISC",
