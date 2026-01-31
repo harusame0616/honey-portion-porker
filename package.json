@@ -3,7 +3,7 @@
 	"description": "",
 	"devDependencies": {
 		"@biomejs/biome": "catalog:",
-		"renovate": "42.71.0",
+		"renovate": "42.95.2",
 		"turbo": "2.7.4"
 	},
 	"keywords": [],
