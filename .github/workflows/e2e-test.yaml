@@ -27,10 +27,10 @@ jobs:
       fail-fast: false
     steps:
       - name: チェックアウト
-        uses: actions/checkout@v5
+        uses: actions/checkout@v5.1.0
 
       - name: supabase cli のセットアップ
-        uses: supabase/setup-cli@v1
+        uses: supabase/setup-cli@v1.7.1
         with:
           version: latest
       # 時間短縮のためテストで不要なサービスは除外して supabase を起動
@@ -38,9 +38,9 @@ jobs:
         run: supabase start -x gotrue,storage-api,imgproxy,inbucket,postgres-meta,studio,edge-runtime,logflare,vector,supavisor &
 
       - name: pnpm のセットアップ
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v4.4.0
       - name: Node.js セットアップ
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v6.5.0
         with:
           node-version-file: "./.node-version"
           cache: "pnpm"
@@ -78,7 +78,7 @@ jobs:
       - name: e2e テスト
         run: pnpm --filter e2e run test --project="${{ matrix.project }}"
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v6.0.0
         if: ${{ !cancelled() }}
         with:
           name: playwright-report-${{ matrix.project }}
