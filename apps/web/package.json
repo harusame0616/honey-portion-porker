@@ -36,7 +36,7 @@
 		"cspell": "catalog:",
 		"jsdom": "catalog:",
 		"knip": "catalog:",
-		"postcss": "8.5.6",
+		"postcss": "8.5.23",
 		"postcss-load-config": "6.0.1",
 		"tailwindcss": "4.1.18",
 		"typescript": "5.9.3",
